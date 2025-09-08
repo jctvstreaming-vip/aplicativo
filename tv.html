@@ -1423,36 +1423,36 @@
 </div>
 
 
-  <div class="modal fade modal-fullscreen" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="playerModalLabel">Reproduzindo...</h5>
-          <div>
-            <button id="btnProg" type="button" title="Ver Programação">📺 Programação</button>
-
-            <div class="btn-group-toggle">
-              <button id="btnEspelhar" type="button" title="Espelhar">📺 Espelhar</button>
-              <div id="espelharDropdown">
-                <button data-action="webcast" style="display: flex; align-items: center; gap: 6px;">
-                <img src="https://x.gd/gflG1" alt="Web Video Cast Logo" style="width: 15px; height: 15px;" />Web Video Cast</button>
-              </div>
+  <!-- Modal -->
+<div class="modal fade modal-fullscreen" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="playerModalLabel">Reproduzindo...</h5>
+        <div>
+          <button id="btnProg" type="button" title="Ver Programação">📺 Programação</button>
+          <div class="btn-group-toggle">
+            <button id="btnEspelhar" type="button" title="Espelhar">📺 Espelhar</button>
+            <div id="espelharDropdown">
+              <button id="castOpen" data-action="webcast" style="display:flex; align-items:center; gap:6px;">
+                <img src="https://x.gd/gflG1" alt="Web Video Cast Logo" style="width:15px;height:15px;"> Web Video Cast
+              </button>
             </div>
-
-            <button id="btnFechar" type="button" aria-label="Fechar modal">❌ Fechar</button>
           </div>
+          <button id="btnFechar" type="button" aria-label="Fechar modal">❌ Fechar</button>
         </div>
-        <div class="modal-body">
-          <div id="playerContainer">
-            <iframe id="playerFrame" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
-          </div>
-          <div id="programacaoPanel">
-            <iframe id="programacaoFrame" src="" frameborder="0" allowfullscreen></iframe>
-          </div>
+      </div>
+      <div class="modal-body">
+        <div id="playerContainer">
+          <iframe id="playerFrame" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+        </div>
+        <div id="programacaoPanel">
+          <iframe id="programacaoFrame" src="" frameborder="0" allowfullscreen></iframe>
         </div>
       </div>
     </div>
   </div>
+</div>
 
   <footer class="footer" id="siteFooter">
     <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo"/>
@@ -1460,18 +1460,19 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const playerModal = document.getElementById("playerModal");
-    const modalPlayer = document.getElementById("playerFrame");
-    const programacaoPanel = document.getElementById("programacaoPanel");
-    const programacaoFrame = document.getElementById("programacaoFrame");
-    const btnFechar = document.getElementById("btnFechar");
-    const btnProg = document.getElementById("btnProg");
-    const btnEspelhar = document.getElementById("btnEspelhar");
-    const espelharDropdown = document.getElementById("espelharDropdown");
-    const siteFooter = document.getElementById("siteFooter");
-    const searchInput = document.getElementById("searchInput");
-    const canalContainer = document.getElementById("canalContainer");
+<script>
+const playerModal = document.getElementById("playerModal");
+const modalPlayer = document.getElementById("playerFrame");
+const programacaoPanel = document.getElementById("programacaoPanel");
+const programacaoFrame = document.getElementById("programacaoFrame");
+const btnFechar = document.getElementById("btnFechar");
+const btnProg = document.getElementById("btnProg");
+const btnEspelhar = document.getElementById("btnEspelhar");
+const espelharDropdown = document.getElementById("espelharDropdown");
+const castOpen = document.getElementById("castOpen");
+const siteFooter = document.getElementById("siteFooter");
+const searchInput = document.getElementById("searchInput");
+const canalContainer = document.getElementById("canalContainer");
 
     const programacaoUrls = {
       "A&E": "https://mi.tv/br/canais/a-e",
@@ -1588,95 +1589,81 @@
       "Warner TV": "https://mi.tv/br/canais/warner-channel",
     };
 
-    playerModal.addEventListener("show.bs.modal", function (event) {
-      const card = event.relatedTarget;
-      const src = card.getAttribute("data-src");
-      const title = card.getAttribute("data-title");
-      if (!src) { event.preventDefault(); alert("Este canal ainda não está disponível."); return; }
-      modalPlayer.src = src;
-      document.getElementById("playerModalLabel").textContent = `Reproduzindo: ${title}`;
-      programacaoFrame.src = programacaoUrls[title] || "";
-      programacaoPanel.classList.remove("show");
-      siteFooter.classList.add("d-none");
-    });
+    // Modal abrir canal
+playerModal.addEventListener("show.bs.modal", function(event) {
+  const card = event.relatedTarget;
+  const src = card.getAttribute("data-src");
+  const title = card.getAttribute("data-title");
+  if (!src) { event.preventDefault(); alert("Este canal ainda não está disponível."); return; }
+  modalPlayer.src = src;
+  document.getElementById("playerModalLabel").textContent = `Reproduzindo: ${title}`;
+  programacaoFrame.src = programacaoUrls[title] || "";
+  programacaoPanel.classList.remove("show");
+  siteFooter.classList.add("d-none");
+});
 
-    btnFechar.addEventListener("click", () => {
-      const modal = bootstrap.Modal.getInstance(playerModal);
-      if (modal) modal.hide();
-    });
+// Modal fechar
+btnFechar.addEventListener("click", () => {
+  const modal = bootstrap.Modal.getInstance(playerModal);
+  if(modal) modal.hide();
+});
+playerModal.addEventListener("hidden.bs.modal", () => {
+  modalPlayer.src = "";
+  programacaoFrame.src = "";
+  programacaoPanel.classList.remove("show");
+  siteFooter.classList.remove("d-none");
+});
 
-    playerModal.addEventListener("hidden.bs.modal", () => {
-      modalPlayer.src = "";
-      programacaoFrame.src = "";
-      programacaoPanel.classList.remove("show");
-      siteFooter.classList.remove("d-none");
-    });
+// Toggle programação
+btnProg.addEventListener("click", () => { programacaoPanel.classList.toggle("show"); });
 
-    btnProg.addEventListener("click", () => { programacaoPanel.classList.toggle("show"); });
-
-    // Toggle dropdown
+// Toggle dropdown
 btnEspelhar.addEventListener("click", () => { 
   espelharDropdown.style.display = espelharDropdown.style.display === "flex" ? "none" : "flex";
 });
 
-// === Web Video Cast - compartilhar link via Intent com token aleatório ===
+// Web Video Cast - Intent com token 84 caracteres
 castOpen.addEventListener("click", (e) => {
   e.preventDefault();
-
   const url = modalPlayer.src;
-  if (!url) {
-    alert("Nenhum vídeo carregado.");
-    return;
-  }
+  if (!url) { alert("Nenhum vídeo carregado."); return; }
 
-  // Função para gerar token aleatório de 84 caracteres
-  const gerarToken = (tamanho = 84) => {
+  const gerarToken = (tamanho=84) => {
     const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+|~-=";
     let token = "";
-    for (let i = 0; i < tamanho; i++) {
-      token += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    for(let i=0;i<tamanho;i++) token += chars.charAt(Math.floor(Math.random()*chars.length));
     return token;
   };
-
   const token = gerarToken();
-
-  // Adiciona token ao final do link
-  const videoUrl = url + (url.includes("?") ? "&" : "?") + "token=" + token;
-
-  // Remove https:// do início para criar o Intent
+  const videoUrl = url + (url.includes("?")?"&":"?") + "token=" + token;
   const cleanUrl = videoUrl.replace(/^https?:\/\//, '');
-
-  // Cria o Intent para abrir no Web Video Cast
   const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
-
-  // Tenta abrir o aplicativo
   window.location.href = intentLink;
+});
 
-    // Busca de canais
-    searchInput.addEventListener("input", () => {
-      const filter = searchInput.value.toLowerCase();
-      const canais = canalContainer.querySelectorAll(".canal-card");
-      canais.forEach((canal) => {
-        const title = canal.getAttribute("data-title")?.toLowerCase() || "";
-        canal.parentElement.style.display = title.includes(filter) ? "" : "none";
-      });
-    });
+// Busca de canais
+searchInput.addEventListener("input", () => {
+  const filter = searchInput.value.toLowerCase();
+  canalContainer.querySelectorAll(".canal-card").forEach((canal) => {
+    const title = canal.getAttribute("data-title")?.toLowerCase() || "";
+    canal.parentElement.style.display = title.includes(filter) ? "" : "none";
+  });
+});
 
-    // Bloqueios básicos de devtools
-    function mostrarAlerta() {
-      const tela = document.getElementById("bloqueio");
-      tela.style.display = "block";
-      setTimeout(()=> location.reload(), 1000);
-    }
-    document.addEventListener("keydown", function(e) {
-      const tecla = e.key.toLowerCase();
-      if(e.key === "F12" || (e.ctrlKey && tecla === "u") || (e.ctrlKey && tecla === "s") || (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(tecla))){
-        e.preventDefault(); mostrarAlerta();
-      }
-    });
-    window.addEventListener("contextmenu", e => e.preventDefault());
-  </script>
+// Bloqueios básicos de devtools
+function mostrarAlerta() {
+  const tela = document.getElementById("bloqueio");
+  tela.style.display = "block";
+  setTimeout(()=> location.reload(),1000);
+}
+document.addEventListener("keydown", function(e) {
+  const tecla = e.key.toLowerCase();
+  if(e.key === "F12" || (e.ctrlKey && tecla==='u') || (e.ctrlKey && tecla==='s') || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(tecla))) {
+    e.preventDefault(); mostrarAlerta();
+  }
+});
+window.addEventListener("contextmenu", e => e.preventDefault());
+</script>
 
 <!-- Tela de Alerta -->
 <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
