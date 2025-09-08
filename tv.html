@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JC TV STREAMING</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+      color: #000;
+    }
+
+    #seriesTabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      margin-top: 100px;
+    }
+    .search-bar {
+      width: 200px;
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1050;
+    }
+    .canal-card {
+      background-color: #3333;
+      border-radius: 8px;
+      padding: 6px;
+      text-align: center;
+      color: #000;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .canal-card:hover {
+      transform: scale(1.03);
+    }
+    .channel-card img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+    }
+    .canal-nome {
+      margin-top: 6px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      line-height: 1.1;
+      word-break: break-word;
+      white-space: normal;
+    }
+    footer.footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: black;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      z-index: 1000;
+    }
+    footer.footer img {
+      height: 30px;
+      width: auto;
+    }
+
+    /* Modal ainda existe, mas não será usado */
+    .modal-fullscreen .modal-dialog {
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0;
+      height: 100vh;
+    }
+    .modal-fullscreen .modal-content {
+      height: 100vh;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+    }
+    .modal-header {
+      background: #121212;
+      border-bottom: 1px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+      color: #eee;
+      flex-shrink: 0;
+    }
+    .modal-title { margin: 0; font-weight: 600; font-size: 1.2rem; flex: 1; user-select: none; }
+    #btnFechar, #btnProg {
+      border: none;
+      background-color: #222;
+      color: #eee;
+      font-weight: 600;
+      padding: 6px 14px;
+      margin-left: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      user-select: none;
+    }
+    #btnFechar:hover, #btnProg:hover { background-color: #444; }
+
+    .btn-group-toggle {
+      position: relative;
+      display: inline-block;
+    }
+    #btnEspelhar {
+      border: none;
+      background-color: #FFC107;
+      color: #000;
+      font-weight: 600;
+      padding: 6px 14px;
+      margin-left: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      user-select: none;
+    }
+    #btnEspelhar:hover { background-color: #444; }
+    #espelharDropdown {
+      display: none;
+      position: absolute;
+      top: 40px;
+      right: 0;
+      font-size: 12px;
+      padding: 4px 10px;
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 5px;
+      z-index: 1001;
+      flex-direction: column;
+      min-width: 180px;
+    }
+    #espelharDropdown button {
+      background: none;
+      color: #eee;
+      border: none;
+      text-align: left;
+      padding: 8px 12px;
+      cursor: pointer;
+      width: 100%;
+    }
+    #espelharDropdown button:hover { background: #444; }
+
+    .modal-body {
+      display: flex;
+      flex: 1 1 auto;
+      height: 100%;
+      padding: 0;
+      overflow: hidden;
+    }
+    #playerContainer {
+      flex: 1 1 auto;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #playerFrame { width: 100%; height: 100%; border: none; background: black; }
+    #programacaoPanel {
+      width: 0;
+      background: #121212;
+      border-left: 2px solid #333;
+      overflow: hidden;
+      transition: width 0.3s ease;
+      flex-shrink: 0;
+      height: 100%;
+    }
+    #programacaoPanel.show { width: 350px; }
+    #programacaoFrame { width: 100%; height: 100%; border: none; }
+
+  </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="mb-4">
+      <!-- Barra de pesquisa central fixa -->
+<div class="search-bar">
+  <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar canal..." />
+</div>
+    <h1 class="text-center mb-4"></h1>
+    <!-- Container dos canais -->
+    <div class="row g-3" id="canalContainer">
+<p> 
+<hr><h6 style="color: #000;"></h6>
+
+      <!-- Canal exemplo -->
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/band.html?alt=media" data-title="Band">
+          <img src="https://www.mediafire.com/convkey/7dcd/ors0qr3jqbwm2sh5g.jpg"  alt="Band" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Band">Band</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/globo_sp.html?alt=media" data-title="Globo SP">
+          <img src="https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg"  alt="Globo SP" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Globo SP">Globo SP</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/globo_rj.html?alt=media" data-title="Globo RJ">
+          <img src="https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg"  alt="Globo RJ" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Globo RJ">Globo RJ</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/globo_nordeste.html?alt=media" data-title="Globo Nordeste">
+          <img src="https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg"  alt="Globo Nordeste" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Globo Nordeste">Globo Nordeste</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sbt.html?alt=media" data-title="SBT">
+          <img src="https://www.mediafire.com/convkey/ec97/n1ustsu38sqw0vj5g.jpg"  alt="SBT" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="SBT">SBT</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/record.html?alt=media" data-title="Record">
+          <img src="https://www.mediafire.com/convkey/996b/3hk43pafo0b5zve5g.jpg"  alt="Record" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Record">Record</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/band_news.html?alt=media" data-title="Band News">
+          <img src="https://www.mediafire.com/convkey/2ef7/f9duyhtq2fvdja95g.jpg"  alt="Band News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Band News">Band News</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/cnn_brasil.html?alt=media" data-title="CNN Brasil">
+          <img src="https://www.mediafire.com/convkey/9cf0/ufwwfpli3cxsayv5g.jpg"  alt="CNN Brasil" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="CNN Brasil">CNN Brasil</div>
+        </div>
+      </div>
+
+    <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/cnn_brasil_money.html?alt=media" data-title="CNN Brasil Money">
+          <img src="https://www.mediafire.com/convkey/3c55/79782iw447zo65s5g.jpg"  alt="CNN Brasil Money" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="CNN Brasil Money">CNN Brasil Money</div>
+        </div>
+      </div>
+
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/globo_news.html?alt=media" data-title="Globo News">
+          <img src="https://www.mediafire.com/convkey/d707/vany601v3i6oltz5g.jpg"  alt="Globo News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Globo News">Globo News</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/jp_news.html?alt=media" data-title="JP News">
+          <img src="https://www.mediafire.com/convkey/c32e/z6n71wps9nuofum5g.jpg"  alt="JP News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="JP News">JP News</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/record_news.html?alt=media" data-title="Record News">
+          <img src="https://www.mediafire.com/convkey/4ea5/qlxfi1vsvu7m5m55g.jpg"  alt="Record News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Ao Vivo 24 Horas">Record News</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/times_brasil.html?alt=media" data-title="Times Brasil CNBC">
+          <img src="https://www.mediafire.com/convkey/6637/zi5qubqemnotbij5g.jpg"  alt="Times Brasil CNBC" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Times Brasil CNBC">Times Brasil CNBC</div>
+        </div>
+      </div>
+      
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/band_sports.html?alt=media" data-title="Band Sports">
+          <img src="https://www.mediafire.com/convkey/1e18/eblhu8culfgis5f5g.jpg"  alt="Band Sports" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Band Sports">Band Sports</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/combate.html?alt=media" data-title="Combate">
+          <img src="https://www.mediafire.com/convkey/8692/4u9xbfujsnwx8a95g.jpg"  alt="Combate" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Combate">Combate</div>
+        </div>
+      </div>
+
+    <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sportv.html?alt=media" data-title="Sportv">
+          <img src="https://www.mediafire.com/convkey/cd23/p1rxf0qpxtclpw75g.jpg"  alt="Sportv" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Sportv">Sportv</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sportv2.html?alt=media" data-title="Sportv 2">
+          <img src="https://www.mediafire.com/convkey/9c1e/318ioitp90nqrsa5g.jpg"  alt="Sportv 2" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Sportv 2">Sportv 2</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sportv3.html?alt=media" data-title="Sportv 3">
+          <img src="https://www.mediafire.com/convkey/a89c/8hoohulrzb92th55g.jpg"  alt="Sportv 3" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Sportv 3">Sportv 3</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sporty_net.html?alt=media" data-title="SportyNet">
+          <img src="https://www.mediafire.com/convkey/b117/0t5mgn07rnjarcu5g.jpg"  alt="SportyNet" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="SportyNet">SportyNet</div>
+        </div>
+      </div>
+ 
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sporty_net1.html?alt=media" data-title="SportyNet +1">
+          <img src="https://www.mediafire.com/convkey/ac30/kl4mtusuq8jnswp5g.jpg"  alt="SportyNet +1" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="SportyNet +1">SportyNet +1</div>
+        </div>
+      </div>
+ 
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sporty_net2.html?alt=media" data-title="SportyNet +2">
+          <img src="https://www.mediafire.com/convkey/3fbd/n59aiy5de2dr4lf5g.jpg"  alt="SportyNet +2" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="SportyNet +2">SportyNet +2</div>
+        </div>
+      </div>
+ 
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sporty_net3.html?alt=media" data-title="SportyNet +3">
+          <img src="https://www.mediafire.com/convkey/3d7f/7e26yoc0dg6zpu05g.jpg"  alt="SportyNet +3" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="SportyNet +3">SportyNet +3</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/ufc_fight_pass.html?alt=media" data-title="UFC Fight Pass">
+          <img src="https://www.mediafire.com/convkey/7b2d/l7xtwuoe2zapgzr5g.jpg"  alt="UFC Fight Pass" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="UFC Fight Pass">UFC Fight Pass</div>
+        </div>
+      </div>
+
+    <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/espn.html?alt=media" data-title="ESPN">
+          <img src="https://www.mediafire.com/convkey/3512/ovq21ck4lile4sx5g.jpg"  alt="ESPN" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="ESPN">ESPN</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/espn2.html?alt=media" data-title="ESPN 2">
+          <img src="https://www.mediafire.com/convkey/96c0/1n8z2pjnpe6knip5g.jpg"  alt="ESPN 2" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="ESPN 2">ESPN 2</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/espn3.html?alt=media" data-title="ESPN 3">
+          <img src="https://www.mediafire.com/convkey/a705/x0oad6vreapio1v5g.jpg"  alt="ESPN 3" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="ESPN 3">ESPN 3</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/espn4.html?alt=media" data-title="ESPN 4">
+          <img src="https://www.mediafire.com/convkey/e418/1rirj01jj917x865g.jpg"  alt="ESPN 4" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="ESPN 4">ESPN 4</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/espn5.html?alt=media" data-title="ESPN 5">
+          <img src="https://www.mediafire.com/convkey/d37d/1ojbd4ekwad59j05g.jpg"  alt="ESPN 5" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="ESPN 5">ESPN 5</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/espn6.html?alt=media" data-title="ESPN 6">
+          <img src="https://www.mediafire.com/convkey/41cd/wzlgga0jyir8rud5g.jpg"  alt="ESPN 6" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="ESPN 6">ESPN 6</div>
+        </div>
+      </div>
+    
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/aie.html?alt=media" data-title="A&E">
+          <img src="https://www.mediafire.com/convkey/2598/huxkg4lcurlfko35g.jpg"  alt="A&E" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="A&E">A&E</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/adult_swim.html?alt=media" data-title="Adult Swim">
+          <img src="https://www.mediafire.com/convkey/bafc/u6lut22bmswk8hq5g.jpg"  alt="Adult Swim" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Adult Swim">Adult Swim</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/amc.html?alt=media" data-title="AMC">
+          <img src="https://www.mediafire.com/convkey/aa3e/xbc07letcmluym65g.jpg"  alt="AMC" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="AMC">AMC</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/axn.html?alt=media" data-title="AXN">
+          <img src="https://www.mediafire.com/convkey/e488/5ajoj97di8f0rvu5g.jpg"  alt="AXN" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="AXN">AXN</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/canal_brasil.html?alt=media" data-title="Canal Brasil">
+          <img src="https://www.mediafire.com/convkey/37a7/q930ib2y7bv2jqb5g.jpg"  alt="Canal Brasil" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Canal Brasil">Canal Brasil</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/cinemax.html?alt=media" data-title="Cinemax">
+          <img src="https://www.mediafire.com/convkey/36a2/lieqkrv92trvw865g.jpg"  alt="Cinemax" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Cinemax">Cinemax</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/globoplay_novelas.html?alt=media" data-title="Globoplay Novelas">
+          <img src="https://www.mediafire.com/convkey/afb2/sz6iws9sm5z3bt25g.jpg"  alt="Globoplay Novelas" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Globoplay Novelas">Globoplay Novelas</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/animal_planet.html?alt=media" data-title="Animal Planet">
+          <img src="https://www.mediafire.com/convkey/08d9/l1syfzof817nmk75g.jpg"  alt="Animal Planet" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Animal Planet">Animal Planet</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/arte1.html?alt=media" data-title="Arte1">
+          <img src="https://www.mediafire.com/convkey/aa70/9s2kgymo4v7jl4l5g.jpg"  alt="Arte1" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Arte1">Arte1</div>
+        </div>
+      </div>
+
+    <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/discovery.html?alt=media" data-title="Discovery Channel">
+          <img src="https://www.mediafire.com/convkey/a885/ngdunnc8ddnkrt65g.jpg"  alt="Discovery Channel" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Discovery Channel">Discovery Channel</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/discovery_home&health.html?alt=media" data-title="Discovery Home & Health">
+          <img src="https://www.mediafire.com/convkey/c4ff/yqsk6z5mhtlxju65g.jpg"  alt="Discovery Home & Health" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Discovery Home & Health">Discovery Home & Health</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/discovery_science.html?alt=media" data-title="Discovery Science">
+          <img src="https://www.mediafire.com/convkey/c074/43qs60gg70r9ndl5g.jpg"  alt="Discovery Science" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Discovery Science">Discovery Science</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/discovery_theater.html?alt=media" data-title="Discovery Theater">
+          <img src="https://www.mediafire.com/convkey/ba73/ldr09d61fvwlakc5g.jpg"  alt="Discovery Theater" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Discovery Theater">Discovery Theater</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/discovery_turbo.html?alt=media" data-title="Discovery Turbo">
+          <img src="https://www.mediafire.com/convkey/6b07/x56n8bfmodktzgb5g.jpg"  alt="Discovery Turbo" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Discovery Turbo">Discovery Turbo</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/discovery_world.html?alt=media" data-title="Discovery World">
+          <img src="https://www.mediafire.com/convkey/cd0a/zdg6db0hx0j0d325g.jpg"  alt="Discovery World" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Discovery World">Discovery World</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/fishtv.html?alt=media" data-title="Fish TV">
+          <img src="https://www.mediafire.com/convkey/405d/4aamr2lnsjmxc2k5g.jpg"  alt="Fish TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Fish TV">Fish TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/hgtv.html?alt=media" data-title="HGTV">
+          <img src="https://www.mediafire.com/convkey/151e/vq9v53wervrvlqe5g.jpg"  alt="HGTV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="HGTV">HGTV</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/history.html?alt=media" data-title="History">
+          <img src="https://www.mediafire.com/convkey/713f/rkbl3yw9r456lla5g.jpg"  alt="History" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="History">History</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/history2.html?alt=media" data-title="History 2">
+          <img src="https://www.mediafire.com/convkey/e388/udadrcaxjzjgv3b5g.jpg"  alt="History 2" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="History 2">History 2</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/discovery_id.html?alt=media" data-title="Investigação Discovery">
+          <img src="https://www.mediafire.com/convkey/3911/uxao9373njw0dje5g.jpg"  alt="Investigação Discovery" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Investigação Discovery">Investigação Discovery</div>
+        </div>
+      </div>
+  
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/bis.html?alt=media" data-title="BIS">
+          <img src="https://www.mediafire.com/convkey/2389/5o8yr08hvdzfr0w5g.jpg"  alt="BIS" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="BIS">BIS</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/cancao_nova.html?alt=media" data-title="Canção Nova">
+          <img src="https://www.mediafire.com/convkey/73e0/lqupkenvqv64wgn5g.jpg"  alt="Canção Nova" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Canção Nova">Canção Nova</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/cartoon_network.html?alt=media" data-title="Cartoon Network">
+          <img src="https://www.mediafire.com/convkey/628c/uadp0amudpo14db5g.jpg"  alt="Cartoon Network" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Cartoon Network">Cartoon Network</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/cartoonito.html?alt=media" data-title="Cartoonito">
+          <img src="https://www.mediafire.com/convkey/ffb9/ys1gxu0qrkzp0zl5g.jpg"  alt="Cartoonito" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Cartoonito">Cartoonito</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/comedy_central.html?alt=media" data-title="Comedy Central">
+          <img src="https://www.mediafire.com/convkey/7917/xoa1bitihlh2djc5g.jpg"  alt="Comedy Central" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Comedy Central">Comedy Central</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/curta.html?alt=media" data-title="Curta!">
+          <img src="https://www.mediafire.com/convkey/56b4/qa3fi0he91yw4ce5g.jpg"  alt="Curta!" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Curta!">Curta!</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/food_network.html?alt=media" data-title="Food Network">
+          <img src="https://www.mediafire.com/convkey/ee95/4jbp9cro1yyi2b65g.jpg"  alt="Food Network" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Food Network">Food Network</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/gloob.html?alt=media" data-title="Gloob">
+          <img src="https://www.mediafire.com/convkey/e6b7/prcguyxudq0sa7a5g.jpg"  alt="Gloob" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Gloob">Gloob</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/gloobinho.html?alt=media" data-title="Gloobinho">
+          <img src="https://www.mediafire.com/convkey/83b3/tuqjkz16t9g5stv5g.jpg"  alt="Gloobinho" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Gloobinho">Gloobinho</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/gnt.html?alt=media" data-title="GNT">
+          <img src="https://www.mediafire.com/convkey/c257/23wmwqfhkxncxei5g.jpg"  alt="GNT" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="GNT">GNT</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/hbo.html?alt=media" data-title="HBO">
+          <img src="https://www.mediafire.com/convkey/57f8/f46d0ht9k9h6qor5g.jpg"  alt="HBO" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="HBO">HBO</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/hbo2.html?alt=media" data-title="HBO 2">
+          <img src="https://www.mediafire.com/convkey/6784/094ecv56q1gx9wp5g.jpg"  alt="HBO 2" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="HBO 2">HBO 2</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/hbo_family.html?alt=media" data-title="HBO Family">
+          <img src="https://www.mediafire.com/convkey/6ffa/gc4rc1r9pf6yeyd5g.jpg"  alt="HBO Family" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="HBO Family">HBO Family</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/hbo_mundi.html?alt=media" data-title="HBO Mundi">
+          <img src="https://www.mediafire.com/convkey/284a/ijtp3sgtjxyn7tf5g.jpg"  alt="HBO Mundi" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="HBO Mundi">HBO Mundi</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/hbo_plus.html?alt=media" data-title="HBO Plus">
+          <img src="https://www.mediafire.com/convkey/1ced/vso3ujiky4tvvk05g.jpg"  alt="HBO Plus" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="HBO Plus">HBO Plus</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/hbo_pop.html?alt=media" data-title="HBO POP">
+          <img src="https://www.mediafire.com/convkey/2732/c5stimdg4fu9dch5g.jpg"  alt="HBO POP" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="HBO POP">HBO POP</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/hbo_signature.html?alt=media" data-title="HBO Signature">
+          <img src="https://www.mediafire.com/convkey/04de/mjgp608mx042zg25g.jpg"  alt="HBO Signature" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="HBO Signature">HBO Signature</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/hbo_xtreme.html?alt=media" data-title="HBO Xtreme">
+          <img src="https://www.mediafire.com/convkey/048b/voyryixm40xwr5n5g.jpg"  alt="HBO Xtreme" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="HBO Xtreme">HBO Xtreme</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/lifetime.html?alt=media" data-title="Lifetime">
+          <img src="https://www.mediafire.com/convkey/839e/8mc6kugf3i39rl35g.jpg"  alt="Lifetime" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Lifetime">Lifetime</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/megapix.html?alt=media" data-title="Megapix">
+          <img src="https://www.mediafire.com/convkey/6e6b/1zy0dskxz4mtzai5g.jpg"  alt="Megapix" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Megapix">Megapix</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/modo_viagem.html?alt=media" data-title="Modo Viagem">
+          <img src="https://www.mediafire.com/convkey/0141/wqh3di3ks6bfa2j5g.jpg"  alt="Modo Viagem" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Modo Viagem">Modo Viagem</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/mtv.html?alt=media" data-title="MTV">
+          <img src="https://www.mediafire.com/convkey/c6ad/bu37lc0afdfinum5g.jpg"  alt="MTV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="MTV">MTV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/mtv_00s.html?alt=media" data-title="MTV 00s">
+          <img src="https://www.mediafire.com/convkey/0c4d/zynxft3dcjaaon15g.jpg"  alt="MTV 00s" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="MTV 00s">MTV 00s</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/mtv_live.html?alt=media" data-title="MTV Live">
+          <img src="https://www.mediafire.com/convkey/0b3c/864qp3qpjwjk8015g.jpg"  alt="MTV Live" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="MTV Live">MTV Live</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/multishow.html?alt=media" data-title="Multishow">
+          <img src="https://www.mediafire.com/convkey/e03a/vz7j1lu2pitwwum5g.jpg"  alt="Multishow" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Multishow">Multishow</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/nick_jr.html?alt=media" data-title="Nick Jr.">
+          <img src="https://www.mediafire.com/convkey/b603/ke1ogbyv39o3fdc5g.jpg"  alt="Nick Jr." style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Nick Jr.">Nick Jr.</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/nickelodeon.html?alt=media" data-title="Nickelodeon">
+          <img src="https://www.mediafire.com/convkey/60b4/d3kjg1jwvni848j5g.jpg"  alt="Nickelodeon" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Nickelodeon">Nickelodeon</div>
+        </div>
+      </div>
+     
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/canal_off.html?alt=media" data-title="Canal Off">
+          <img src="https://www.mediafire.com/convkey/6680/2ehg7adeyz6ufnm5g.jpg"  alt="Canal Off" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Canal Off">Canal Off</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/paramount_network.html?alt=media" data-title="Paramount Network">
+          <img src="https://www.mediafire.com/convkey/5d3e/9vceyghb4sivbg95g.jpg"  alt="Paramount Network" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Paramount Network">Paramount Network</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/premiere_clubes.html?alt=media" data-title="Premiere Clubes">
+          <img src="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg"  alt="Premiere Clubes" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Premiere Clubes">Premiere Clubes</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/premiere2.html?alt=media" data-title="Premiere 2">
+          <img src="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg"  alt="Premiere 2" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Premiere 2">Premiere 2</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/premiere3.html?alt=media" data-title="Premiere 3">
+          <img src="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg"  alt="Premiere 3" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Premiere 3">Premiere 3</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/premiere4.html?alt=media" data-title="Premiere 4">
+          <img src="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg"  alt="Premiere 4" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Premiere 4">Premiere 4</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/premiere5.html?alt=media" data-title="Premiere 5">
+          <img src="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg"  alt="Premiere 5" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Premiere 5">Premiere 5</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/premiere6.html?alt=media" data-title="Premiere 6">
+          <img src="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg"  alt="Premiere 6" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Premiere 6">Premiere 6</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/premiere7.html?alt=media" data-title="Premiere 7">
+          <img src="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg"  alt="Premiere 7" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Premiere 7">Premiere 7</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/prime_box_brasil.html?alt=media" data-title="Prime Box Brazil">
+          <img src="https://www.mediafire.com/convkey/9bf4/aa0itu6m6zo1qm95g.jpg"  alt="Prime Box Brazil" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Prime Box Brazil">Prime Box Brazil</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/redetv.html?alt=media" data-title="RedeTV!">
+          <img src="https://www.mediafire.com/convkey/b94f/s8i731t6w2gd6ci5g.jpg"  alt="RedeTV!" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="RedeTV!">RedeTV!</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sabor&arte.html?alt=media" data-title="Sabor & Arte">
+          <img src="https://www.mediafire.com/convkey/2a19/ycsyhrfemgvqzag5g.jpg"  alt="Sabor & Arte" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Sabor & Arte">Sabor & Arte</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sony_channel.html?alt=media" data-title="Sony Channel">
+          <img src="https://www.mediafire.com/convkey/0684/tk9baeut61ufh605g.jpg"  alt="Sony Channel" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Sony Channel">Sony Channel</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/sony_movies.html?alt=media" data-title="Sony Movies">
+          <img src="https://www.mediafire.com/convkey/87cb/jd5ptyv02tus7ff5g.jpg"  alt="Sony Movies" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Sony Movies">Sony Movies</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/space.html?alt=media" data-title="Space">
+          <img src="https://www.mediafire.com/convkey/a9ef/0jdw8czly0dnjug5g.jpg"  alt="Space" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Space">Space</div>
+        </div>
+      </div>
+     
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/studio_universal.html?alt=media" data-title="Studio Universal">
+          <img src="https://www.mediafire.com/convkey/44dc/cnmkzxavfqi9gq85g.jpg"  alt="Studio Universal" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Studio Universal">Studio Universal</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/telecine_action.html?alt=media" data-title="Telecine Action">
+          <img src="https://www.mediafire.com/convkey/f015/ss85xdbgpn4v4co5g.jpg"  alt="Telecine Action" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Telecine Action">Telecine Action</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/telecine_cult.html?alt=media" data-title="Telecine Cult">
+          <img src="https://www.mediafire.com/convkey/3407/tzbsl532lvhl9lh5g.jpg"  alt="Telecine Cult" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Telecine Cult">Telecine Cult</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/telecine_fun.html?alt=media" data-title="Telecine Fun">
+          <img src="https://www.mediafire.com/convkey/d8b5/m49v3xpcsp4ggc15g.jpg"  alt="Telecine Fun" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Telecine Fun">Telecine Fun</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/telecine_pipoca.html?alt=media" data-title="Telecine Pipoca">
+          <img src="https://www.mediafire.com/convkey/5389/40r58hvzgexg1tg5g.jpg"  alt="Telecine Pipoca" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Telecine Pipoca">Telecine Pipoca</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/telecine_premium.html?alt=media" data-title="Telecine Premium">
+          <img src="https://www.mediafire.com/convkey/6bff/rhznq8sgw3jsnsc5g.jpg"  alt="Telecine Premium" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Telecine Premium">Telecine Premium</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/telecine_touch.html?alt=media" data-title="Telecine Touch">
+          <img src="https://www.mediafire.com/convkey/4b1d/em13al9fywmoio65g.jpg"  alt="Telecine Touch" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Telecine Touch">Telecine Touch</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/tlc.html?alt=media" data-title="TLC">
+          <img src="https://www.mediafire.com/convkey/604c/qt0chtp1k0i3ex35g.jpg"  alt="TLC" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="TLC">TLC</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/tnt.html?alt=media" data-title="TNT">
+          <img src="https://www.mediafire.com/convkey/1fda/hnpl392ek0uvhxn5g.jpg"  alt="TNT" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="TNT">TNT</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/tnt_novelas.html?alt=media" data-title="TNT Novelas">
+          <img src="https://www.mediafire.com/convkey/47ac/qgr3erww8f9hg225g.jpg"  alt="TNT Novelas" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="TNT Novelas">TNT Novelas</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/tnt_series.html?alt=media" data-title="TNT Séries">
+          <img src="https://www.mediafire.com/convkey/5225/9mfad9o7744un765g.jpg"  alt="TNT Séries" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="TNT Séries">TNT Séries</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/travel_box_brasil.html?alt=media" data-title="Travel Box Brazil">
+          <img src="https://www.mediafire.com/convkey/6202/gpt5zak9duc7a4d5g.jpg"  alt="Travel Box Brazil" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Travel Box Brazil">Travel Box Brazil</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/tv_evangelizar.html?alt=media" data-title="TV Evangelizar">
+          <img src="https://www.mediafire.com/convkey/8256/chyukjldyhgirvd5g.jpg"  alt="TV Evangelizar" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="TV Evangelizar">TV Evangelizar</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/universal_tv.html?alt=media" data-title="Universal TV">
+          <img src="https://www.mediafire.com/convkey/6342/uw3j9griyzwfhvo5g.jpg"  alt="Universal TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Universal TV">Universal TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/usa_network.html?alt=media" data-title="USA Network">
+          <img src="https://www.mediafire.com/convkey/dafd/dxpzc2s5r4lmh7z5g.jpg"  alt="USA Network" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="USA Network">USA Network</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/warner_tv.html?alt=media" data-title="Warner TV">
+          <img src="https://www.mediafire.com/convkey/2c78/akts8nrxrn16nw35g.jpg"  alt="Warner TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Warner TV">Warner TV</div>
+        </div>
+      </div>
+
+<p>
+<hr>
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/adrenalina_pura_tv.html?alt=media" data-title="Adrenalina Pura">
+          <img src="https://www.mediafire.com/convkey/466e/xjcbdknrq2t7fnh5g.jpg"  alt="Adrenalina Pura" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Adrenalina Pura">Adrenalina Pura</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/adrenalina_pura_tv_plus.html?alt=media" data-title="Halloween Adrenalina Pura">
+          <img src="https://www.mediafire.com/convkey/a06d/aqhvmyr6acpc0305g.jpg"  alt="Halloween Adrenalina Pura" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Halloween Adrenalina Pura">Halloween Adrenalina Pura</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/agro_brasil_tv.html?alt=media" data-title="Agro Brasil tv">
+          <img src="https://www.mediafire.com/convkey/b13e/uh3wi5n02zs3quf5g.jpg"  alt="Agro Brasil tv" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Agro Brasil tv">Agro Brasil tv</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/agro_canal.html?alt=media" data-title="Agro Canal">
+          <img src="https://www.mediafire.com/convkey/9681/s673k65kk4tu9so5g.jpg"  alt="Agro Canal" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Agro Canal">Agro Canal</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/agro_mais.html?alt=media" data-title="Agro+">
+          <img src="https://www.mediafire.com/convkey/5295/vcv6hm69ni4moit5g.jpg"  alt="Agro+" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Agro+">Agro+</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/aljazeera.html?alt=media" data-title="Al Jazeera English">
+          <img src="https://www.mediafire.com/convkey/16d0/htj1ra92jujf1ed5g.jpg"  alt="Al Jazeera English" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Al Jazeera English">Al Jazeera English</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/amazon_sat.html?alt=media" data-title="Amazon Sat">
+          <img src="https://www.mediafire.com/convkey/b789/cknda9zmdxtd3qq5g.jpg"  alt="Amazon Sat" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Amazon Sat">Amazon Sat</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/astral_tv.html?alt=media" data-title="Astral TV">
+          <img src="https://www.mediafire.com/convkey/28ee/n9t81goz5pv60s05g.jpg"  alt="Astral TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Astral TV">Astral TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/baby_tv.html?alt=media" data-title="Baby TV">
+          <img src="https://www.mediafire.com/convkey/8e5d/iu3b96mnz2bqa6e5g.jpg"  alt="Baby TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Baby TV">Baby TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/blits_tv.html?alt=media" data-title="Blits TV">
+          <img src="https://www.mediafire.com/convkey/0089/6kuyvmcqpmaodcr5g.jpg"  alt="Blits TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Blits TV">Blits TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/bm&c_news.html?alt=media" data-title="BM&C News">
+          <img src="https://www.mediafire.com/convkey/a44a/m4dskw8yegyidnk5g.jpg"  alt="BM&C News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="BM&C News">BM&C News</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/boas_novas.html?alt=media" data-title="Boas Novas">
+          <img src="https://www.mediafire.com/convkey/4276/7i3twb55s4gjhom5g.jpg"  alt="Boas Novas" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Boas Novas">Boas Novas</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/br_super_tv.html?alt=media" data-title="BrSuper TV">
+          <img src="https://www.mediafire.com/convkey/463f/ru39fsx9f0ivlbe5g.jpg"  alt="BrSuper TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="BrSuper TV">BrSuper TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/canal_do_boi.html?alt=media" data-title="Canal do Boi">
+          <img src="https://www.mediafire.com/convkey/bb88/yytyv6vjxlps05p5g.jpg"  alt="Canal do Boi" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Canal do Boi">Canal do Boi</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/canal_iconics.html?alt=media" data-title="Iconic">
+          <img src="https://www.mediafire.com/convkey/4133/hp9h18ryg3sj5xt5g.jpg"  alt="Iconic" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Iconic">Iconic</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/canal_rural.html?alt=media" data-title="Canal Rural">
+          <img src="https://www.mediafire.com/convkey/662d/8r84ld2v05uba2x5g.jpg"  alt="Canal Rural" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Canal Rural">Canal Rural</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/canal_saude.html?alt=media" data-title="Canal Saúde">
+          <img src="https://www.mediafire.com/convkey/d8cc/qkosfy28ktiuii65g.jpg"  alt="Canal Saúde" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Canal Saúde">Canal Saúde</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/canal_uou.html?alt=media" data-title="Canal Uol">
+          <img src="https://www.mediafire.com/convkey/340b/vgez8dsnvk28prp5g.jpg"  alt="Canal Uol" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Canal Uol">Canal Uol</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/cancao_nova_b.html?alt=media" data-title="Canção Nova">
+          <img src="https://www.mediafire.com/convkey/73e0/lqupkenvqv64wgn5g.jpg"  alt="Canção Nova" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Canção Nova">Canção Nova</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/cnn_brasil_b.html?alt=media" data-title="CNN Brasil">
+          <img src="https://www.mediafire.com/convkey/9cf0/ufwwfpli3cxsayv5g.jpg"  alt="CNN Brasil" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="CNN Brasil">CNN Brasil</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/cnn_brasil_money_b.html?alt=media" data-title="CNN Brasil Money">
+          <img src="https://www.mediafire.com/convkey/3c55/79782iw447zo65s5g.jpg"  alt="CNN Brasil Money" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="CNN Brasil Money">CNN Brasil Money</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/com_brasil_tv.html?alt=media" data-title="Com Brasil">
+          <img src="https://www.mediafire.com/convkey/db98/9u4tff594bf42me5g.jpg"  alt="Com Brasil" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Com Brasil TV">Com Brasil TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/diatv.html?alt=media" data-title="DiaTV">
+          <img src="https://www.mediafire.com/convkey/dfb0/fevhce1fxcbh0qh5g.jpg"  alt="DiaTV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="diatv">diatv</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/filmelier_tv.html?alt=media" data-title="Filmelier TV">
+          <img src="https://www.mediafire.com/convkey/c6ec/nvjioj8h68t08we5g.jpg"  alt="Filmelier TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Filmelier TV">Filmelier TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/filmelier_vida_real.html?alt=media" data-title="Filmelier TV Vida Real">
+          <img src="https://www.mediafire.com/convkey/58b6/sxubj5t09si7if95g.jpg"  alt="Filmelier TV Vida Real" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Filmelier TV Vida Real">Filmelier TV Vida Real</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/fit_dance.html?alt=media" data-title="Fit Dance">
+          <img src="https://www.mediafire.com/convkey/4ea1/5ghw3cz20lgh2tx5g.jpg"  alt="Fit Dance" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Fit Dance">Fit Dance</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/fuel_tv.html?alt=media" data-title="Fuel TV">
+          <img src="https://www.mediafire.com/convkey/c3b8/ncd86dmly6rdqu65g.jpg"  alt="Fuel TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Fuel TV">Fuel TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/futura.html?alt=media" data-title="Futura">
+          <img src="https://www.mediafire.com/convkey/2c40/i8539zyt2rc0pst5g.jpg"  alt="Futura" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Futura">Futura</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/gp_tv.html?alt=media" data-title="GP TV">
+          <img src="https://www.mediafire.com/convkey/bcd9/sl1u2021o1z5fhb5g.jpg"  alt="GP TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="GP TV">GP TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/heartland.html?alt=media" data-title="Heartland">
+          <img src="https://www.mediafire.com/convkey/2a33/bfecfoqydt5tj8b5g.jpg"  alt="Heartland" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Heartland">Heartland</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/inspire2.html?alt=media" data-title="Inspire">
+          <img src="https://www.mediafire.com/convkey/51bc/0iylxlgdj0uvfh95g.jpg"  alt="Inspire" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Inspire">Inspire</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/jp_news_b.html?alt=media" data-title="JP News">
+          <img src="https://www.mediafire.com/convkey/c32e/z6n71wps9nuofum5g.jpg"  alt="JP News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="JP News">JP News</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/kids_mais.html?alt=media" data-title="Kids Mais">
+          <img src="https://www.mediafire.com/convkey/37cf/pwjww29a6v3jgbt5g.jpg"  alt="Kids Mais" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Kids Mais">Kids Mais</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/kiss_tv.html?alt=media" data-title="Kiss TV">
+          <img src="https://www.mediafire.com/convkey/212e/mxhl9ka6hovu3o45g.jpg"  alt="Kiss TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Kiss TV">Kiss TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/leoelully_tv.html?alt=media" data-title="Leo e Lully">
+          <img src="https://www.mediafire.com/convkey/7d47/lcx2jjns4k5q4oo5g.jpg"  alt="Leo e Lully" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Leo e Lully">Leo e Lully</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/loading.html?alt=media" data-title="Loading">
+          <img src="https://www.mediafire.com/convkey/be2e/cfwi359lgscc57r5g.jpg"  alt="Loading" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Loading">Loading</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/mais_familia.html?alt=media" data-title="Mais Família">
+          <img src="https://www.mediafire.com/convkey/ddd1/ulx3edfi0iqpk1t5g.jpg"  alt="Mais Família" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Mais Família">Mais Família</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/manual_do_mundo.html?alt=media" data-title="Manual do Mundo">
+          <img src="https://www.mediafire.com/convkey/86ec/vv58l07h4rsr6595g.jpg"  alt="Manual do Mundo" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Manual do Mundo">Manual do Mundo</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/movie_sphere.html?alt=media" data-title="Movie Sphere">
+          <img src="https://www.mediafire.com/convkey/1c3d/lvm2zb3oucp91sj5g.jpg"  alt="Movie Sphere" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Movie Sphere">Movie Sphere</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/new_brasil.html?alt=media" data-title="New Brasil">
+          <img src="https://www.mediafire.com/convkey/473c/xpz8uv9r47vpmne5g.jpg"  alt="New Brasil" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="New Brasil">New Brasil</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/nhk.html?alt=media" data-title="NHK World Japan">
+          <img src="https://www.mediafire.com/convkey/5bbc/2wqxatqn0iqsd5w5g.jpg"  alt="NHK World Japan" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="NHK World Japan">NHK World Japan</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/novo_tempo.html?alt=media" data-title="Novo Tempo">
+          <img src="https://www.mediafire.com/convkey/dbaf/rvdxpsaly4claon5g.jpg"  alt="Novo Tempo" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Novo Tempo">Novo Tempo</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/nsc_tv.html?alt=media" data-title="NSC TV">
+          <img src="https://www.mediafire.com/convkey/e05c/yxr96n6r2bwfsdm5g.jpg"  alt="NSC TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="NSC TV">NSC TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/play_tv.html?alt=media" data-title="Play TV">
+          <img src="https://www.mediafire.com/convkey/8f76/u2iwijzkx9kgm855g.jpg"  alt="Play TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Play TV">Play TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/q_tal_channel.html?alt=media" data-title="Canal Q Tal?">
+          <img src="https://www.mediafire.com/convkey/ad78/vfyuw4p8blt7mwv5g.jpg"  alt="Canal Q Tal?" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Canal Q Tal?">Canal Q Tal?</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rbti.html?alt=media" data-title="Rbti">
+          <img src="https://www.mediafire.com/convkey/6c5f/jxhdarfutoj1n1s5g.jpg"  alt="Rbti" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rbti">Rbti</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rbti_mais.html?alt=media" data-title="Rbti+">
+          <img src="https://www.mediafire.com/convkey/5090/ulh00esz0dd3efl5g.jpg"  alt="Rbti+" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rbti+">Rbti+</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/record_news_b.html?alt=media" data-title="Record News">
+          <img src="https://www.mediafire.com/convkey/4ea5/qlxfi1vsvu7m5m55g.jpg"  alt="Record News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Record News">Record News</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_brasil.html?alt=media" data-title="Rede Brasil">
+          <img src="https://www.mediafire.com/convkey/691c/evk20xbyszsuqw05g.jpg"  alt="Rede Brasil" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede Brasil">Rede Brasil</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_cnt.html?alt=media" data-title="Rede CNT">
+          <img src="https://www.mediafire.com/convkey/887b/uxt7jiftfhchss45g.jpg"  alt="Rede CNT" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede CNT">Rede CNT</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_genesis.html?alt=media" data-title="Rede Gênesis">
+          <img src="https://www.mediafire.com/convkey/17ee/bsahdhz79dt7bpf5g.jpg"  alt="Rede Gênesis" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede Gênesis">Rede Gênesis</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_gospel.html?alt=media" data-title="Rede Gospel">
+          <img src="https://www.mediafire.com/convkey/b96b/4v18vculua6cm755g.jpg"  alt="Rede Gospel" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede Gospel">Rede Gospel</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_minas.html?alt=media" data-title="Rede Minas">
+          <img src="https://www.mediafire.com/convkey/00d0/9ecbaxf4ilbxt2i5g.jpg"  alt="Rede Minas" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede Minas">Rede Minas</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_mosaico.html?alt=media" data-title="Rede Mosaico">
+          <img src="https://www.mediafire.com/convkey/b6dc/5apnanebz7kw2jr5g.jpg"  alt="Rede Mosaico" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede Mosaico">Rede Mosaico</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_qdm.html?alt=media" data-title="Rede qdm">
+          <img src="https://www.mediafire.com/convkey/c7ca/czwbqi7436kce6k5g.jpg"  alt="Rede qdm" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede QDM">Rede QDM</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_recon.html?alt=media" data-title="Rede Recon">
+          <img src="https://www.mediafire.com/convkey/7780/l91lai1vfm45zzt5g.jpg"  alt="Rede Recon" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede Recon">Rede Recon</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_super.html?alt=media" data-title="Rede Super">
+          <img src="https://www.mediafire.com/convkey/5ee2/hvbkbz5445od3905g.jpg"  alt="Rede Super" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede Super">Rede Super</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_utv.html?alt=media" data-title="Rede UTV">
+          <img src="https://www.mediafire.com/convkey/d7a4/l1nzebri1vl8ub35g.jpg"  alt="Rede UTV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede UTV">Rede UTV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rede_vida.html?alt=media" data-title="Rede Vida">
+          <img src="https://www.mediafire.com/convkey/956b/4jjpecqogrd935o5g.jpg"  alt="Rede Vida" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rede Vida">Rede Vida</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/redetv_pr.html?alt=media" data-title="RedeTV! PR">
+          <img src="https://www.mediafire.com/convkey/72bc/q2h6sp6no62q4j15g.jpg"  alt="RedeTV! PR" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="RedeTV! PR">RedeTV! PR</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rit_tv.html?alt=media" data-title="Rit TV">
+          <img src="https://www.mediafire.com/convkey/dfe9/ivr3w7z377mhpv15g.jpg"  alt="Rit TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Rit TV">Rit TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rm_tv?alt=media" data-title="Real Madrid TV">
+          <img src="https://www.mediafire.com/convkey/8fce/pc5rjp6j3kg3n4z5g.jpg"  alt="Real Madrid TV" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Real Madrid TV">Real Madrid TV</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://sx.jctvstreaming-vip.workers.dev/v0/b/jctvstreaming-1.appspot.com/o/rm_tv2.html?alt=media" data-title="Real Madrid TV 2">
+          <img src="https://www.mediafire.com/convkey/8fce/pc5rjp6j3kg3n4z5g.jpg"  alt="Real Madrid TV 2" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Real Madrid TV 2">Real Madrid TV 2</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="" data-title="">
+          <img src=""  alt="" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title=""></div>
+        </div>
+      </div>
+
+     </div>
+    </div>
+  </div>
+
+     
+<!-- Rodapé institucional após os canais -->
+<div class="col-12 mt-4">
+   <div class="playerButtons" id="serverButtons"></div>
+  <div style="margin-top: 40px; font-size: 0.85rem; color: #000; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <p><br></p>
+    <p></p>
+  </div>
+</div>
+
+
+  <div class="modal fade modal-fullscreen" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="playerModalLabel">Reproduzindo...</h5>
+          <div>
+            <button id="btnProg" type="button" title="Ver Programação">📺 Programação</button>
+
+            <div class="btn-group-toggle">
+              <button id="btnEspelhar" type="button" title="Espelhar">📺 Espelhar</button>
+              <div id="espelharDropdown">
+                <button data-action="webcast" style="display: flex; align-items: center; gap: 6px;">
+                <img src="https://x.gd/gflG1" alt="Web Video Cast Logo" style="width: 15px; height: 15px;" />Web Video Cast</button>
+              </div>
+            </div>
+
+            <button id="btnFechar" type="button" aria-label="Fechar modal">❌ Fechar</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div id="playerContainer">
+            <iframe id="playerFrame" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+          </div>
+          <div id="programacaoPanel">
+            <iframe id="programacaoFrame" src="" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer" id="siteFooter">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo"/>
+    <span>JC TV STREAMING © 2025</span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const playerModal = document.getElementById("playerModal");
+    const modalPlayer = document.getElementById("playerFrame");
+    const programacaoPanel = document.getElementById("programacaoPanel");
+    const programacaoFrame = document.getElementById("programacaoFrame");
+    const btnFechar = document.getElementById("btnFechar");
+    const btnProg = document.getElementById("btnProg");
+    const btnEspelhar = document.getElementById("btnEspelhar");
+    const espelharDropdown = document.getElementById("espelharDropdown");
+    const siteFooter = document.getElementById("siteFooter");
+    const searchInput = document.getElementById("searchInput");
+    const canalContainer = document.getElementById("canalContainer");
+
+    const programacaoUrls = {
+      "A&E": "https://mi.tv/br/canais/a-e",
+      "Adult Swim": "https://mi.tv/br/canais/trutv",
+      "AMC": "https://mi.tv/br/canais/amc-brasil",
+      "Animal Planet": "https://mi.tv/br/canais/animal-planet",
+      "Arte1": "https://mi.tv/br/canais/arte-1",
+      "AXN": "https://mi.tv/br/canais/axn",
+      "Band": "https://mi.tv/br/canais/band", 
+      "Band News": "https://mi.tv/br/canais/band-news",
+      "Band Sports": "https://mi.tv/br/canais/bandSports",
+      "BIS": "https://mi.tv/br/canais/bis",
+      "Canal Brasil": "https://mi.tv/br/canais/canal-brasil",
+      "Canção Nova": "https://mi.tv/br/canais/canc-o-nova",
+      "Cartoon Network": "https://mi.tv/br/canais/cartoon",
+      "Cartoonito": "https://mi.tv/br/canais/boomerang",
+      "Cinemax": "https://mi.tv/br/canais/cinemax",
+      "CNN Brasil": "https://mi.tv/br/canais/cnn-brasil",
+      "CNN Brasil Money": "https://abre.ai/jctv-guia",
+      "Combate": "https://mi.tv/br/canais/combate-hd",
+      "Comedy Central": "https://mi.tv/br/canais/comedy-central",
+      "Curta!": "https://mi.tv/br/canais/curta",
+      "Discovery Channel": "https://mi.tv/br/canais/discovery-hd",
+      "Discovery Home & Health": "https://mi.tv/br/canais/discovery-home-health",
+      "Discovery Science": "https://mi.tv/br/canais/discovery-science",
+      "Discovery Theater": "https://mi.tv/br/canais/discovery-theater-hd",
+      "Discovery Turbo": "https://mi.tv/br/canais/discovery-turbo",
+      "Discovery World": "https://mi.tv/br/canais/discovery-world-hd",
+      "ESPN": "https://mi.tv/br/canais/espn",
+      "ESPN 2": "https://mi.tv/br/canais/espn-2",
+      "ESPN 3": "https://mi.tv/br/canais/espn-plus",
+      "ESPN 4": "https://mi.tv/br/canais/fox-sports",
+      "ESPN 5": "https://mi.tv/br/canais/fox-sports-2",
+      "ESPN 6": "https://mi.tv/br/canais/espn-extra",
+      "Fish TV": "https://mi.tv/br/canais/fishtv",
+      "Food Network": "https://mi.tv/br/canais/food-network",
+      "Globo News": "https://mi.tv/br/canais/globo-news-hd",
+      "Globo Nordeste": "https://mi.tv/br/canais/rede-globo-aracaju",
+      "Globo RJ": "https://mi.tv/br/canais/globo-rj",
+      "Globo SP": "https://mi.tv/br/canais/globo-sp",
+      "Globoplay Novelas": "https://mi.tv/br/canais/viva",
+      "Gloob": "https://mi.tv/br/canais/gloob", 
+      "Gloobinho": "https://mi.tv/br/canais/gloobinho", 
+      "GNT": "https://mi.tv/br/canais/gnt", 
+      "HBO": "https://mi.tv/br/canais/hbo", 
+      "HBO 2": "https://mi.tv/br/canais/hbo-2", 
+      "HBO Family": "https://mi.tv/br/canais/hbo-family-hd", 
+      "HBO Mundi": "https://mi.tv/br/canais/max-1", 
+      "HBO Plus": "https://mi.tv/br/canais/hbo-plus-brasil-hd", 
+      "HBO POP": "https://mi.tv/br/canais/max-up", 
+      "HBO Signature": "https://mi.tv/br/canais/hbo-signature", 
+      "HBO Xtreme": "https://mi.tv/br/canais/maxprime", 
+      "HGTV": "https://mi.tv/br/canais/hgtv", 
+      "History": "https://mi.tv/br/canais/history-channel", 
+      "History 2": "https://mi.tv/br/canais/h2", 
+      "Investigação Discovery": "https://mi.tv/br/canais/investigacao-discovery", 
+      "JP News": "https://abre.ai/jctv-guia", 
+      "Lifetime": "https://mi.tv/br/canais/lifetime-brazil", 
+      "Megapix": "https://mi.tv/br/canais/megapix", 
+      "Modo Viagem": "https://mi.tv/br/canais/globosat", 
+      "MTV": "https://mi.tv/br/canais/mtv-brasil", 
+      "MTV 00s": "https://abre.ai/jctv-guia", 
+      "MTV Live": "https://mi.tv/br/canais/mtv-live-hd", 
+      "Multishow": "https://mi.tv/br/canais/multishow", 
+      "Nick Jr.": "https://mi.tv/br/canais/nick-jr", 
+      "Nickelodeon": "https://mi.tv/br/canais/nickelodeon", 
+      "Nosso Futebol": "https://abre.ai/jctv-guia", 
+      "Canal Off": "https://mi.tv/br/canais/off", 
+      "Paramount Network": "https://mi.tv/br/canais/paramount-channel", 
+      "Premiere Clubes": "https://mi.tv/br/canais/premiere-clubes", 
+      "Premiere 2": "https://mi.tv/br/canais/premiere-2", 
+      "Premiere 3": "https://mi.tv/br/canais/premiere-3", 
+      "Premiere 4": "https://mi.tv/br/canais/premiere-4", 
+      "Premiere 5": "https://abre.ai/jctv-guia", 
+      "Premiere 6": "https://mi.tv/br/canais/premiere-6", 
+      "Premiere 7": "https://mi.tv/br/canais/premiere-7", 
+      "Premiere 8": "https://mi.tv/br/canais/premiere-8", 
+      "Prime Box Brazil": "https://mi.tv/br/canais/prime-box-brazil", 
+      "Record News": "https://mi.tv/br/canais/record-news-hd", 
+      "Record News": "https://mi.tv/br/canais/record-news-hd", 
+      "Record": "https://mi.tv/br/canais/record", 
+      "RedeTV!": "https://mi.tv/br/canais/rede-tv", 
+      "RedeTV!": "https://mi.tv/br/canais/rede-tv", 
+      "Sabor & Arte": "https://abre.ai/jctv-guia", 
+      "SBT": "https://mi.tv/br/canais/sbt", 
+      "Sony Channel": "https://mi.tv/br/canais/sony", 
+      "Sony Movies": "https://abre.ai/jctv-guia", 
+      "Space": "https://mi.tv/br/canais/space", 
+      "Sportv": "https://mi.tv/br/canais/sportv", 
+      "Sportv 2": "https://mi.tv/br/canais/sportv-2", 
+      "Sportv 3": "https://mi.tv/br/canais/sportv-3",
+      "SportyNet": "https://abre.ai/jctv-guia", 
+      "SportyNet +1": "https://abre.ai/jctv-guia", 
+      "SportyNet +2": "https://abre.ai/jctv-guia", 
+      "SportyNet +3": "https://abre.ai/jctv-guia", 
+      "Studio Universal": "https://mi.tv/br/canais/studio-universal", 
+      "Telecine Action": "https://mi.tv/br/canais/telecine-action", 
+      "Telecine Cult": "https://mi.tv/br/canais/telecine-cult", 
+      "Telecine Fun": "https://mi.tv/br/canais/telecine-fun", 
+      "Telecine Pipoca": "https://mi.tv/br/canais/telecine-pipoca", 
+      "Telecine Premium": "https://mi.tv/br/canais/telecine-premium", 
+      "Telecine Touch": "https://mi.tv/br/canais/telecine-touch", 
+      "Times Brasil CNBC": "https://abre.ai/jctv-guia", 
+      "TLC": "https://mi.tv/br/canais/tlc", 
+      "TNT": "https://mi.tv/br/canais/tnt", 
+      "TNT Novelas": "https://abre.ai/jctv-guia", 
+      "TNT Séries": "https://mi.tv/br/canais/tnt-series-hd", 
+      "Travel Box Brazil": "https://mi.tv/br/canais/travel-box-brazil", 
+      "TV Evangelizar": "https://abre.ai/jctv-guia",
+      "UFC Fight Pass": "https://abre.ai/jctv-guia", 
+      "Universal TV": "https://mi.tv/br/canais/universal", 
+      "Universal TV": "https://mi.tv/br/canais/universal", 
+      "USA Network": "https://mi.tv/br/canais/syfy", 
+      "Warner TV": "https://mi.tv/br/canais/warner-channel",
+    };
+
+    playerModal.addEventListener("show.bs.modal", function (event) {
+      const card = event.relatedTarget;
+      const src = card.getAttribute("data-src");
+      const title = card.getAttribute("data-title");
+      if (!src) { event.preventDefault(); alert("Este canal ainda não está disponível."); return; }
+      modalPlayer.src = src;
+      document.getElementById("playerModalLabel").textContent = `Reproduzindo: ${title}`;
+      programacaoFrame.src = programacaoUrls[title] || "";
+      programacaoPanel.classList.remove("show");
+      siteFooter.classList.add("d-none");
+    });
+
+    btnFechar.addEventListener("click", () => {
+      const modal = bootstrap.Modal.getInstance(playerModal);
+      if (modal) modal.hide();
+    });
+
+    playerModal.addEventListener("hidden.bs.modal", () => {
+      modalPlayer.src = "";
+      programacaoFrame.src = "";
+      programacaoPanel.classList.remove("show");
+      siteFooter.classList.remove("d-none");
+    });
+
+    btnProg.addEventListener("click", () => { programacaoPanel.classList.toggle("show"); });
+
+    // Toggle dropdown
+    btnEspelhar.addEventListener("click", () => { 
+      espelharDropdown.style.display = espelharDropdown.style.display === "flex" ? "none" : "flex";
+    });
+
+    // === Web Video Cast - compartilhar link via Intent ===
+castOpen.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  const url = modalPlayer.src; // pega o link do player
+  if (!url) {
+    alert("Nenhum vídeo carregado.");
+    return;
+  }
+
+  // Remove https:// do início
+  const cleanUrl = url.replace(/^https?:\/\//, '');
+  
+  // Cria o intent para abrir no Web Video Cast
+  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
+
+  // Tenta abrir o aplicativo diretamente
+  window.location.href = intentLink;
+});
+
+    // Busca de canais
+    searchInput.addEventListener("input", () => {
+      const filter = searchInput.value.toLowerCase();
+      const canais = canalContainer.querySelectorAll(".canal-card");
+      canais.forEach((canal) => {
+        const title = canal.getAttribute("data-title")?.toLowerCase() || "";
+        canal.parentElement.style.display = title.includes(filter) ? "" : "none";
+      });
+    });
+
+    // Bloqueios básicos de devtools
+    function mostrarAlerta() {
+      const tela = document.getElementById("bloqueio");
+      tela.style.display = "block";
+      setTimeout(()=> location.reload(), 1000);
+    }
+    document.addEventListener("keydown", function(e) {
+      const tecla = e.key.toLowerCase();
+      if(e.key === "F12" || (e.ctrlKey && tecla === "u") || (e.ctrlKey && tecla === "s") || (e.ctrlKey && e.shiftKey && ["i","j","c"].includes(tecla))){
+        e.preventDefault(); mostrarAlerta();
+      }
+    });
+    window.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+
+<!-- Tela de Alerta -->
+<div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
+  <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
+  <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
+</div>
+
+<script>
+  // Mostrar o alerta e recarregar após 2 segundos
+  function mostrarAlerta() {
+    const tela = document.getElementById("bloqueio");
+    tela.style.display = "block";
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
+  }
+
+  // Força todos os links a abrirem na mesma aba
+  document.querySelectorAll('a').forEach(link => {
+    link.setAttribute('target', '_self');
+  });
+
+  // Bloqueia ações de desenvolvedor (com alerta)
+  document.addEventListener('keydown', function(e) {
+    const tecla = e.key.toLowerCase();
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && tecla === 'u') ||
+      (e.ctrlKey && tecla === 's') ||
+      (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+    ) {
+      e.preventDefault();
+      mostrarAlerta();
+    }
+  });
+
+  // Bloqueia botão direito (sem alerta)
+  window.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+</script>
+</body>
+</html>
