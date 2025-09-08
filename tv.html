@@ -1615,29 +1615,43 @@
     btnProg.addEventListener("click", () => { programacaoPanel.classList.toggle("show"); });
 
     // Toggle dropdown
-    btnEspelhar.addEventListener("click", () => { 
-      espelharDropdown.style.display = espelharDropdown.style.display === "flex" ? "none" : "flex";
-    });
+btnEspelhar.addEventListener("click", () => { 
+  espelharDropdown.style.display = espelharDropdown.style.display === "flex" ? "none" : "flex";
+});
 
-    // === Web Video Cast - compartilhar link via Intent ===
+// === Web Video Cast - compartilhar link via Intent com token aleatório ===
 castOpen.addEventListener("click", (e) => {
   e.preventDefault();
 
-  const url = modalPlayer.src; // pega o link do player
+  const url = modalPlayer.src;
   if (!url) {
     alert("Nenhum vídeo carregado.");
     return;
   }
 
-  // Remove https:// do início
-  const cleanUrl = url.replace(/^https?:\/\//, '');
-  
-  // Cria o intent para abrir no Web Video Cast
+  // Função para gerar token aleatório de 84 caracteres
+  const gerarToken = (tamanho = 84) => {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+|~-=";
+    let token = "";
+    for (let i = 0; i < tamanho; i++) {
+      token += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return token;
+  };
+
+  const token = gerarToken();
+
+  // Adiciona token ao final do link
+  const videoUrl = url + (url.includes("?") ? "&" : "?") + "token=" + token;
+
+  // Remove https:// do início para criar o Intent
+  const cleanUrl = videoUrl.replace(/^https?:\/\//, '');
+
+  // Cria o Intent para abrir no Web Video Cast
   const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
 
-  // Tenta abrir o aplicativo diretamente
+  // Tenta abrir o aplicativo
   window.location.href = intentLink;
-});
 
     // Busca de canais
     searchInput.addEventListener("input", () => {
