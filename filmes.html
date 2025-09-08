@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JC TV STREAMING</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+body { background: #fff; color: #000; padding: 1rem; }
+/* Centraliza os cards da aba de séries */
+      #seriesTabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      margin-top: 100px; /* espaço para a barra fixa */
+    }
+#seriesTabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; padding: 1rem 0; margin-top: 100px; }
+.series-tab { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background-color: #eee; border-radius: 0.5rem; max-width: 100%; white-space: normal; cursor: pointer; }
+.series-tab img { width: 100%; height: 100%; border-radius: 5px; flex-shrink: 0; }
+.series-tab .card { width: 100px; }
+.card-body p.card-text { white-space: normal !important; word-break: break-word; overflow-wrap: break-word; font-size: 0.75rem; text-align: center; max-height: 6em; line-height: 1.2; }
+#serieInfo { margin-bottom: 1rem; }
+.serie-details { display: flex; gap: 1rem; align-items: flex-start; }
+.serie-details img { width: 100px; height: auto; border-radius: 5px; }
+.serie-details div { flex: 1; }
+#serieInfo h4 { font-size: 1.1rem; }
+#serieInfo p { font-size: 0.95rem; }
+#backButton {
+  display: none;
+  position: fixed;
+  top: 2px;       /* afasta um pouco do topo */
+  right: 0px;      /* afasta um pouco da esquerda */
+  z-index: 1055;
+  background-color: #FFC107;
+  color: #000000;
+  border: none;
+  padding: 8px 10px;    /* menor que antes */
+  border-radius: 10px;   /* menor arredondamento */
+  cursor: pointer;
+  font-weight: bold;     /* Texto em negrito */
+  font-size: 12px;      /* fonte menor */
+  transition: 0.3s ease;
+}
+
+#backButton:hover {
+  background-color: #007BFF;
+  color: #fff;           /* melhora contraste no hover */
+}
+ /* Footer */
+  footer.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: black;
+    color: #fff; /* cor diferente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    font-size: 1rem; /* maior */
+    z-index: 1000;
+  }
+  footer.footer img {
+    height: 30px;
+    width: auto;
+  }
+#centralSearch { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 200px; z-index: 1050; display: flex; flex-direction: column; gap: 8px; }
+#serieSynopsis .synopsis-text { display: block; overflow: hidden; }
+
+/* Ajuste do botão Assistir Agora */
+#assistirBtn {
+  background-color: #FFC107; /* Cor de fundo */
+  color: #000000;             /* Cor do texto */
+  font-size: 1rem;          /* Tamanho da fonte */
+  padding: 0.25rem 1rem;      /* Altura e largura */
+  border-radius: 10px;        /* Borda arredondada */
+  font-weight: bold;           /* Texto em negrito */
+  margin-left: -100px; /* ajusta a posição para a esquerda */
+}
+#assistirBtn:hover {
+  background-color: #007BFF;  /* Cor ao passar o mouse */
+}
+</style>
+</head>
+<body>
+<button id="backButton" class="btn btn-primary btn-lg">Voltar</button>
+
+<div id="centralSearch">
+  <input type="search" id="seriesSearch" class="form-control" placeholder="Pesquisar série...">
+  <select id="categoryFilter" class="form-select">
+    <option value="">Todas as Categorias</option>
+  </select>
+</div>
+
+<ul class="nav nav-tabs d-flex flex-wrap gap-3 mb-3 border-0" id="seriesTabs"></ul>
+
+<div id="serieInfo" class="card p-3 bg-light" style="display:none;">
+  <div class="serie-details">
+    <img id="seriePoster" src="" alt="Poster da Série">
+    <div>
+      <h4 id="serieTitle"></h4>
+      <p id="serieSynopsis" class="mb-0"></p>
+      <p><strong>Categoria:</strong> <span id="serieCategories"></span></p>
+      <p><strong>Linguagem:</strong> <span id="serieLanguage"></span></p>
+
+      <!-- Botão Assistir Central -->
+      <div class="text-center mt-3">
+        <button id="assistirBtn" class="btn btn-primary btn-lg">▶ Assistir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Rodapé institucional após os canais -->
+<div class="col-12 mt-4">
+   <div class="playerButtons" id="serverButtons"></div>
+  <div style="margin-top: 40px; font-size: 0.85rem; color: #000; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <p><br></p>
+    <p></p>
+  </div>
+</div>
+
+<!-- Modal Player -->
+<div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content bg-white text-dark">
+      <div class="modal-header border-0">
+        <h5 id="modalTitle" class="modal-title"></h5>
+        <div class="d-flex gap-2 align-items-center">
+          <div class="dropdown">
+            <button id="castDropdown" type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">📺 Espelhar</button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#" id="castCopy"></a></li>
+              <li><a class="dropdown-item d-flex align-items-center" href="#" id="castOpen">
+              <img src="https://x.gd/gflG1" alt="Web Video Cast" style="width: 18px; height: 18px; margin-right: 8px;">Web Video Cast</a></li>
+            </ul>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+      </div>
+      <div class="modal-body p-0">
+        <iframe id="modalPlayer" width="100%" height="480" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" />
+  <span>JC TV STREAMING © 2025</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const seriesData = {
+      eoventolevou: {
+        name: "...E o Vento Levou (1939)",
+        synopsis: "Scarlett O'Hara é uma jovem mimada que consegue tudo o que quer. No entanto, algo falta em sua vida: o amor de Ashley Wilkes, um nobre sulista que deve se casar com a sua prima Melanie. Tudo muda quando a Guerra Civil americana explode e Scarlett precisa lutar para sobreviver e manter a fazenda da família.",
+        poster: "https://image.tmdb.org/t/p/w500/lY3jrnJAx7msVcnvWF4Jk3AOl4R.jpg",
+        background: "https://image.tmdb.org/t/p/original/4FHcxMtVruMr7ltU2cItWssLjTP.jpg", // imagem para fundo
+        categories: ["Romance"],
+        language: ["Dublado"],
+        seasons: { 1: ["d2a6c2b9f"] }
+      },
+      hackgutrilogy: {
+        name: ".hack//G.U. Trilogy (2007)",
+        synopsis: "Nesta busca por vingança contra Tri-Edge e para acordar Shino de seu coma Haseo procura através do The World como um PKK dos PK. Ele acaba conhecendo uma garoda chamada Atolli que se irrita com sua atitude infantil e ignorante com ela e que acaba se interessando em ajudá-lo em sua busca. E ela acaba despertando feridas antigas devido ao design de seu personagem ser igual ao de Shino. Ele forma novas alianças e tenta descobrir o mistério por trás dos comas que atingem os jogadores e da entidade conhecida como AIDA.",
+        poster: "https://image.tmdb.org/t/p/w500/pWqBAViWtcLxHoO9f1JD17gzpRH.jpg",
+        background: "https://image.tmdb.org/t/p/original/yP7G4z6CYrfRT3mwOYTJpLzeGQo.jpg",
+        categories: ["Anime"],
+        language: ["Legendado"],
+        seasons: { 1: ["4abd25fe2"] }
+      },
+      hackalemdomundo: {
+        name: ".hack//Além do mundo (2012)",
+        synopsis: "Em 2024, as crianças vivem desde o nascimento em um mundo conectado por redes. Uma alegre criança de 14 anos do ginasial chamada Yuuki Sora não têm interesse em jogos, mas seus amigos a fazem entrar no popular mmorpg The World. Entretanto, devido a um certo acontecimento no The World, anomalias começam a ocorrer no mundo real.",
+        poster: "https://image.tmdb.org/t/p/w500/tW9FYOBX6pBWHfDtvwparLrXnag.jpg",
+        background: "https://image.tmdb.org/t/p/original/28BHk7qzkjU3URuSYPSPyXffbuI.jpg",
+        categories: ["Anime"],
+        language: ["Legendado"],
+        seasons: { 1: ["0ad568d62"] }
+      },
+      quinhentosdiascomela: {
+        name: "(500) Dias com Ela (2009)",
+        synopsis: "Um romântico escritor se surpreende quando sua namorada Summer termina o namoro repentinamente. Com isso, ele relembra vários momentos dos 500 dias que passaram juntos para tentar descobrir onde seu caso de amor se perdeu e vai redescobrindo suas verdadeiras paixões.",
+        poster: "https://image.tmdb.org/t/p/w500/wkspryd5Ve93npEge3OFYCRgYwY.jpg",
+        background: "https://image.tmdb.org/t/p/original/1M2i4Mxd03elGOTmEkIvqrHfmyS.jpg",
+        categories: ["Romance"],
+        language: ["Dublado"],
+        seasons: { 1: ["19b422562"] }
+      },
+      desencontroperfeito: {
+        name: "(Des)encontro Perfeito (2015)",
+        synopsis: "Nancy (Lake Bell) tem 34 anos de idade e leva uma vida fracassada no amor. Quando ela viaja a Londres para o aniversário de casamento de seus pais, conhece Jack (Simon Pegg), que confunde Nancy com a garota que ele está esperando para um encontro às cegas. Sem desfazer a confusão, Nancy assume a identidade da garota que Jack esperava, e passa uma ótima noite ao lado do pretendente. Mas uma hora a mentira vai ser descoberta...",
+        poster: "https://image.tmdb.org/t/p/w500/iMyCHKgaTDub1UgzQOZ6r60YdcO.jpg",
+        background: "https://image.tmdb.org/t/p/original/znc4p9S2177ClNnTlJHr1CSOIkB.jpg",
+        categories: ["Romance"],
+        language: ["Dublado"],
+        seasons: { 1: ["69cbd247a"] }
+      },
+      renascer: {
+        name: "(Re)Nascer (2023)",
+        synopsis: "Uma técnica de necrotério reanima com sucesso o corpo de uma menina, mas para mantê-la respirando, ela precisará colher materiais biológicos de mulheres grávidas.",
+        poster: "https://image.tmdb.org/t/p/w500/qjjwYBk21klwdD86bxPro54qqaC.jpg",
+        background: "https://image.tmdb.org/t/p/original/yr7ViN1uLrubY5OXgoSPd8HtAMy.jpg",
+        categories: ["Terror"],
+        language: ["Dublado"],
+        seasons: { 1: ["aa3f61353"] }
+      },
+      recum: {
+        name: "[REC] (2007)",
+        synopsis: "Ao longo de uma noite, uma repórter e seu cameraman acompanham um grupo de bombeiros chamados para resgatar uma mulher presa em um edifício, com resultados apavorantes. Antes de se darem conta, moradores, ajudantes e equipe de resgate são trancados dentro do edifício devido a um vírus desconhecido.",
+        poster: "https://image.tmdb.org/t/p/w500/hJx9gqUJgWXRkFpIbCcNYrkqAQX.jpg",
+        background: "https://image.tmdb.org/t/p/original/xfrguTH6maYiGsC8FXiQ9N3lZXw.jpg",
+        categories: ["Terror"],
+        language: ["Dublado"],
+        seasons: { 1: ["a4658fa71"] }
+      },
+      recdois: {
+        name: "[REC] 2: Possuídos (2009)",
+        synopsis: "Há 15 minutos a polícia não tem qualquer contato com as pessoas que estão presas dentro de um edifício em quarentena. Ninguém sabe o que aconteceu lá dentro. Neste momento, Dr. Owen e uma unidade da SWAT resolvem entrar no prédio para descobrir qual é a situação do local e desenvolver um antídoto através da coleta de sangue da jovem Medeiros.",
+        poster: "https://image.tmdb.org/t/p/w500/83A9LTmRsqmWEfhquZ3cAGoxATp.jpg",
+        background: "https://image.tmdb.org/t/p/original/svZPLmBwYHjlwDwHkZz4EotpXqx.jpg",
+        categories: ["Terror"],
+        language: ["Dublado"],
+        seasons: { 1: ["5ca129408"] }
+      },
+      rectres: {
+        name: "[REC] 3: Gênesis (2012)",
+        synopsis: "A infecção agora está oficialmente fora do prédio. E atinge diretamente a festa de casamento de um casal inocente - na qual os convidados começam a mostrar sinais claros de uma doença terrível. Uma doença que os faz perder a consciência e sentir uma sede incontrolável de sangue.",
+        poster: "https://image.tmdb.org/t/p/w500/uLIyUugRBrJrKPAFw3cC4oY31k0.jpg",
+        background: "https://image.tmdb.org/t/p/original/9FgY5ejI3BlDV9LAkTG2iTX65rq.jpg",
+        categories: ["Terror"],
+        language: ["Dublado"],
+        seasons: { 1: ["d6506fe44"] }
+      },
+      recquatro: {
+        name: "[REC] 4: Apocalipse (2014)",
+        synopsis: "Uma repórter de TV, única sobrevivente de uma epidemia zumbi, é confinada em um barco no meio do mar, onde tentam achar a cura. Mas o perigo se encontra a bordo.",
+        poster: "https://image.tmdb.org/t/p/w500/uUGdIdCl8Fy4TRcXLizRCDPQJ5R.jpg",
+        background: "https://image.tmdb.org/t/p/original/qyFEOqVfnjVFQfZLlStERorrtUf.jpg",
+        categories: ["Terror"],
+        language: ["Dublado"],
+        seasons: { 1: ["2a3fd7fe9"] }
+      },
+      recquatrolegendado: {
+        name: "[REC] 4: Apocalipse (2014)",
+        synopsis: "Uma repórter de TV, única sobrevivente de uma epidemia zumbi, é confinada em um barco no meio do mar, onde tentam achar a cura. Mas o perigo se encontra a bordo.",
+        poster: "https://image.tmdb.org/t/p/w500/nlSSZNESHkY1iPzYnpcRvYUr7Mz.jpg",
+        background: "https://image.tmdb.org/t/p/original/948zJq2BoP48IuueUz3UpJyoagI.jpg",
+        categories: ["Terror"],
+        language: ["Legendado"],
+        seasons: { 1: ["e7c2c4ce3"] }
+      },
+      alive: {
+        name: "#Alive (2020)",
+        synopsis: "Um vírus terrível destrói a cidade, e um homem se tranca no apartamento para sobreviver. Desconectado do mundo, ele tenta desesperadamente encontrar uma saída.",
+        poster: "https://image.tmdb.org/t/p/w500/fUEv9INjh1HEdbD9BAExioSO65a.jpg",
+        background: "https://image.tmdb.org/t/p/original/k2SY15W9QXH9qL8f4a4BbytV1BE.jpg",
+        categories: ["Terror"],
+        language: ["Dublado"],
+        seasons: { 1: ["34bae61d1"] }
+      },
+      comvocevolum: {
+        name: "#ComVocê: Volume: 1 (2021)",
+        synopsis: "O conceito é bastante simples: usando um aparelho smartphone ou qualquer outro recurso disponível, várias histórias foram registradas ao longo dos dias de isolamento provocado pela pandemia da COVID-19. Cada segmento traz um ponto de vista único, mostrando como as vidas das pessoas passaram por mudanças e o público pode acompanhar eventos reais sob a ótica de pessoas de diferentes origens e classes durante tempos complexos sem contato social.",
+        poster: "https://image.tmdb.org/t/p/w500/dEgBV4Tuo9jFZh7rFiQEbiY91sT.jpg",
+        background: "https://image.tmdb.org/t/p/original/okGPsMjrqCWGIPJUZs751lzOvqv.jpg",
+        categories: ["Comédia","Drama"],
+        language: ["Dublado"],
+        seasons: { 1: ["8042e6c01"] }
+      },
+      hashtaghorror: {
+        name: "#Horror (2015)",
+        synopsis: "Inspirado em fatos reais, um grupo de garotas de 12 anos de idade enfrenta uma noite de horror quando um vício compulsivo por um jogo online de uma rede social, transforma um momento de cyber-bullying em uma noite de insanidade.",
+        poster: "https://image.tmdb.org/t/p/w500/v9pTHwhpSWmPHU8i1pEt9VIG9Kg.jpg",
+        background: "https://image.tmdb.org/t/p/original/izCwWpstY7LAm6eXIKliXACs6sK.jpg",
+        categories: ["Terror"],
+        language: ["Dublado"],
+        seasons: { 1: ["fedce1243"] }
+      },
+      hashtagnatal: {
+        name: "#Natal (2022)",
+        synopsis: "Para entrar em um concurso de design, Jen conta com a ajuda de seu melhor amigo, Max, e de seu sobrinho para inventar a família perfeita, mas nem tudo sai como esperado.",
+        poster: "https://image.tmdb.org/t/p/w500/l0lH0hvU0XcPfhyRKydGjRKmXtf.jpg",
+        background: "https://image.tmdb.org/t/p/original/gRS55xRFpgPX2RKeFTTFIvJmA0f.jpg",
+        categories: ["Romance"],
+        language: ["Dublado"],
+        seasons: { 1: ["dabfe3667"] }
+      },
+      hashtagnudes: {
+        name: "#NUDES (2018)",
+        synopsis: "Leo (Guily Machovec) e Maysa (Yolanda de Paulo) são um casal enfrentando problemas no seu relacionamento. Eles então começam a sair com Adélia (Gabriela Pimenta) e Heitor (Vini Hideki), um casal que acabaram de conhecer, e essa união muda completamente suas vidas e a dinâmica que eles têm como casal.",
+        poster: "https://image.tmdb.org/t/p/w500/f463CTemzbWdAMYTYfkG5rnB2Wg.jpg",
+        background: "https://image.tmdb.org/t/p/original/1MbFbg2Zz8jRUQEdBs6BcxhCfQl.jpg",
+        categories: ["Comédia","Nacional"],
+        language: ["Idioma Original"],
+        seasons: { 1: ["68d9316fb"] }
+      },
+      hashtagpartiufama: {
+        name: "#PartiuFama: Cancelado no Amor (2022)",
+        synopsis: "Gabriel sempre sonhou em ser famoso, mas sua timidez não permitia nem que ele falasse com Bianca, sua paixão de infância. Depois de reprogramar seu passado, ele se torna popular na escola. Mesmo assim, seus vídeos não viralizam. Quando decide prestar atenção nas histórias de um cliente do boteco de seu pai, que relata suas desventuras na juventude, Gabriel passa a gravar vídeos contando estas histórias como se fossem suas e se torna um youtuber de sucesso, mas as coisas fogem de controle.",
+        poster: "https://image.tmdb.org/t/p/w500/24eEIEi7bgGmNDnsfkC6FAQTF8.jpg",
+        background: "https://image.tmdb.org/t/p/original/gYx3o2OD8UNZV76rTJXRevKvkRZ.jpg",
+        categories: ["Comédia","Nacional"],
+        language: ["Dublado"],
+        seasons: { 1: ["2e942bde3"] }
+       },
+      hashtagautorealidade: {
+        name: "#Alto Realidade (2017)",
+        synopsis: "Dani Barnes (Nesta Cooper) é uma jovem nerd percorrendo um grande sonho de ser aceita na UC Davis, a melhor universidade veterinária do mundo. Mas seus planos podem ir por água abaixo quando ela finalmente chama a atenção do garoto que ela estavam afim: a namorada dele, uma celebridade nas redes sociais, despertou sua fúria por Dani.",
+        poster: "https://image.tmdb.org/t/p/w500/iZliPeiiDta9KbONAhdFSXhTxrO.jpg",
+        background: "https://image.tmdb.org/t/p/original/smgZYp49OB6xo4hZewxzryrh5xN.jpg",
+        categories: ["Comédia"],
+        language: ["Dublado"],
+        seasons: { 1: ["7b08203cf"] }
+       },
+      hashtagseacabodiariodascampeas: {
+        name: "#SeAcabó: Diário das Campeãs (2024)",
+        synopsis: "A seleção espanhola se reúne pela primeira vez para relembrar a turbulenta Copa do Mundo Feminina de 2023 e o beijo que ofuscou a vitória.",
+        poster: "https://image.tmdb.org/t/p/w500/AbhsO718qA8qeHyF00FsvG7vt3f.jpg",
+        background: "https://image.tmdb.org/t/p/original/8pSb6TrJp1RIW8wd6p5Tm1CLzd8.jpg",
+        categories: ["Documentário","Lançamento (2024)"],
+        language: ["Dublado"],
+        seasons: { 1: ["4f3080bad"] }
+       },
+      hashtagsemsaida: {
+        name: "#SemSaída (2020)",
+        synopsis: "Uma personalidade das redes sociais viaja com seus amigos para Moscou para gravar novo conteúdo para os seus seguidores. Sempre excedendo seus limites em busca de uma nova audiência, eles entram em um mundo frio de mistério, excesso e perigoso. Quando as linhas entre vida real e rede social ficam borradas, o grupo deve lutar para escapar e sobreviver.",
+        poster: "https://image.tmdb.org/t/p/w500/fUCIj47O9v5zktS81hRWktUVnSR.jpg",
+        background: "https://image.tmdb.org/t/p/original/2Xh3Q0LLir3a2Ss0ASuEMgiz4Qv.jpg",
+        categories: ["Terror"],
+        language: ["Dublado"],
+        seasons: { 1: ["8c5da2e90"] }
+       },
+      maisvelozesmaisfuriosos: {
+        name: "+ Velozes + Furiosos (2003)",
+        synopsis: "O ex-policial Brian comete uma grande traição, juntando-se a um amigo ex-presidiário no transporte de dinheiro sujo para uma importadora-exportadora muito suspeita.",
+        poster: "https://image.tmdb.org/t/p/w500/mx0CB8H78PQu0g9YUWG47hdi93S.jpg",
+        background: "https://image.tmdb.org/t/p/original/z3ioibdjWZOYeXjoiabFOFOfPI3.jpg",
+        categories: ["Ação", "Crime"],
+        language: ["Dublado"],
+        seasons: { 1: ["616192b01"] }
+       },
+      zerrozeroseteum: {
+        name: "007 Contra o Satânico Dr. No (1962)",
+        synopsis: "James Bond investiga o desaparecimento de um agente britânico. Em meio às suas investigações ele descobre o esconderijo do Dr. No, um gênio louco que pretende desviar o rumo dos foguetes americanos.",
+        poster: "https://image.tmdb.org/t/p/w500/zJPZPtBqPSN73m6UmpS7uTTOZSo.jpg",
+        background: "https://image.tmdb.org/t/p/original/ptcXbbxTyjHfEE4d4QocNP0YQct.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["ef438cbc3"] }
+       },
+      zerrozerosetedois: {
+        name: "Moscou Contra 007 (1963)",
+        synopsis: "James Bond é incumbido de ajudar uma bela agente soviética a fugir de seu país para então tentar recuperar uma leitora de códigos na embaixada russa, em Londres. Porém, Bond não sabe que a temível organização criminosa Spectre organizou esta armadilha no intuito de executá-lo.",
+        poster: "https://image.tmdb.org/t/p/w500/x06hUBmBeExMSs4Zot2V8Y3R24t.jpg",
+        background: "https://image.tmdb.org/t/p/original/8JMiQa0OqsCYvbNUrQIrMzwV7g2.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["8bdbc0b40"] }
+       },
+      zerrozerosetetres: {
+        name: "007 Contra Goldfinger (1964)",
+        synopsis: "James Bond é encarregado de espionar Goldfinger, um poderoso milionário cujas remessas de ouro espalhadas por diversos países podem esconder ações criminosas. Após ser capturado, Bond descobre que o plano de Goldfinger é bem maior do que ele imaginava: Goldfinger pretende roubar nada mais nada menos do que as reservas americanas de ouro, guardadas no Forte Knox.",
+        poster: "https://image.tmdb.org/t/p/w500/aSFbyik1bd3xQxyPQbahdcaCYwT.jpg",
+        background: "https://image.tmdb.org/t/p/original/f1Is9VLQZSRpeLMU7mIcj5aXclt.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["214d92542"] }
+       },
+      zerozerosetequatro: {
+        name: "007 Contra a Chantagem Atômica (1965)",
+        synopsis: "James Bond 'Sean Connery' tenta evitar a destruição de Miami por meio de uma super bomba, roubada pela SPECTRE. A organização está exigindo um pagamento de 100 milhões de dólares em diamantes para não cumprir a ameaça de explodir a cidade. Para isso, ele vai correr contra o tempo para encontrar as armas roubadas e impedir a morte de milhões de inocentes.",
+        poster: "https://image.tmdb.org/t/p/w500/ot8pEGo9Mljwkz7Ak8hv4qjBmsu.jpg",
+        background: "https://image.tmdb.org/t/p/original/7DLCXCQx52YLle1qTokrjROTwVV.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["216d66ce4"] }
+       },
+      zerozerosetecinco: {
+        name: "Com 007 Só Se Vive Duas Vezes (1967)",
+        synopsis: "Durante uma missão de rotina no espaço, uma nave americana desaparece misteriosamente da sua órbita. Os americanos suspeitam dos soviéticos e pensam em uma retaliação. No entanto, os ingleses se mantêm mais cautelosos, após existirem possibilidades da nave ter pousado perto do Mar do Japão. Assim, James Bond 'Sean Connery' vai investigar o caso, mas quando os soviéticos perdem uma espaçonave nas mesmas circunstâncias, Bond tem poucos dias para resolver esta missão e evitar a Terceira Guerra Mundial.",
+        poster: "https://image.tmdb.org/t/p/w500/oUXRXL8z6Ia4RtBTnrN11WppxRa.jpg",
+        background: "https://image.tmdb.org/t/p/original/cpZAXIYA0lkZMpAt7d1MmH8ojNV.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["71deb3c2e"] }
+       },
+      zerozeroseteseis: {
+        name: "007 A Serviço Secreto de Sua Majestade (1969)",
+        synopsis: "Em uma praia, James Bond 'George Lazenby' evita que uma jovem mulher cometa suicídio. O pai dela é o chefe de uma poderosa organização criminosa e, impressionado com Bond, quer que ele proteja sua filha se casando com ela. Em troca, ele oferece ao famoso agente informações que o façam chegar até Ernst Blofeld 'Telly Savallas', o principal inimigo do agente. Inicialmente, James Bond concorda com o acordo, visando apenas poder matar Blofeld, mas com o tempo ele realmente fica apaixonado pela sua futura esposa. Porém, James Bond logo descobre que Blofeld planeja destruir a humanidade com um vírus altamente mortal a menos que receba perdão por todos os seus crimes. Desta maneira, a Rainha da Inglaterra pede que o agente secreto mais famoso do mundo intervenha no caso, mas a situação se complica e toma um rumo inesperado.",
+        poster: "https://image.tmdb.org/t/p/w500/8lj09OvXpSgPTSHWOJ7AerBemDS.jpg",
+        background: "https://image.tmdb.org/t/p/original/58pMrmwwcKamJIdjUlinE6QX1Fs.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["08612a08d"] }
+       },
+      zerozerosetesete: {
+        name: "007 Os Diamantes São Eternos (1971)",
+        synopsis: "Quando o governo britânico suspeita da existência de uma rede mundial de contrabando de diamantes, 007 'Sean Connery' é chamado para investigar. Ele logo descobre a extensão do problema e viaja para a América, onde o milionário proprietário de um cassino é suspeito de estar por trás de tudo. Só que ele é ninguém menos que Ernst Stavro Blofeld 'Charles Gray', o arquiinimigo de James Bond, que sabe exatamente o que tem de fazer, principalmente quando as mais poderosas potências nucleares do planeta estão envolvidas.",
+        poster: "https://image.tmdb.org/t/p/w500/n0UhYapEWDcrgDgKvRKHZMyv4z6.jpg",
+        background: "https://image.tmdb.org/t/p/original/htEoTYfgURlBmIkMdZlMkSI4XPF.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["0cc635752"] }
+       },
+      zerozeroseteoito: {
+        name: "Com 007 Viva e Deixe Morrer (1973)",
+        synopsis: "O tráfico de heroína e a morte de agentes secretos colocam frente a frente James Bond 'Roger Moore' e Mr. Big 'Yaphet Kotto', o chefão do crime em Nova York. Sua organização age impulsionada pelas visões de Solitaire 'Jane Seymour', uma cartomante com poderes especiais. Quando conhece Bond, Solitaire perde os seus poderes e é condenada a morte em um ritual vudu.",
+        poster: "https://image.tmdb.org/t/p/w500/oxPPkImbyUCNvdhHf1zO4S1ayKd.jpg",
+        background: "https://image.tmdb.org/t/p/original/hzmmXx6UeYQeylioNbliFKjSbV7.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["2fdb86397"] }
+       },
+      zerozerosetenove: {
+        name: "007 Contra o Homem com a Pistola de Ouro (1974)",
+        synopsis: "Quando uma bala de ouro chega ao quartel-general da inteligência britânica com um 007 gravado nela, se acredita que James Bond 'Roger Moore' será o próximo alvo de um assassino profissional Christopher Lee que cobra um milhão de dólares por serviço. Assim, Bond vai investigar a situação e acaba descobrindo que o objetivo do matador internacional seqüestrar um cientista, que inventou um conversor solar capaz de resolver a crise de energia no planeta.",
+        poster: "https://image.tmdb.org/t/p/w500/rqC546GsvQqNEM4Tmlw6y132Dst.jpg",
+        background: "https://image.tmdb.org/t/p/original/3tpNEbRahT8smy7RraaWa0xg9Gv.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["16b777d31"] }
+       },
+      zerozerosetedez: {
+        name: "007 O Espião Que Me Amava (1977)",
+        synopsis: "A Inglaterra descobre que alguém sabe como rastrear um submarino submerso e está oferecendo esta tecnologia para quem pagar mais alto. Uma crise internacional tem início quando um submarino com dezesseis mísseis nucleares desaparece, enquanto fazia uma patrulha. O agente secreto 007 'Roger Moore' é incumbido de investigar o caso e recuperar as ogivas antes que sejam disparadas e, para isto, recebe a ajuda de uma bela e sensual agente soviética 'Barbara Bach'.",
+        poster: "https://image.tmdb.org/t/p/w500/l7qtdY0f2q14U41wb7Y755RCCEx.jpg",
+        background: "https://image.tmdb.org/t/p/original/8lRdfsmJjUXQU3DMOOB3vVIhJxP.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["2fbe37547"] }
+       },
+      zerozeroseteonze: {
+        name: "007 Contra o Foguete da Morte",
+        synopsis: "Um avião carregando um foguete espacial sofre um acidente. Mas quando o Serviço Secreto Britânico vai examinar os destroços, não encontra nenhum vestígio da espaçonave. Assim, James Bond Roger Moore tem a missão de investigar o caso e começa indo visitar o multimilionário que construiu a aeronave e tem idéias bastantes estranhas de qual deva ser o destino da raça humana.",
+        poster: "https://image.tmdb.org/t/p/w500/qLWSt8edXmWG55I16DJt5VtXsR3.jpg",
+        background: "https://image.tmdb.org/t/p/original/mrDC5DLx2wljt4HZGwgkmqlzfcF.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["2d4d9dacf"] }
+       },
+      zerozerosetedoze: {
+        name: "007 Somente para Seus Olhos (1981)",
+        synopsis: "Quando um navio britânico é afundado em águas estrangeiras, as superpotências mundiais começam uma corrida desesperada para achar sua carga: Um sistema submarino de controle nuclear. E James 'Bond Roger Moore' é lançado a uma de suas mais eletrizantes aventuras ao participar da procura... E evitar a devastação mundial!",
+        poster: "https://image.tmdb.org/t/p/w500/v3TFKkWFgsQcBvN29s1P7meOt2j.jpg",
+        background: "https://image.tmdb.org/t/p/original/z7Jp7HAsY7MqXzPYzTjJnmOQk2r.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["3371f11ad"] }
+       },
+      zerozerosetetreze: {
+        name: "007 Contra Octopussy (1983)",
+        synopsis: "Ao tentar solucionar quem assassinou o agente 009 'Andy Bradford', James Bond 'Roger Moore' resolve seguir uma pista de uma jóia Fabergé roubada do Kremlin, que aparece em uma famosa casa de leilões de Londres. O agente 007 acredita que esta jóia pode ser a chave para solucionar o mistério, pois o agente morto foi encontrado com um Fabergé falso.",
+        poster: "https://image.tmdb.org/t/p/w500/orK0ZbPR6teSzBH2ZsWlVY4m5GL.jpg",
+        background: "https://image.tmdb.org/t/p/original/xTS1qCmhzH3vq7cuextO5vQA6eW.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["820e35ec0"] }
+       },
+      zerozerosetequatorze: {
+        name: "007: Nunca Mais Outra Vez (1983)",
+        synopsis: "James Bond 'Sean Connery' é convocado para reaver bombas nucleares roubadas pela Spectre, uma terrível organização criminosa que pretende lançá-las em cidades americanas. Mas terá que enfrentar uma sexy assassina profissional, contratada especialmente para eliminá-lo.",
+        poster: "https://image.tmdb.org/t/p/w500/uULahg7URW4DjPq0fANgHEw1uHC.jpg",
+        background: "https://image.tmdb.org/t/p/original/45uCcAUB8Ljz3uKb1y1JHtT5aCT.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["401e77dee"] }
+       },
+      zerozerosetequinze: {
+        name: "007 Na Mira dos Assassinos (1985)",
+        synopsis: "O magnata Max Zorin 'Christopher Walken' pretende controlar o mercado de informática. Ele resolve arquitetar um louco plano, no qual milhares de pessoas vão morrer para ficar ainda mais rico. Após retornar da sua viagem na União Soviética com um chip de computador, James Bond 'Roger Moore' precisa investigar as indústrias de Zorin e tentar impedir que o vilão realize os seus planos.",
+        poster: "https://image.tmdb.org/t/p/w500/mlv7UVryoJ3CiHrtNfL5bddiZez.jpg",
+        background: "https://image.tmdb.org/t/p/original/QKepTHybC1gJO8BJls63jKmLib.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["0848f7a60"] }
+       },
+      zerozerosetedezeseis: {
+        name: "007 Marcado para a Morte (1987)",
+        synopsis: "Georgi Koskov (Jeroen Krabbé), um general dissidente da União Soviética, escapa da Cortina de Ferro com a ajuda de James Bond 'Timothy Dalton', mas logo é recapturado através de uma sensacional missão de resgate, que transforma o Serviço Secreto Inglês em uma grande chacota. A partir de então, 007 assume o caso e vê fatos surpreendentes ao conhecer Kara Milovy 'Maryam d'Abo', uma violoncelista tcheca com quem se envolve. Bond acaba descobrindo uma grande trama ligada a Brad Whitaker 'Joe Don Baker', um grande comerciante de armamento bélico.",
+        poster: "https://image.tmdb.org/t/p/w500/x0pqZMotd2S4JknksLkK8red6Zh.jpg",
+        background: "https://image.tmdb.org/t/p/original/hZwFWGM3Clpvenxb137C82eODOg.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["2ff6ee452"] }
+       },
+      zerozerosetedezesete: {
+        name: "007: Permissão para Matar (1989)",
+        synopsis: "James Bond desobedece ordens e parte em uma missão para vingar a morte da mulher de seu melhor amigo, assassinada por um chefão das drogas. Ele chega à base sul-americana do narcotraficante e, disfarçado de pistoleiro, é contratado pelo criminoso.",
+        poster: "https://image.tmdb.org/t/p/w500/cTRASi09SKtyzWrjmakEW3196IB.jpg",
+        background: "https://image.tmdb.org/t/p/original/542y97Wv0i01MVpzzaNNHUAvplA.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["1eabbea2a"] }
+       },
+      zerozerosetedezoito: {
+        name: "007 Contra GoldenEye (1995)",
+        synopsis: "James Bond precisa impedir que o controle do poderoso satélite GoldenEye, capaz de causar pane em qualquer equipamento eletrônico do mundo, caia em mãos erradas. Para isso, contará com a ajuda da bela especialista em computação Natalya Siminova.",
+        poster: "https://image.tmdb.org/t/p/w500/gp8jxHD3Yk4zeizXhlcQpJxls3u.jpg",
+        background: "https://image.tmdb.org/t/p/original/vm7yMg7YiYisMSeO3mUC5NUKbSB.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["b384f0876"] }
+       },
+      zerozerosetedezenove: {
+        name: "007 O Amanhã Nunca Morre (1997)",
+        synopsis: "James Bond descobre que o magnata da mídia Elliot Carver colocou em prática um plano para manipular as superpotências e expandir seus negócios. O agente deve impedir que essa ideia doentia provoque uma nova guerra mundial.",
+        poster: "https://image.tmdb.org/t/p/w500/bli11OpEc4jtNfRwPOdG1uiL6qB.jpg",
+        background: "https://image.tmdb.org/t/p/original/fesAgiKA0pc04vScDTAQe1f9nd4.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["20ccab849"] }
+       },
+      zerozerosetevinte: {
+        name: "007 O Mundo Não é o Bastante (1999)",
+        synopsis: "James Bond deve proteger Elektra King, filha de um magnata do petróleo que foi brutalmente assassinado. O agente secreto é encarregado de manter Elektra longe do lunático terrorista Renard, que deseja assumir o controle do petróleo de todo o mundo.",
+        poster: "https://image.tmdb.org/t/p/w500/hhdLmdw0o2weP64g8w4LvPNs3G0.jpg",
+        background: "https://image.tmdb.org/t/p/original/n2jVDMcBEWsLFooO7W1ZkcMUtWS.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["f1c62b9b9"] }
+       },
+      zerozerosetevinteum: {
+        name: "007 Um Novo Dia para Morrer (2002)",
+        synopsis: "Após se libertar de uma prisão na Coréia do Norte, James Bond entra em ação para perseguir o maligno Gustav Graves, que está desenvolvendo uma arma de alta tecnologia capaz de colocar o mundo em risco.",
+        poster: "https://image.tmdb.org/t/p/w500/p5XYHwDfsOjItfYQAOlLwMZYb3d.jpg",
+        background: "https://image.tmdb.org/t/p/original/ibJEhfV4CudcL3iaUgvhkBrfMCO.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["8f670dac4"] }
+       },
+      zerozerosetevintedois: {
+        name: "007 Cassino Royale (2006)",
+        synopsis: "Depois de obter o status 00 e uma licença para matar, o agente secreto James Bond parte em sua primeira missão como 007. Bond precisa derrotar um banqueiro privado que financia terroristas em um jogo de pôquer de alto risco no Casino Royale, Montenegro.",
+        poster: "https://image.tmdb.org/t/p/w500/7b3qmLlvm2lvJ2gxsKQ42S3RTKR.jpg",
+        background: "https://image.tmdb.org/t/p/original/kjC48HRQpojr3FHx5pZF7Ro9xFg.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["dd173b674"] }
+       },
+      zerozerosetevintetres: {
+        name: "007 Quantum of Solace (2008)",
+        synopsis: "Após a morte de Vesper Lynd, James Bond faz com que sua próxima missão seja pessoal. A caçada àqueles envolvidos na morte da mulher de sua vida o leva ao encontro do cruel empresário Dominic Greene, que faz parte da organização que coagiu Vesper. Bond descobre que Greene planeja obter o controle total de um recurso natural vital e deve enfrentar perigo e traição para frustrar o plano.",
+        poster: "https://image.tmdb.org/t/p/w500/fV0ejyUsnqd8BzHcK13C7ZJFEa1.jpg",
+        background: "https://image.tmdb.org/t/p/original/1tW2fJCE6vb7lAbBMOs3eYMuA7X.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["71b3736ca"] }
+       },
+      zerozerosetevintequatro: {
+        name: "007 Operação Skyfall (2012)",
+        synopsis: "Após uma missão mal sucedida de James Bond, a identidade de agentes secretos é revelada e o M16, atacado. Ajudado por um agente de campo, Bond deverá seguir a trilha de Silva, um homem que habita o passado de M e que tem contas a acertar.",
+        poster: "https://image.tmdb.org/t/p/w500/dMquqnvnvwuugB5z8zP7uyyNYUl.jpg",
+        background: "https://image.tmdb.org/t/p/original/uMTSR1Ezeb2Qws1X7X7nvLFBJtB.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["a3b59874a"] }
+       },
+      zerozerosetevintecinco: {
+        name: "007 Contra Spectre (2015)",
+        synopsis: "James Bond chega à Cidade do México e está pronto para eliminar Marco Sciarra sem que o chef M saiba da missão. O caso leva à suspensão temporária do agente, que passa a ser constantemente vigiado pelo governo britânico graças a uma tecnologia implantada em seu corpo por Q. Na tentativa de despistar os inimigos e até mesmo alguns de seus parceiros de trabalho, ele se responsabiliza por ajudar a filha de um desafeto. Toda a situação o leva ao centro de uma temida organização denominada Spectre.",
+        poster: "https://image.tmdb.org/t/p/w500/ozwsRvKABRcF8VrNNvMkKt8KWyF.jpg",
+        background: "https://image.tmdb.org/t/p/original/8lBViysvNJBPkl6zG1LVAaW3qhj.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["c30404f9d"] }
+       },
+      zerozerosetevinteseis: {
+        name: "007: Sem Tempo para Morrer (2021)",
+        synopsis: "Bond deixou o serviço ativo e está desfrutando de uma vida tranquila na Jamaica. Sua paz é interrompida quando o seu velho amigo Felix Leiter, da CIA, aparece pedindo sua ajuda. A missão de resgatar um cientista sequestrado acaba sendo muito mais difícil do que o esperado, deixando Bond no caminho de um vilão misterioso e armado com uma nova tecnologia perigosa.",
+        poster: "https://image.tmdb.org/t/p/w500/luE0KG1rWfUptbgNtlNtL5sihyd.jpg",
+        background: "https://image.tmdb.org/t/p/original/sAlir1UOMUkp0X6yIwZHcZ0DuRb.jpg",
+        categories: ["Aventura", "Ação"],
+        language: ["Dublado"],
+        seasons: { 1: ["9d122c9a1"] }
+       },
+      zerozeronoverecyborg: {
+        name: "009 Re:Cyborg (2012)",
+        synopsis: "Nove seres humanos normais de diferentes partes do mundo são sequestrados e transformados em ciborgues com poderes surpreendentes, criados com o propósito de serem usados como armas. Os nove ciborgues rebeldes começam a lutar contra os seus criadores, em nome da justiça e da paz no mundo. Décadas mais tarde, os nove ciborgues aparecem sem alterações pelo tempo, mas eles vivem em um mundo onde a “justiça” tem tantas nuances quanto o número de pessoas que vivem no planeta. Qual será o lugar deles no mundo agora?",
+        poster: "https://image.tmdb.org/t/p/w500/eBaUVUNAWSOg70TMl7o9K3qSgYO.jpg",
+        background: "https://image.tmdb.org/t/p/original/pfdCuGOx2mJuDDtRoUMxNle4R5M.jpg",
+        categories: ["Anime"],
+        language: ["Legendado"],
+        seasons: { 1: ["2e67dd486"] }
+       },
+      umcontratodos: {
+        name: "1 Contra Todos: O Filme (2016)",
+        synopsis: "Cadu, um advogado honesto do interior de São Paulo, esta prestes a ser pai pela segunda vez. Porém, sua vida é totalmente transformada quando ele cai em uma armadilha e a polícia encontra uma tonelada de maconha em sua casa. Revoltado com a injustiça, ele passa a agir como chefe de um cartel de drogas, exatamente do que o acusaram, diante dos bandidos e assassinos do presídio.",
+        poster: "https://image.tmdb.org/t/p/w500/dwLLqTWXWdD8CFWXdlmemxWPYas.jpg",
+        background: "https://image.tmdb.org/t/p/original/w7yH5aLzPTvKEkn2RFseSUp6imy.jpg",
+        categories: ["Drama"],
+        language: ["Idioma Original"],
+        seasons: { 1: ["3e9aa440a"] }
+       },
+      umcontratodosdois: {
+        name: "1 Contra Todos 2: O Filme (2017)",
+        synopsis: "Cadu 'Júlio Andrade' é um exemplo de cidadão, um advogado dedicado que preza a verdade e a justiça acima de tudo. Sua amplitude moral, no entanto, acaba fazendo com que perca o emprego. Como se não bastasse, ele é confundido com o maior traficante do Brasil, indo para a cadeia. Ao chegar lá, decide manter a mentira para aumentar suas chances de sobrevivência, arrastando consigo a esposa Malu 'Júlia Lanina', grávida do segundo filho do casal.",
+        poster: "https://image.tmdb.org/t/p/original/j3LiSj9xsEPEU4YeXq2t272gsZE.jpg",
+        background: "https://image.tmdb.org/t/p/original/eZwXL29qElmELz04gV15BoqlkUD.jpg",
+        categories: ["Drama"],
+        language: ["Idioma Original"],
+        seasons: { 1: ["c8dbddab9"] }
+       },
+      dezcoisasparafazerantesdeseparar: {
+        name: "10 Coisas Que Deveríamos Fazer Antes de Nos Separar (2020)",
+        synopsis: "Em 10 Coisas que Deveríamos Fazer Antes de Nos Separar, Abigail (Christina Ricci) conhece Benjamin (Hamish Linklater) no bar e iniciam uma conversa cômica sobre o que fariam antes de se separar – caso fossem casados. O que era uma brincadeira, acaba se tornando realidade quando os dois passam a noite juntos e Abigail fica grávida.",
+        poster: "https://image.tmdb.org/t/p/w500/bS1rZqjcvk3WPCXVBgHeDY6FVRC.jpg",
+        background: "https://image.tmdb.org/t/p/original/gibelK8BHbR6ldonfgChgUfUgUr.jpg",
+        categories: ["Romance"],
+        language: ["Dublado"],
+        seasons: { 1: ["bc3df4996"] }
+       },
+      dezcoisasqueeuodeioemvoce: {
+        name: "10 Coisas Que Eu Odeio em Você (1999)",
+        synopsis: "Em seu primeiro dia na nova escola, Cameron se apaixona por Bianca. Mas ela só poderá sair com rapazes até que Kat, sua irmã mais velha, arrume um namorado. O problema é que ela é insuportável. Cameron, então, negocia com o único garoto que talvez consiga sair com Kat – um misterioso bad-boy com uma péssima reputação.",
+        poster: "https://image.tmdb.org/t/p/w500/sSr6OheCylo2rlt4Ko9OWwcmu3n.jpg",
+        background: "https://image.tmdb.org/t/p/original/yvPbncYhMu9FfTjDhq0N5lgnVkO.jpg",
+        categories: ["Romance"],
+        language: ["Dublado"],
+        seasons: { 1: ["db8f3d950"] }
+       },
+      dezdiasdeumhomembom: {
+        name: "10 Dias de um Homem Bom (2023)",
+        synopsis: "Sadık (Nejat Isler) é um homem de grande integridade e força vital, além disso, sempre esteve muito empenhado em ajudar o próximo, por isso, começou a trabalhar como advogado. No entanto, com o tempo, ele decidiu se tornar um investigador particular em uma pequena cidade da Turquia. Lá ele tenta buscar justiça em um mundo cheio de bandidos, traficantes de pessoas e assassinos. Quando um caso sobre várias pessoas desaparecidas chega até ele, quatro mulheres muito diferentes cruzarão seu caminho. Todos eles têm muitos problemas que ele tentará resolver.",
+        poster: "https://image.tmdb.org/t/p/w500/ihMCcc0vBQQyphiaoyoTvpJlTPi.jpg",
+        background: "https://image.tmdb.org/t/p/original/72Cz99QcfnlcyUy7PePQZISVxxr.jpg",
+        categories: ["Crime","Drama"],
+        language: ["Dublado"],
+        seasons: { 1: ["870ff295d"] }
+       },
+      dezdiasdeumhomemmal: {
+        name: "10 Dias de um Homem Mau (2023)",
+        synopsis: "Um detetive privado desgastado, destroçado e enlutado tem de desenredar à força um emaranhado de mentiras para descobrir a verdade por detrás de um homicídio numa mansão.",
+        poster: "https://image.tmdb.org/t/p/w500/fl0vUwiKyxEauecs9UCh8cGRzZH.jpg",
+        background: "https://image.tmdb.org/t/p/original/sil4GzTAvmxFWqsp5FWZcG7adtS.jpg",
+        categories: ["Crime","Drama"],
+        language: ["Dublado"],
+        seasons: { 1: ["7c4cb58d6"] }
+       },
+      dezdiasdeumhomemcurioso: {
+        name: "10 Dias de um Homem Curioso (2024)",
+        synopsis: "Depois que uma jovem desaparece em Istambul, um escritor entediado em busca de uma boa história decide procurá-la e acaba se envolvendo em um caso perigoso.",
+        poster: "https://image.tmdb.org/t/p/w500/oYfKed3vI58cNN86OxDZ1Ryrgft.jpg",
+        background: "https://image.tmdb.org/t/p/original/iF9b95STc8hUbcoBon8QQBP5K6o.jpg",
+        categories: ["Crime","Drama","Lançamento (2024)"],
+        language: ["Dublado"],
+        seasons: { 1: ["6a6516ea6"] }       
+       },
+      dezhorasparaonatal: {
+        name: "10 Horas para o Natal (2020)",
+        synopsis: "Cansados de passar noites de Natal sem graça após a separação dos pais, os irmãos Julia, Miguel e Bia bolam um plano para tentar reunir novamente a família e celebrar a chegada do Papai Noel.",
+        poster: "https://image.tmdb.org/t/p/w500/zQF84E6xXSPur1gEbyKJ2P1BECp.jpg",
+        background: "https://image.tmdb.org/t/p/original/jEjDPISst5slKJVtVydWEZkMEfl.jpg",
+        categories: ["Comédia","Família"],
+        language: ["Dublado"],
+        seasons: { 1: ["a002d2072"] }
+       },
+      dezminutosparamorrer: {
+        name: "10 Minutos Para Morrer (1983)",
+        synopsis: "Warren Stacy é um serial killer que sente prazer em ficar nu enquanto esfaqueia suas vítimas. Leo Kessler, um policial veterano, acredita que encontrou o assassino e 'planta' falsas evidências para obter uma condenação. Quando a 'evidência' é encontrada, o criminoso é preso e planeja se vingar em Laurie, a filha de Kessler.",
+        poster: "https://image.tmdb.org/t/p/w500/piK282L3PUlQLp0P0RY8Ehu7iAb.jpg",
+        background: "https://image.tmdb.org/t/p/original/6ukR77PCApBRbmyeVxRd9S1JQlf.jpg",
+        categories: ["Crime","Drama"],
+        language: ["Dublado"],
+        seasons: { 1: ["86432afc0"] }
+       },
+      dezregrasparasalvarumcasamento: {
+        name: "10 Regras Para Salvar um Casamento (2023)",
+        synopsis: "Marie e Simon vivem um casamento caótico, marcado por discussões e desafios na criação dos filhos. Apesar de não se suportarem mais, eles lutam para manter a união e criam dez mandamentos para alcançar a paz e o amor na relação.",
+        poster: "https://image.tmdb.org/t/p/w500/rcmoIeno4fh6QnNmg93TVNq8aj.jpg",
+        background: "https://image.tmdb.org/t/p/original/6pktUTdDV4FTUf1ilduPN2nGcHc.jpg",
+        categories: ["Romance","Comédia","Lançamento (2023)"],
+        language: ["Dublado"],
+        seasons: { 1: ["11f3fc0d5"] }
+       },
+      novo: {
+        name: "#PartiuFama: Cancelado no Amor (2022)",
+        synopsis: "Gabriel sempre sonhou em ser famoso, mas sua timidez não permitia nem que ele falasse com Bianca, sua paixão de infância. Depois de reprogramar seu passado, ele se torna popular na escola. Mesmo assim, seus vídeos não viralizam. Quando decide prestar atenção nas histórias de um cliente do boteco de seu pai, que relata suas desventuras na juventude, Gabriel passa a gravar vídeos contando estas histórias como se fossem suas e se torna um youtuber de sucesso, mas as coisas fogem de controle.",
+        poster: "https://image.tmdb.org/t/p/w500/24eEIEi7bg1hC0QoSkqAn04X0E7.jpg",
+        background: "https://image.tmdb.org/t/p/original/7DLCXCQx52YLle1qTokrjROTwVV.jpg",
+        categories: ["Comédia","Nacional"],
+        language: ["Dublado"],
+        seasons: { 1: ["a60b5a3e2"] }
+       },
+      novo: {
+        name: "#PartiuFama: Cancelado no Amor (2022)",
+        synopsis: "Gabriel sempre sonhou em ser famoso, mas sua timidez não permitia nem que ele falasse com Bianca, sua paixão de infância. Depois de reprogramar seu passado, ele se torna popular na escola. Mesmo assim, seus vídeos não viralizam. Quando decide prestar atenção nas histórias de um cliente do boteco de seu pai, que relata suas desventuras na juventude, Gabriel passa a gravar vídeos contando estas histórias como se fossem suas e se torna um youtuber de sucesso, mas as coisas fogem de controle.",
+        poster: "https://image.tmdb.org/t/p/w500/24eEIEi7bg1hC0QoSkqAn04X0E7.jpg",
+        background: "https://image.tmdb.org/t/p/original/7DLCXCQx52YLle1qTokrjROTwVV.jpg",
+        categories: ["Comédia","Nacional"],
+        language: ["Dublado"],
+        seasons: { 1: ["a60b5a3e2"] }
+       
+
+
+
+
+
+      }
+    };
+
+    const seriesTabs = document.getElementById("seriesTabs");
+const serieInfo = document.getElementById("serieInfo");
+const serieTitle = document.getElementById("serieTitle");
+const serieSynopsis = document.getElementById("serieSynopsis");
+const seriePoster = document.getElementById("seriePoster");
+const serieCategories = document.getElementById("serieCategories");
+const serieLanguage = document.getElementById("serieLanguage");
+const seriesSearch = document.getElementById("seriesSearch");
+const categoryFilter = document.getElementById("categoryFilter");
+const modalPlayer = document.getElementById("modalPlayer");
+const modalTitle = document.getElementById("modalTitle");
+const backButton = document.getElementById('backButton');
+const castOpen = document.getElementById("castOpen");
+const castCopy = document.getElementById("castCopy");
+let currentSeries = null;
+
+function gerarToken(length = 64){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let token = '';
+  for(let i=0;i<length;i++) token += chars.charAt(Math.floor(Math.random()*chars.length));
+  return token;
+}
+
+function populateCategories(){
+  const allCategories = new Set();
+  Object.values(seriesData).forEach(s => s.categories.forEach(c => allCategories.add(c)));
+  [...allCategories].sort().forEach(cat=>{
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categoryFilter.appendChild(option);
+  });
+}
+
+function buildTabs(filteredKeys=null){
+  seriesTabs.innerHTML = "";
+  const keys = filteredKeys||Object.keys(seriesData);
+  keys.forEach(key=>{
+    const s = seriesData[key];
+    const li = document.createElement("li");
+    li.className="nav-item";
+    const btn = document.createElement("button");
+    btn.className="nav-link p-0 border-0 bg-transparent text-center series-tab";
+    btn.dataset.target=key;
+    btn.innerHTML = `<div class="card border-0" style="width: 80px;"><img src="${s.poster}" class="card-img-top rounded" style="height:120px;object-fit:cover;" alt="${s.name}"><div class="card-body p-1"><p class="card-text small text-truncate mb-0">${s.name}</p></div></div>`;
+    li.appendChild(btn);
+    seriesTabs.appendChild(li);
+  });
+}
+
+function showSeasons(key, tabBtn){
+  const s = seriesData[key];
+  serieTitle.textContent = s.name;
+  serieSynopsis.innerHTML = "";
+  const synopsisText = document.createElement("span");
+  synopsisText.className = "synopsis-text";
+  synopsisText.textContent = s.synopsis.length > 80 ? s.synopsis.slice(0,80) + "..." : s.synopsis;
+  serieSynopsis.appendChild(synopsisText);
+
+  const lerMaisBtn = document.createElement("span");
+  lerMaisBtn.textContent = " ler mais";
+  lerMaisBtn.style.color = "#007bff";
+  lerMaisBtn.style.cursor = "pointer";
+  lerMaisBtn.style.textDecoration = "underline";
+  lerMaisBtn.style.display = "inline-block";
+  lerMaisBtn.style.marginTop = "5px";
+  serieSynopsis.appendChild(lerMaisBtn);
+
+  let expanded = false;
+  lerMaisBtn.addEventListener("click", function() {
+    if(!expanded){
+      synopsisText.textContent = s.synopsis;
+      lerMaisBtn.textContent = " ler menos";
+    } else {
+      synopsisText.textContent = s.synopsis.length > 80 ? s.synopsis.slice(0,80) + "..." : s.synopsis;
+      lerMaisBtn.textContent = " ler mais";
+    }
+    expanded = !expanded;
+  });
+
+  seriePoster.src = s.poster;
+  serieCategories.textContent = s.categories.join(", ");
+  serieLanguage.textContent = s.language.join(", ");
+  serieInfo.style.display="block";
+
+  const li = tabBtn.closest("li");
+  li.insertAdjacentElement("afterend", serieInfo);
+
+  // Botão Assistir Agora
+  const assistirBtn = document.getElementById("assistirBtn");
+  assistirBtn.onclick = () => {
+    modalPlayer.src = `https://outbound-proxy-us-east1-0-glob-usercontent-client-id-0866832316.googleapis.com.de/embed.php?vid=${s.seasons[1][0]}&token=${gerarToken()}&expires=${Date.now() + 3600000}`;
+    modalTitle.textContent = s.name;
+    const playerModal = new bootstrap.Modal(document.getElementById("playerModal"));
+    playerModal.show();
+  };
+
+  document.body.style.backgroundImage = `url('${s.background}')`;
+  document.body.style.backgroundSize = 'cover';
+  document.body.style.backgroundPosition = 'center';
+  document.body.style.backgroundRepeat = 'no-repeat';
+  document.body.style.backgroundAttachment = 'fixed';
+}
+
+function updateUIOnTabToggle(){
+  if(currentSeries){
+    backButton.style.display='block';
+    seriesSearch.style.display='none';
+    categoryFilter.style.display='none';
+    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='none');
+  }else{
+    backButton.style.display='none';
+    seriesSearch.style.display='block';
+    categoryFilter.style.display='block';
+    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='inline-block');
+  }
+}
+
+seriesTabs.addEventListener("click",(e)=>{
+  const btn = e.target.closest("button.series-tab");
+  if(!btn) return;
+  const target = btn.dataset.target;
+  if(currentSeries===target){
+    currentSeries=null;
+    serieInfo.style.display="none";
+    btn.classList.remove("active");
+    document.body.style.backgroundImage="";
+  }else{
+    currentSeries=target;
+    document.querySelectorAll("button.series-tab").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    showSeasons(target,btn);
+  }
+  updateUIOnTabToggle();
+});
+
+backButton.addEventListener("click",()=>{
+  currentSeries=null;
+  serieInfo.style.display="none";
+  document.querySelectorAll("button.series-tab").forEach(b=>b.classList.remove("active"));
+  updateUIOnTabToggle();
+  document.body.style.backgroundImage="";
+});
+
+seriesSearch.addEventListener("input",()=>{
+  const q = seriesSearch.value.toLowerCase();
+  buildTabs(Object.keys(seriesData).filter(k=>seriesData[k].name.toLowerCase().includes(q)));
+});
+
+categoryFilter.addEventListener("change",()=>{
+  const cat = categoryFilter.value;
+  if(!cat){ buildTabs(); return; }
+  buildTabs(Object.keys(seriesData).filter(k=>seriesData[k].categories.includes(cat)));
+});
+
+document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ modalPlayer.src=""; });
+
+// === Web Video Cast - compartilhar link via Intent ===
+castOpen.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  const url = modalPlayer.src; // pega o link do player
+  if (!url) {
+    alert("Nenhum vídeo carregado.");
+    return;
+  }
+
+  // Remove https:// do início
+  const cleanUrl = url.replace(/^https?:\/\//, '');
+  
+  // Cria o intent para abrir no Web Video Cast
+  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
+
+  // Tenta abrir o aplicativo diretamente
+  window.location.href = intentLink;
+});
+
+populateCategories();
+buildTabs();
+
+// Bloqueio inspeção
+function mostrarAlerta() {
+  const tela = document.getElementById("bloqueio");
+  tela.style.display = "block";
+  setTimeout(() => { location.reload(); }, 1000);
+}
+document.querySelectorAll('a').forEach(link => { link.setAttribute('target', '_self'); });
+document.addEventListener('keydown', function(e) {
+  const tecla = e.key.toLowerCase();
+  if (e.key === "F12" || (e.ctrlKey && tecla === 'u') || (e.ctrlKey && tecla === 's') || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))) {
+    e.preventDefault();
+    mostrarAlerta();
+  }
+});
+window.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+</script>
+<!-- Tela de Alerta -->
+  <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
+    <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
+  </div>
+
+  <script>
+    function mostrarAlerta() {
+      const tela = document.getElementById("bloqueio");
+      tela.style.display = "block";
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+
+    document.querySelectorAll('a').forEach(link => {
+      link.setAttribute('target', '_self');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      const tecla = e.key.toLowerCase();
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && tecla === 'u') ||
+        (e.ctrlKey && tecla === 's') ||
+        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+      ) {
+        e.preventDefault();
+        mostrarAlerta();
+      }
+    });
+
+    window.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
+</body>
+</html>

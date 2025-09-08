@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JC TV STREAMING</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+body { background: #fff; color: #000; padding: 1rem; }
+/* Centraliza os cards da aba de séries */
+      #seriesTabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      margin-top: 100px; /* espaço para a barra fixa */
+    }
+#seriesTabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; padding: 1rem 0; margin-top: 100px; }
+.series-tab { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background-color: #eee; border-radius: 0.5rem; max-width: 100%; white-space: normal; cursor: pointer; }
+.series-tab img { width: 100%; height: 100%; border-radius: 5px; flex-shrink: 0; }
+.series-tab .card { width: 100px; }
+.card-body p.card-text { white-space: normal !important; word-break: break-word; overflow-wrap: break-word; font-size: 0.75rem; text-align: center; max-height: 6em; line-height: 1.2; }
+#serieInfo { margin-bottom: 1rem; }
+.serie-details { display: flex; gap: 1rem; align-items: flex-start; }
+.serie-details img { width: 100px; height: auto; border-radius: 5px; }
+.serie-details div { flex: 1; }
+#serieInfo h4 { font-size: 1.1rem; }
+#serieInfo p { font-size: 0.95rem; }
+#backButton {
+  display: none;
+  position: fixed;
+  top: 2px;       /* afasta um pouco do topo */
+  right: 0px;      /* afasta um pouco da esquerda */
+  z-index: 1055;
+  background-color: #FFC107;
+  color: #000000;
+  border: none;
+  padding: 8px 10px;    /* menor que antes */
+  border-radius: 10px;   /* menor arredondamento */
+  cursor: pointer;
+  font-weight: bold;     /* Texto em negrito */
+  font-size: 12px;      /* fonte menor */
+  transition: 0.3s ease;
+}
+
+#backButton:hover {
+  background-color: #007BFF;
+  color: #fff;           /* melhora contraste no hover */
+}
+ /* Footer */
+  footer.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: black;
+    color: #fff; /* cor diferente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    font-size: 1rem; /* maior */
+    z-index: 1000;
+  }
+  footer.footer img {
+    height: 30px;
+    width: auto;
+  }
+#centralSearch { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 200px; z-index: 1050; display: flex; flex-direction: column; gap: 8px; }
+#serieSynopsis .synopsis-text { display: block; overflow: hidden; }
+</style>
+</head>
+<body>
+<button id="backButton" class="btn btn-primary btn-lg">Voltar</button>
+
+<div id="centralSearch">
+  <input type="search" id="seriesSearch" class="form-control" placeholder="Pesquisar série...">
+  <select id="categoryFilter" class="form-select">
+    <option value="">Todas as Categorias</option>
+  </select>
+</div>
+
+<ul class="nav nav-tabs d-flex flex-wrap gap-3 mb-3 border-0" id="seriesTabs"></ul>
+
+<div id="serieInfo" class="card p-3 bg-light" style="display:none;">
+  <div class="serie-details">
+    <img id="seriePoster" src="" alt="Poster da Série">
+    <div>
+      <h4 id="serieTitle"></h4>
+      <p id="serieSynopsis" class="mb-0"></p>
+      <p><strong>Categoria:</strong> <span id="serieCategories"></span></p>
+      <p><strong>Gênero:</strong> <span id="serieGênero"></span></p>
+      <p><strong>Linguagem:</strong> <span id="serieLanguage"></span></p>
+    </div>
+  </div>
+  <div id="seasonEpisodesContainer" class="mt-4"></div>
+</div>
+
+<div class="col-12 mt-4">
+  <div class="playerButtons" id="serverButtons"></div>
+</div>
+
+<!-- Rodapé institucional após os canais -->
+<div class="col-12 mt-4">
+   <div class="playerButtons" id="serverButtons"></div>
+  <div style="margin-top: 40px; font-size: 0.85rem; color: #000; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <p><br></p>
+    <p></p>
+  </div>
+</div>
+
+<!-- Modal Player -->
+<div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content bg-white text-dark">
+      <div class="modal-header border-0">
+        <h5 id="modalTitle" class="modal-title"></h5>
+        <div class="d-flex gap-2 align-items-center">
+          <div class="dropdown">
+            <button id="castDropdown" type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">📺 Espelhar</button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#" id="castCopy"></a></li>
+              <li><a class="dropdown-item d-flex align-items-center" href="#" id="castOpen">
+              <img src="https://x.gd/gflG1" alt="Web Video Cast" style="width: 18px; height: 18px; margin-right: 8px;">Web Video Cast</a></li>
+            </ul>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+      </div>
+      <div class="modal-body p-0">
+        <iframe id="modalPlayer" width="100%" height="480" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" />
+  <span>JC TV STREAMING © 2025</span>
+</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const seriesData = {
+        fdp: {
+        name: "(fdp) (2012)",
+        synopsis: "A vida de um árbitro além dos campos de futebol. Juarez Gomes da Silva busca seu maior sonho: apitar a final de uma Copa do Mundo. Enquanto isso, sua vida pessoal está de cabeça para baixo.",
+        poster: "https://media.themoviedb.org/t/p/w500/gI3ujWH91dbYFxORxFYH4PXZueY.jpg",
+        background: "https://image.tmdb.org/t/p/original/2vnxZaeZ9DP1tSEowEQiYUaRUxS.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Comédia, Drama"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["3b96dfd02","0453572ea","b79437f89","5a5a1b8bc","61133823e","cda24c458","af3839720","ad0820b51","14b9e442e","9d3cdd281","7f8ca6ee5","202c14f10","643ff25e5"]
+        }
+        },
+        gina: {
+        name: "@Gina Yei: #ComTodoCoraçãoEMais (2023)",
+        synopsis: "Gina Yei ganhou uma bolsa de estudos para frequentar o renomado Instituto Musical do Caribe (IMC), que fica na ilha de Porto Rico, considerado o berço do reggaeton, onde anseia realizar seu sonho de compor canções para os artistas mais renomados do gênero. Gina encontrará em sua paixão pela música a forma mais autêntica de realizar o sonho que sempre a guiou.",
+        poster: "https://media.themoviedb.org/t/p/w500/9sYfIYzRii7FHp0zzoSvIv2wBmf.jpg",
+        background: "https://image.tmdb.org/t/p/original/besHGP8RmlJuwSfRCD2QE4xfOgi.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Comédia, Drama, Kids"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["ce2d10255","5e6e5498a","130704ee2","c45cbee61","06c1a61c8","d9c7b2a3b","41af69eb8","51f18661a","a1b15ff1b","435904da7","d69386e3c","a7c1bc720"]
+        }
+        },
+        contra: {
+        name: "1 Contra Todos (2016)",
+        synopsis: "A série conta a história do honesto chefe de família Cadu que vê sua vida mudar drasticamente quando ele é preso, após ser confundido com o maior traficante do país.",
+        poster: "https://image.tmdb.org/t/p/w500/3o7f2Xjwl5hcoiioR9eGdD9ezHt.jpg",
+        background: "https://image.tmdb.org/t/p/original/vZsXfIDs3A8jzB46cdwusqxRjdI.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Crime"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["c5c4531f7","3507309ba","7bad2c0f1","a4aa61164","ee5c4e1d5","a08e2042b","5c8ef02ad","12d799b6e"],
+          2: ["5914075ee","99fcc53b4","3200a8624","b10ff19b8","136c05b39","a839b24a8","b8a41f0d3","2ff6648cb"],
+          3: ["59d1d2ca2","77de95539","bad84b738","c7dcd66f7","bfd23c678","06e3eebee","4ec76fea0","d1b12be4c"],
+          4: ["7e190acd6","b8ea31687","19b21d5f6","1e3b23f41","490100ea8","0dac77c9f","ede0b7ecb","c543a80ba"]
+        }
+        },
+        broke: {
+        name: "2 Broke Girls (2011)",
+        synopsis: "Max é trabalhadora, esperta e está sempre pobre. Caroline veio de família rica, sempre teve tudo o que quis, mas pela primeira vez na vida está sentindo na pele o que é não ter dinheiro. Duas mulheres de mundos diferentes que são unidas pelo destino por compartilhar da mesma precária situação financeira.",
+        poster: "https://image.tmdb.org/t/p/w500/AtcXSM7WXnHXJaAgYvs1ZAUKKnQ.jpg",
+        background: "https://image.tmdb.org/t/p/original/u04AvxFIDgL9JSd9xoVNK3BoBEd.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Comédia"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["bf9cbfb19","bf9bd7d64","c88b8a300","5fed6c195","8fd459025","a323a2919","fc10ffb60","7bc51abb6","38ddb35ac","bc7b64a2a",
+              "514c0db1e","1e14749e1","be658969b","4c05c7880","8893253f9","22e6aafba","3fd76d618","e1dcfadc1","26975985f","fe186a8a3",
+              "892f49963","d4a9d6fe4","6ec3d077f"],
+          2: ["6e143f9fd","1d0884455","967a3c839","277329426","5e6cfb011","ecc4a1f16","303b6e1c0","4bbed8980","7194aa5b6","4c7264000",
+              "56cf8bbad","27d32dbc8","11ba54811","a9e23de2b","12823cd2a","946f5e8f1","1a1b96a9e","2ee5261e8","f73db3891","adb3ebf07",
+              "6df2a8c63","cc7ba2e5b","d743e2818","19087724f"],
+          3: ["a128cd7a6","31488499e","634887983","938ca5325","0db60f6f9","489e85d22","0159b7518","d28e76ff2","ef7824aa2","9352f4bc0",
+              "793eb32d0","7f53d06a8","7a4388edd","f4b702cbd","2101b16a4","348810423","58f42b658","4e4c64deb","2b4d50e9d","f2b5865b3",
+              "5129778af","587d7e87a","e1f1bd392","3ab82032e"],
+          4: ["b52d7d827","f8bdc453d","246c07ede","fb09342db","c999e4370","d96374fee","346bc1d2c","133fb2a1a","fbaebcdf1","d54f1206a",
+              "18202902e","27a998812","6807d0b38","fa8f45cef","625544163","3d6bdd269","d1000762c","7798891a4","f26630d0e","97ec70704",
+              "681873317","d9f7eb089"],
+          5: ["cf03027b3","275bb585e","c1a85fe20","5a74558ba","e885d5855","7f149f298","20ce602fc","fcb41f920","682beb9b0","9a376da51",
+              "64ca8f4b2","2a725fa5f","883559b33","5c0b58643","b59a9552c","6d95ca5ae","67c22062a","af5244a39","39ffb046f","960fd6bea",
+              "00bf0f213","a04af31dc"],
+          6: ["5e86be9a6","a404eea59","fabe451e9","cdb6209f9","7fca53ce8","c35d96c81","369a41434","2e99ebb85","b54e5dd1d","5cb20a564",
+              "a354db2d9","b6ba1a79a","47c836e14","bcf828873","df37a542f","c9ac42a95","f7223b833","587b62981","fd3424b9c","5994fa482",
+              "bbc100380"]
+        }
+        },
+        tresporcento: {
+        name: "3% (2016)",
+        synopsis: "Num futuro em que a elite habita uma ilha paradisíaca longe dos bairros de lata sobrelotados, esta é a única hipótese de te juntares aos 3% da população salva da miséria.",
+        poster: "https://image.tmdb.org/t/p/w500/w9ixRllvnzpiDzu2r0e60U4aS8h.jpg",
+        background: "https://image.tmdb.org/t/p/original/4RCJIZMy65KyjOPkNcM22D78u9k.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama ,  Ficção Científica e Fantasia"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["f01247fbe","880fbb87c","7bd0b034a","fbb10622b","57586c42a","25a5dafc1","d22d9f899","a474f6aa6"],
+          2: ["483f923c9","b82d0fbb6","73d0c1053","1c8d2d22c","5a09436b1","d193fc7eb","e2b9c8f21","b84c18227","640e4e651","3f4bb9996"],
+          3: ["c56010169","65a65f52d","2c3869015","61c9cd8b0","61aa64c37","f860a1224","b4bf692ff","2927a5225"],
+          4: ["c9e113705","26ab323c2","056f3af5b","3b9077b6e","eb96bf5e4","4e80561ed","7f0fcda3e"]
+        }
+        },
+        trescaminos: {
+        name: "3 Caminos (2021)",
+        synopsis: "2000, 2006 e 2021. Três viagens, três fases de cinco vidas. Jana, Luca, Roberto, Yoon Soo e Raquel estão na casa dos 20 e 30 anos nos dois primeiros “Caminos”, e já passaram dos 40 no terceiro. Tanta coisa acontecerá até então: a raiva anti-estabelecimento de Jana terá se acalmado um pouco, revelando compaixão inesperada na mulher alemã. Luca, o italiano, chegará ao fundo do poço e ressuscitará com a ajuda dos amigos. Roberto, o mexicano, aprenderá a perdoar-se aceitando que a morte de outro não foi sua culpa. E embora sua paixão pela música faça do coreano Yoon Soo e da espanhola Raquel o casal perfeito, eles devem aprender da maneira mais difícil que confundiram amizade com amor antes de encontrarem paz de espírito novamente. Todos eles experimentam amizade e perda, ciúme e amor, coragem e desespero, perdão, felicidade e encontrar seu próprio propósito pessoal na vida.",
+        poster: "https://image.tmdb.org/t/p/w500/qSqbaztRG0AliF6HZLoMJ6yaegt.jpg",
+        background: "https://image.tmdb.org/t/p/original/dImOIpLdgMsUhWuXiZGYN0SjVDf.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama ,  Ação e Aventura"],
+        language: ["Legendado"],
+        seasons: {
+          1: ["35cd4473c","d82512364","d35818ab6","882c27fb3","97d10f999","f1266cc9f","f0e6e74c3","5dd92822f"]
+        }
+        },
+        trestoneladas: {
+        name: "3 Tonelada$: Assalto ao Banco Central (2022)",
+        synopsis: "Em 2005, ladrões cavaram um túnel até o Banco Central do Brasil em Fortaleza, levando mais de 160 milhões de reais. Esta série documental relata o roubo histórico.",
+        poster: "https://image.tmdb.org/t/p/w500/qzYfiX3t8b9Kg7RhAHl5WDi5usI.jpg",
+        background: "https://image.tmdb.org/t/p/original/rhO9JVT6VCsPNx6aNddqHmZHDQM.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Documentário"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["9cc7d75cb","f90a8cbb7","cee3b505c"]
+        }
+        },
+        treshz: {
+        name: "3Hz (2021)",
+        synopsis: "Felix consegue ouvir o passado através de seu antigo walkman. Com a ajuda de seus amigos, ele começa a buscar respostas para a misteriosa morte de sua mãe e, no processo, descobre um escândalo ambiental. Na década de 1980, foram despejados resíduos ilegalmente, gerando um risco para a sua cidade. O que isso tem a ver com a morte de sua mãe? Será que ele vai conseguir evitar a catástrofe?",
+        poster: "https://image.tmdb.org/t/p/w500/b9R1paAYG8HpzPs6JS7hxmKgO8t.jpg",
+        background: "https://image.tmdb.org/t/p/original/mswMxESDdQjrxIEpTaRUbLkKNTk.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Mistério, Kids"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["89b1ccaf5","6baab7b66","86501d85b","e9ffa29a0","9de6fbb98","fb3fab928","a1e3b1413","92dfb5406","58f7e4fa0","2591ff4a0",
+              "3462ea006","55b879846","d1e9d3e53"]
+        }
+        },
+        quatroblocks: {
+        name: "4 Blocks (2017)",
+        synopsis: "Toni Hamady quer deixar para trás a sua vida no crime, quando uma operação policial de consequências devastadoras estraga os seus planos. Toni deve mostrar mais uma vez que é o líder, já que ele não quer entregar o controle ao seu nervoso irmão Abbas. Quando um velho amigo aparece, o sonho do Toni parece ser novamente possível. Poderá ele escapar do caminho do crime?",
+        poster: "https://image.tmdb.org/t/p/w500/5KY603CZqvxm86QSWuqfAxW7ra4.jpg",
+        background: "https://image.tmdb.org/t/p/original/jEdce7g6VZHMoJ7DANX8NFQkVAW.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["097aad430","c86c53542","e31fdc5fa","ba263f961","359bb1675","699a96a60"],
+          2: ["e07f1d989","2039d72e9","c4ff325e5","9b861877c","2dd26ca13","c1ecde7b4","42d0424ba"],
+          3: ["6d85849d7","937f65353","8955db898","a7489bb23","33975a498","a8936be88"]
+        }
+        },
+        tresvezes: {
+        name: "3x Ártico: O Alerta do Gelo (2024)",
+        synopsis: "Ernesto Paglia retorna à Groenlândia, depois de quase 30 anos da primeira viagem, para mostrar o impacto das mudanças climáticas em uma das regiões mais isoladas do mundo.",
+        poster: "https://image.tmdb.org/t/p/w500/8AbWvPr776OYTuysKgyT6jUafKT.jpg",
+        background: "https://image.tmdb.org/t/p/original/ewVXCiYgTU0XL8vHYFPUGzb1SQe.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Documentário"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["8dc88e834","a68223afb","3063aaa2c"]
+        }
+        },
+        cincovezesbrasil: {
+        name: "5x Brasil (2022)",
+        synopsis: "A série percorre as trajetórias vitoriosas da seleção masculina de futebol em Copas do Mundo. Na estreia, as polêmicas na formação do time de 1958 e o surgimento de Pelé.",
+        poster: "https://image.tmdb.org/t/p/w500/rkpYi6Pl4moix4NwL6kgBf55suW.jpg",
+        background: "https://image.tmdb.org/t/p/original/lQ24AXFqcPJWRp7cD7ADEibxzhK.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Documentário"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["675dc9a95","6b7f9941a","4f431e5ad","c46463d44","a0f2caf14","914744898","63bb78b58"]
+        }
+        },
+        cincovezescomedia: {
+        name: "5x Comédia (2021)",
+        synopsis: "Partindo de diferentes pontos de vista, 5X Comédia aborda questões como sexo, trabalho, relacionamentos, família, solidão, medo e desejo de viver em estado de isolamento. Questões como as diferenças de classes e privilégios da nossa sociedade também estão presentes na série, ampliando o debate e trazendo mais diversidade ao projeto. Com diálogos ágeis e humor muitas vezes ácido, os episódios também trazem momentos de emoção.",
+        poster: "https://image.tmdb.org/t/p/w500/wRql9XSg9EJRHJ88yVltCzBiB0q.jpg",
+        background: "https://image.tmdb.org/t/p/original/7bKhVTDd1Ec8RPD0MlAIIom7tUb.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Comédia"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["7513b8e17","c03128888","062d95a2e","b7d31e0d2","c755e5930"]
+        }
+        },
+        setefaces: {
+        name: "7 Faces (2017)",
+        synopsis: "Um provocante drama focado em sete personagens que vivem no mesmo edifício, enquanto cada um deles enfrenta um grande acontecimento em sua vida, obrigando-os a encarar seus maiores medos e saindo de sua zona de conforto.",
+        poster: "https://image.tmdb.org/t/p/w500/eDqRaKa1HutBj5TLzFVtsB9tIIm.jpg",
+        background: "https://image.tmdb.org/t/p/original/6BjKuYQhZ99BedVQmPrFwR2C7QQ.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Mistério"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["d80c0c3b3","84fde2f14","4dca26199","68411d172","b315dd75d","34aeaa99f","7f5a25eef"]
+        }
+        },
+        oitodias: {
+        name: "8 Dias (2019)",
+        synopsis: "A ameaça de impacto de um meteoro obriga a família Steiner a fugir da Alemanha, mas em meio a essa missão suicida, a família acaba se separando.",
+        poster: "https://image.tmdb.org/t/p/w500/bhkGEdIgot5RtJSNOEFjyYBzCOk.jpg",
+        background: "https://image.tmdb.org/t/p/original/QI98gl2VSrhW4lu7TtleejSb3n.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Ação e aventura ,  drama ,  ficção científica e fantasia"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["0d9633445","f43272c2e","e3d2b979f","c82061f20","a62b90489","ff2480a72","bd49154c7","a74269725"]
+        }
+        },
+        oitoemstambul: {
+        name: "8 em Istambul (2020)",
+        synopsis: "Em Istambul, um grupo de pessoas precisa transcender fronteiras socioculturais para fazer novas amizades, mesmo quando suas crenças, desejos e medos se misturam.",
+        poster: "https://image.tmdb.org/t/p/w500/5VBqM6qbUrCOr5csR96MjraPAnz.jpg",
+        background: "https://image.tmdb.org/t/p/original/peOoKDVMbXdBMwZd9SeOxtOfCXD.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Mistério"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["884a83f31","dad150d62","a28b63f58","eee79e693","6eeac4df1","cdbcae0bb","6df72087e","eb5d3caaf"]
+        }
+        },
+        oitoregrinhasbasicas: {
+        name: "8 Regrinhas Básicas... para Namorar Minhas Filhas Adolescentes (2002)",
+        synopsis: "O que acontece com um pai amoroso e racional quando suas filhas queridas e maleáveis se transformam em adolescentes incompreensíveis e desafiadas por hormônios? Se ele é Paul Hennessy, ele reage de maneiras que até ele acha loucas. Graças a Deus ele tem um filho de 13 anos que ainda fala sua língua.",
+        poster: "https://image.tmdb.org/t/p/w500/pAENwk5kSrcPppK8TuxTsW67a0x.jpg",
+        background: "https://image.tmdb.org/t/p/original/s6kPf1v4d0IiueyUF1U2GuNWef4.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Comédia, Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["fc6505496","80a768c18","0d9e7a93e","bee6d65cd","d1a01f1ca","47ab9f8e7","2aed35b82","c1b54f972","86eaf0e77","7aaa34b98",
+              "b24ff3d64","5c6082fa6","2e7d44604","815eb5bd3","df076aed3","6e8c18f77","84cd35b49","be419d2f0","b1d464eaf","6f2a97773",
+              "345fc80b9","4666ab686","476349c4b","21ae4c3fe","371a2e078","44a8a585b","a6c357d50","d8b56d835"],
+          2: ["9d537da19","c6c88cfde","8f28732c4","d223cad01","249ab4983","3dc5435d9","854e649bf","8176ffebb","8f4447dd4","a51081f84",
+              "520e2e31b","89583e02b","db0cc91a7","c3abeca37","8d3e1dd37","0f6c4dbad","922ac33bd","ef906c323","1cd938df2","3abee57d1",
+              "e89af47d2","aa75bfa9c","82de5181c","cbd7b50bf"]
+        }
+        },
+        noveumum: {
+        name: "9-1-1 (2018)",
+        synopsis: "9-1-1 mostra a pressão do trabalho da polícia, de paramédicos e de bombeiros que são incumbidos de resolver as situações mais assustadoras e chocantes para salvar vidas.",
+        poster: "https://image.tmdb.org/t/p/w500/9dNWZPjFWdKo5Avr5JEEzLShLMZ.jpg",
+        background: "https://image.tmdb.org/t/p/original/dhnHhEugKPohoyigCaFywPfOJBp.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama ,  Crime ,  Ação e Aventura"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["528eeccd5","afeb1995a","7e17ed0e3","3a990396b","44a3f5b45","1b361bfa7","269a33a05","8946299db","d5d8709ce","792e1b0b8"],
+          2: ["178cba11d","24ebeb988","105265ae8","dd10b42d8","51a4bd43a","edfe1cf0a","5385f484b","a3810cf5f","372266611","78f27e565",
+              "b2a4f4496","feb837a05","3bf562996","3d6f59f9a","88f674d67","bbabca17d","3fdb8dfca","d5ad7ee9c"],
+          3: ["6297c0c4c","25d6475d7","bf2cde482","de3c2c6c4","95e06ea7d","2d06ab4a9","6e144f09f","d9fab9155","9b3ab68e3","d88a1c7d3",
+              "005d8ad3a","e3fa2c7cc","fb85702db","63f03d286","e6bbefda9","a1dab1fd5","92ae4cd5c","c03ac3f83"],
+          4: ["8603abb7f","b91a38f9c","d916de00d","650229c37","31e4bfa9b","2ef94b885","8b50ef8df","497b3018a","aa0e38594","afbf4c837",
+              "3bac45087","9bc6d9417","485edd140","50afbb9ec"],
+          5: ["424f86e37","2f65c3057","c8a264e2a","592e172fb","ff4359792","25dc31afb","aba7594d6","435b4f14b","c9a840b62","4506a2006",
+              "cae666756","8b2a79c42","0aa048107","494ad4d35","55eeac40c","12c85a5d9","c249ac924","97aa8e302"],
+          6: ["d54d2773d","966125caf","75450a229","9ba799121","dac918a96","9e3438e3a","ab7a6f31e","9af53f937","654f04ef4","fcd42688b",
+              "dcb5b5cf9","d00eaf55f","c23b61eec","d9f38ef3c","e76e852de","d50ab048d","ebc42c394","0a5883ad4"],
+          7: ["cf819ee99","72ba29108","29baa04a2","aba571697","64ec81d36","5c303c3c8","fa9066084","ac36cfde2","083d7e022","2c316bebe"],
+          8: ["7bd08364f","1e0f0889d","5483a091a","3766e1aa4","a54ec65a3","a7f5374a2","711deacc0","ac4f02453","71530efa5","d53613d6e",
+              "4e6d295d6","9a07dc40e","34f324d8c","45fd19f76"]
+        }
+        },
+        noveumumlonestar: {
+        name: "9-1-1: Lone Star (2020)",
+        synopsis: "Quase 20 anos atrás, Owen Strand foi o único sobrevivente dos ataques de 11 de setembro em seu quartel de bombeiros de Manhattan. Quando se deu o ataque, Owen teve a difícil tarefa de reconstruir seu posto. Depois de uma tragédia semelhante acontecer com um quartel de bombeiros em Austin, Owen, junto com seu problemático filho bombeiro T.K., leva suas filosofias progressistas de vida e de combate a incêndios para o Texas, onde ele os ajuda a começar de novo.",
+        poster: "https://image.tmdb.org/t/p/w500/BOTITv548LYGB4xRD3rHfbwkqm.jpg",
+        background: "https://image.tmdb.org/t/p/original/6viAAySp0tQbQrg462FRRxSLIuV.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama ,  Ação e Aventura ,  Crime"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["c1658b12a","a86ca8bba","cb070f611","b40f06f32","2784523da","a08648763","a1f3c3b05","c89526c05","5bc0306eb","1d943065c"],
+          2: ["158fbfc02","dfb5023e7","a6f6142a6","bf864a431","86f80d5fd","bee08cc43","2f9fe042c","bd0579544","845453cf7","34e56efe9",
+              "5e4db8196","d11f19f88","864fe384e","cb2dfe7f6"],
+          3: ["57a595d6f","1f8d0fbb0","9a672d948","32a76a80f","739315fd7","732a5ffcf","e8299d883","c975583a1","8a34caa31","72363fad8",
+              "c63204a34","2244f1e2c","1ebec8291","189dc512a","4261cb682","752327991","e55e85171","54c99fa85"],
+          4: ["53bd10c27","3895acf21","aa768ed7e","fbbc8cb71","c22dbb1cd","c4a085816","4456cfcf0","632975d34","49dfbf8c8","acf7aaf69",
+              "a56a29beb","90f921ca1","c83bcd484","39926e938","8c28b47b0","364c50b04","b13b1c060","fd2c57dc9"],
+          5: ["980977a0a","c98e25a8f","1a1fe0c3c","62a22f91c","81d524fa7","571a84787","d463e9921","d592c90f7","cfcf12d74","2417597e3",
+              "831e56bbd","c5c243975"]
+        }
+        },
+        novejkl: {
+        name: "9JKL (2017)",
+        synopsis: "Comédia baseada numa fase da vida do ator Mark Feuerstein, quando ele vivia no apartamento 9K, no mesmo prédio onde ele cresceu e flanqueado pelo apartamento 9J, aonde moravam seus pais, e pelo 9L, aonde moravam seu irmão, cunhada e bebê recém nascido. E todo mundo se metia na vida dele.",
+        poster: "https://image.tmdb.org/t/p/w500/6jFLTrrmTgZxLAqTza171eX2FZr.jpg",
+        background: "https://image.tmdb.org/t/p/original/vvrA7N8VSlzM9XETJyVm1KrnGY.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Comédia"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["0fd1ffb69","96a4a1c16","9cf765b8e","fad593d43","0075cc29f","0d45d6604","587427373","a0976a8fd","675d22e16","13b0e887f",
+              "12e863eb3","c7b758832","c5eae8027","a591c01fb","233a49c45","f8e7f9158"]
+        }
+        },
+        onzevintedoismeiatres: {
+        name: "11.22.63 (2016)",
+        synopsis: "Um modesto professor se depara com um portal do tempo que o leva ao dia 9 de setembro de 1958. Ele inicia uma jornada para tentar evitar o assassinato de John F. Kennedy.",
+        poster: "https://image.tmdb.org/t/p/w500/1fH41ccMKvgDTbbcCxWWH6fznah.jpg",
+        background: "https://image.tmdb.org/t/p/original/6MjF38gq1ktOJqm8tQLtopwOn1c.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama ,  Ficção Científica e Fantasia"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["4a21a249c","a76357289","7cd563b0f","4cc39a6a0","d125efc8b","69c0eb20b","9f5d49791","a0aab9ee2"]
+        }
+        },
+        memoriasonzedonove: {
+        name: "Memórias do 11/9 (2021)",
+        synopsis: "Esta série documental conta em detalhes a história do 11 de setembro através dos olhos das testemunhas, heróis e sobreviventes. Feito em colaboração com o 9/11 Memorial & Museum para marcar o 20º aniversário do ocorrido, esta nova série mostra detalhes inéditos deste dia trágico - desde o primeiro avião atingindo a torre norte até os últimos sobreviventes sendo resgatados dos escombros.",
+        poster: "https://image.tmdb.org/t/p/w500/tjJgPR5dH0okETaGazaJhLsoaES.jpg",
+        background: "https://image.tmdb.org/t/p/original/aOHY41RWsdeBC4hmXMsVedvttkB.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Documentário"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["2046e99de","373fca5ad","ccd6753b1","8c2ff4125","8abb08e74","25010168d"]
+        }
+        },
+        onzetiros: {
+        name: "11 Tiros (2022)",
+        synopsis: "Todos falam sobre a fama, o dinheiro e as festas dos jogadores de futebol. Mas atrás de tudo isso há um outro universo obscuro, desconhecido pelos fãs e repleto de assassinatos, estupros e suicídios.",
+        poster: "https://image.tmdb.org/t/p/w500/6KOq9yLVNIVRPTbZjY3z3BVjZN7.jpg",
+        background: "https://image.tmdb.org/t/p/original/6QC0CXf42gvcj22K9asO1SuFdz5.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Documentário"],
+        language: ["Legendado"],
+        seasons: {
+          1: ["7b8a74df5","d4122b03f","56859eb79","1e8124f16","05c94d18a","5b00ea21d","4398df5ff","edec779ce","a519935d6","6e9b8a314",
+              "6f76741ca"]
+        }
+        },
+        dozemacacos: {
+        name: "12 Monkeys (2015)",
+        synopsis: "Em um mundo pós-apocalíptico, a humanidade é forçada a viver nos subterrâneos depois que um vírus mortal é liberado. James Cole, um condenado, é enviado ao passado com o objetivo de reunir informações sobre o vírus para que os cientistas possam erradicá-lo.",
+        poster: "https://image.tmdb.org/t/p/w500/lnLlxi9GcPNyLcmvt6uVipI73m5.jpg",
+        background: "https://image.tmdb.org/t/p/original/oReDAVfMTBi1J543aKg7LpeecPv.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Ficção científica e fantasia ,  Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["87824050b","ebb4f636a","73a5aceed","840161f91","e48149440","ca5a657c1","c311047cb","ab9f6c17d","fc8fd571f","71fae4818",
+              "b15fe058d","ef2bf14bf","5cde0bfd7"],
+          2: ["76ca5da14","736ec1a04","8e59706f0","85d3540d6","1b43a849e","2494e8b12","6ded294cb","a34a12ac7","1b1a5ffb2","20a4d6659",
+              "e26b57657","735f649b3","1a0556110"],
+          3: ["6817bac10","ad13afa3f","049e85235","04836f4c6","31d5cd091","dae631671","6546c21cf","02f775769","32b6806fa","5905bc0eb"],
+          4: ["2d3356c1a","06234e712","ee71bbca7","57b42e49f","05f2eea16","007217e77","d2637a85e","36a1ae226","d1f984ada","71ce50239",
+              "d4a553786"]
+        }
+        },
+        trezemedos: {
+        name: "13 Medos (2007)",
+        synopsis: "Com base no popular programa mexicano de 1986 Hora Marcada, esta série de antologia de língua espanhola oferece emoções sobrenaturais em abundância. Do vigia noturno que tem medo do escuro para um homem triste que tenta reviver sua esposa falecida, essa coleção inventiva de resfriadores coloca as profundezas de terrores mortais.",
+        poster: "https://image.tmdb.org/t/p/w500/p61wFSBtKiKvPVPyXoiIwP6sWF3.jpg",
+        background: "https://image.tmdb.org/t/p/original/ykZRfpuGR9ya8WNTs6GKi5Iwiml.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Ficção científica e fantasia ,  Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["2b47afa65","70d17b4e8","12c98ab47","a70170e2a","7458ef941","0c9494410","57a4ae9b9","b4434fe96","aea065545","420f2d76a",
+              "13c62c9d3","bba514bc1","83176d377"]
+        }
+        },
+        trezereasonswhy: {
+        name: "13 Reasons Why (2017)",
+        synopsis: "Clay Jensen é um estudante que se vê envolvido em uma série de mistérios provocados pelo trágico suicídio de uma amiga.",
+        poster: "https://image.tmdb.org/t/p/w500/8eUJQK8wRiBvGqiqMKEcYmAnESQ.jpg",
+        background: "https://image.tmdb.org/t/p/original/c4CSgKL6QfkJxsWcGYDyTxpbzpW.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Mistério"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["60c5ee855","28ba04f9d","402d167a7","11a8b1698","e35ed14a8","f21ab442c","5c9a1be08","6524936a9","ef3915f41","8deade07e",
+              "264e6896b","81c87ff96","899f4bc16"],
+          2: ["f8664e7e6","28f12dcf0","d0147a10b","5df509262","42f55a17e","32c457f25","206622b9b","efbfb9e54","f56128d33","9df21b045",
+              "3df6378e5","305a165e8","424d1bd20"],
+          3: ["e381f5c5d","e2e0e6363","97640e467","99dc65935","4e1ec5890","877016836","85f01fd47","4df9414ac","f0eb74c97","9c8df7050",
+              "4983a50b4","c18177f07","a6c40db61"],
+          4: ["380d1b3fc","17997c0df","df4e8c10e","3b4a10e07","31198b776","2349afcba","8c1b724fd","ef6f72266","874e99f35","db992548f"]
+        }
+        },
+        dezesseiserecoveringmtv: {
+        name: "16 & Recovering: MTV Um Dia de Cada Vez... (2020)",
+        synopsis: "A série documental de quatro partes 16 and Recovering acompanha os triunfos e tragédias de estudantes que lutam para se formar enquanto convivem com abuso de substâncias e problemas de saúde mental em uma escola de recuperação em Boston.",
+        poster: "https://image.tmdb.org/t/p/w500/vlwY8fbLwxVC1Ie0hxAdFNjLybl.jpg",
+        background: "https://image.tmdb.org/t/p/original/g9qyHKQHgWa3akOmAHPrzl767iu.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Reality, Documentário"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["cd293fc8d","8343455ee","1dce26f1f","fadb1ec5c"]
+        }
+        },
+        dezoitooutravez: {
+        name: "18 Outra Vez (2020)",
+        synopsis: "Passando por dificuldades em seu casamento e emprego, um homem de meia-idade tem uma nova chance quando volta ao seu corpo de 18 anos. Inspirado no filme americano 17 Outra Vez, de 2009.",
+        poster: "https://image.tmdb.org/t/p/w500/2SBZY5MHUVtypBAnDV4Lj5ErCKg.jpg",
+        background: "https://image.tmdb.org/t/p/original/86OfwAgnduUp19thSIVRv39tFgM.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Comédia, Ficção científica e fantasia"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["33996a232","2ee6e6855","7150eac48","27cbd72e1","a04bee36e","d67e4607c","fffa3bb30","827ed041b","369bb2333","ef4a4af01",
+              "95878b8e4","3c00d0b1a","3a3f5355a","9c443a54a","347b1a75b","b51e8cc99"]
+        }
+        },
+        dezenovedois: {
+        name: "19-2 (2014)",
+        synopsis: "A história acompanha a vida de dois oficiais que fazem patrulha nas ruas de Montreal, Ben Chartier e Nick Barron Nick é um veterano da polícia que volta ao trabalho após passar um tempo afastado recuperando-se da morte de seu parceiro, morto em um tiroteio. Em seu primeiro dia, ele descobre ter um novo parceiro, um jovem recém transferido de uma cidade do interior. Os dois são policiais que, à sua maneira, estão tentando reorganizar suas vidas. Dedicados ao trabalho Nick e Ben precisam deixar suas diferenças de lado para conseguir realizar suas funções.",
+        poster: "https://image.tmdb.org/t/p/w500/3UVgpebTCmlW8URV1Y7KlN1mWJl.jpg",
+        background: "https://image.tmdb.org/t/p/original/o8OqCwbnC3TNmm3wP9v9SLs9GfY.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Crime, Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["52cc10e18","f7f6fc044","a82c924b4","2533c9e8c","638ba3cc6","dd0bd7672","358db86ec","6c3bcaf7e","73cf337fb","02dcf53c0"],
+          2: ["1473f0505","581b659ad","8e48d42b6","712aeeced","ff96c98be","f75b5af7c","e535cd4a6","043ce7ae4","da0ea0772","06efb1528"],
+          3: ["809bd801c","62c6ab038","2c78f3937","0b680174a","03f1b79b6","813f919ce","9450841bd","ad1291aef","3ce0ee664","bc5bda369"],
+          4: ["af36d847d","8d59a1a27","ce7156f71","e02cb631b","ee8e48c3c","479a51eb1","399d70da1","e3650f811"]
+        }
+        },
+        vintequatrohoras: {
+        name: "24 Horas (2001)",
+        synopsis: "O Agente federal Jack Bauer não se pode dar ao luxo de jogar pelas regras. Como membro da UCT (Unidade Contra Terrorismo), Jack deve parar bombas, vírus, tentativas de assassinato, e geralmente salvar alguém que lhe é próximo. Cada temporada da série tem 24 episódios, cada um, em desdobramento em tempo real, de uma hora consecutiva num dia muito ruim.",
+        poster: "https://image.tmdb.org/t/p/w500/nmR2wQIilYPzX0xXVcHyJCT8RTI.jpg",
+        background: "https://image.tmdb.org/t/p/original/sfRRhoZNggPNg3Ptl8ZAOARTiRP.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Ação e aventura ,  Drama ,  Crime"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["c0c4b8248","13c242e33","fcd57ae8e","6d180ff73","5fc0b145a","ae17d52e6","8ce8ae34b","0e48ccf68","0ae7c5dd0","676adb3e9",
+              "dadd94e9e","0e04c4f51","da25905eb","562df99b7","e0dc330c9","7289a3747","af952e8c6","5dd534cac","6f3c37e9c","76888a9d1",
+              "e48c5d187","83e1ef938","7ca53b3d1","cfe3500f5"],
+          2: ["0b13ecd1d","d4b977445","c550eb255","44e7ae883","7b313af5c","d1a38ad1d","dada4406b","c4baf0e1d","93283a65f","35a0d6ac6",
+              "457e07a88","399b6877a","c483ada52","bd75bfb78","96815c20f","28021bc5f","70d426434","ef5bd2de4","831360c28","982c2c97a",
+              "1740dc95f","aeb069fcc","8b8729ca8","d00df2c28"],
+          3: ["9a9cf2a04","2ac8a32f8","6c791d7a1","0175a49fd","5db413582","c55ef49cf","73ebf6d49","eca4bd515","2a1656c9b","10946fb9e",
+              "cf84fba31","6aa48651e","2c20e5cbe","0252a4166","323251ccc","ee9550200","c5a486a2d","035ec38b2","b58f0dfa8","be56b9dfc",
+              "74bfd4290","d22363c0a","dfbe4c2a1","c048226e8"],
+          4: ["82b1fe995","22b9f6749","468459b3c","bc2645d23","666d60b9c","7dda445cf","9c0e0935d","04318455b","4a67dd412","f9771e24d",
+              "cbed9abd3","eecb9fbaa","144c752bd","e86b8ab32","33a77a9f3","33cf5c0e7","6851d7a92","16237d2bb","96b800083","20797ce2e",
+              "c1339670c","71d7dbc81","4c14ffa5c","ae31b5d50"],
+          5: ["113e01eab","c45eb59d6","49c8a188a","3315f5c9c","e901b344b","e54bef404","3e459c4ab","3c946d46f","8b7729ea6","d85f663cd",
+              "6c0795768","a055820fe","8ba88d16c","f8038edff","e999f1583","a2c8c3cc3","5e206ad7d","5f6f95eb3","cea9cd892","3e7e02161",
+              "9fe25c5ea","4e09e06ef","1ce88e2dc","ec9d5a52b"],
+          6: ["708130f4c","7bb063d41","efcd5ab9b","17638dd0c","daf5fc5ad","ea51bef86","ca3be8c7c","e159ffde2","3795a3c56","544df3b4b",
+              "1cccd40a5","e93b085bb","dd3e38c61","176082acd","428cd9a1c","01fe16378","15865eb60","a18b760bd","c3696151e","cb0d3c6ff",
+              "5861a18af","e07785754","4fdff3f1a","419a582b2"],
+          7: ["f21fb888c","f5e348be6","622cb40b4","62fbfbcfa","3ce8ae6ae","236c80ba5","be43a8b98","74422c4e2","5f1234472","80a6c4820",
+              "deb267fba","969f7e9bf","2a6b494d6","1b20799f4","80cf349bb","e6f466109","ceefad3e9","6120529df","55cf6f039","dc57201c6",
+              "849010cb1","5a1f0dc54","f9872ced7","237280f36"],
+          8: ["e78bc4231","8e3b435b3","f7d6d7762","3f7b88389","ad427d911","53270d199","4177d240f","6487b5fde","3426eda1d","70fdaaeee",
+              "b7ff5a275","91e17cf2b","fba04c106","98af931b0","9603437fd","589c8df94","9ea475fbc","26b177604","5bb4c627c","fbaf9da83",
+              "9d20f2a59","fb2bbae60","ee57cdc31","03c2f9ca0"],
+          9: ["3c04386cc","b3886649e","b785b7cf0","405f65bc2","b1eba3d13","112d18747","4f9a7818d","b22f20a23","e8fd77c9e","b5480e748",
+              "e73ceb894","dd9f7274e","0e2c7c074"],
+          Filme: ["b3b6d11ab"]          
+        }
+        },
+        vintequatrohorasolegado: {
+        name: "24 Horas: O Legado (2017)",
+        synopsis: "Quando uma tentativa na vida do sargento Eric Carter é feita após o seu regresso a casa de uma missão para matar o líder terrorista Bin Khalid, ele descobre que ele e as identidades de seus colegas Rangers foram comprometidos. Carter pede a ajuda do ex-diretor nacional da CTU, Rebecca Ingram, que ajudou o ataque que matou Khalid e é um dos poucos que conheceu as identidades dos Rangers. Juntos, eles trabalham para descobrir uma sofisticada rede terrorista em uma corrida contra o relógio para parar um ataque terrorista devastador no solo dos Estados Unidos.",
+        poster: "https://image.tmdb.org/t/p/w500/wYWslsbzI9dD70PqKXx96WeJAUW.jpg",
+        background: "https://image.tmdb.org/t/p/original/bUlrQmMvZMLwNqlILyCKEV5wGyX.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Crime, Drama, Mistério"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["076b45bd4","869d23e05","701196abd","6e553c69e","cef3927cc","a199099f7","611468d78","a49124174","9bda605f9","b439bf082",
+              "b8f5096cc","239b34477"]
+        }
+        },
+        vinteoitodiasassombrados: {
+        name: "28 Dias Assombrados (2022)",
+        synopsis: "Três equipes passam 28 dias em lugares mal-assombrados como parte de uma experiência paranormal baseada nas teorias de Ed e Lorraine Warren.",
+        poster: "https://image.tmdb.org/t/p/w500/1MxVHXE8woWTQaprkQ1gFR2HDln.jpg",
+        background: "https://image.tmdb.org/t/p/original/6ESvUtiCv3XqJRTU9d32I4R0Ckq.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Reality"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["70b3ae993","2b48a010a","5c87932ba","768eae6c7","782876d44","805b8f609"]
+        }
+        },
+        trintamoedas: {
+        name: "30 Moedas (2020)",
+        synopsis: "Judas traiu Cristo por 30 moedas. 2000 anos depois, uma delas aparece em um vilarejo da Espanha causando fenômenos paranormais.",
+        poster: "https://image.tmdb.org/t/p/w500/yo3udZRKPbhfzI7sWaI2hhyfhRM.jpg",
+        background: "https://image.tmdb.org/t/p/original/j5B7G6NsWfgLawCAUsQU8Qrl6Tm.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Crime, Mistério, Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["15223fcfa","6cf5bfa33","6e603a94a","ef7e1b680","1bb5ea725","2075c1653","3f733ff3a","b35f27607"],
+          2: ["159c74f76","928c6eba9","2f37f0c82","ef6f330e2","bd6fb1c88","6c0e9054a","168c82242","b44e0e272"]
+        }
+        },
+        trintarockummaluconatv: {
+        name: "30 Rock: Um Maluco na TV (2006)",
+        synopsis: "A série gira em torno de Liz, uma redatora-chefe de um programa ao vivo de comédia em Nova York. As complicações aparecem quando o novo presidente da emissora, ordena Liz à contratar um astro do cinema mentalmente instável.",
+        poster: "https://image.tmdb.org/t/p/w500/3gJsH8eLDMIMVscLSdHebEmOZAZ.jpg",
+        background: "https://image.tmdb.org/t/p/original/cK5AbLFBY2JDoqEdVXk0697e2SV.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Comédia"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["376778ad8","52beeb2c5","34b94d3a5","53d9730e7","fc39e600a","6878df6bb","ec8c354ed","289dc793e","a8ba1c885","ae91396d9",
+              "9a45bec45","06bf10a01","85a56e2d3","3891eb3ba","780e22787","be40275a8","d2e27b096","2deee1120","7f30d90a2","72b56c105",
+              "b03445248"],
+          2: ["0ab46d209","ac05184b0","ae678ae15","ee3e25134","2cfcc815b","1f66309e4","d78f735fe","0865ff92a","7b374383c","2d74e1ac7",
+              "7bb9bcbfd","b22538a95","d4b5d20b6","543b856b9","0575c8b12"],
+          3: ["769e73c0d","8611d5be4","322128941","8d73b8f63","3fbf88123","0408f9da2","749e47bfa","986dfb323","24c4e7169","16e00fd5c",
+              "70105571c","795e537e5","408ff6e6f","c1af8cca8","467374998","549412ba0","7a30c9255","f6d9c8869","6b281b392","4f6a1549d",
+              "0d9ed945f","c1c89f061"],
+          4: ["5377851ed","076f176df","6bb305b10","317ed06fb","e64140f71","8c3ac5a8c","7dd3cd8d9","38f4c6bb5","c174a1ec3","a01f49d10",
+              "86cb28d92","02f3407f6","ea57fd251","d4f79721d","a79ca49cd","3dbd349d2","d06beff1a","574004592","f329ec0a0","433ae0ed6",
+              "9b2b5c867","665c924a1"],
+          5: ["14e48df3b","5bbf00064","66762e7ec","275db1073","7af52c3a1","0cb3caf2d","c1bab450c","34228143e","ed8e34fe0","df434bfe3",
+              "d75893006","7343757f3","8b2eeced6","96d715398","ebe4305c8","856977bf8","164ac1838","77be75b69","d9097fd8a","9ef783235",
+              "46929e593","499f3a7b6","ae86e8ff3"],
+          6: ["5ea3eb032","d0c7d5ac8","f288c29ea","75e6058c2","2f26877bd","671ca9270","1b11aff9f","29565b2a3","7b198875b","02e7cdbe4",
+              "b1b83c288","d5e64db54","b168b3a39","641b70e40","e225c4e9a","18cb4ed71","e82b789a8","66ccc33cf","b860a280c","eb33c24fb",
+              "fd1bd78fc"],
+          7: ["732c48b94","913d578d7","fa198cc8b","c9fd88010","978df7825","3856db30d","556a67f61","7c6dff556","8b71efc08","a60d1f90d",
+              "7b964f7fb","957fa9c4a"]
+        }
+        },
+        trintasegundos: {
+        name: "30 Segundos (2022)",
+        synopsis: "Série documental que acompanha cinco décadas de transformações na sociedade brasileira através dos olhos, ideias e trabalhos produzidos por profissionais que mantêm o Brasil, há mais de 30 anos, no grupo de elite da propaganda mundial.",
+        poster: "https://image.tmdb.org/t/p/w500/dC0IshQIPDRFpQJ2m1TUYBhxmpI.jpg",
+        background: "https://image.tmdb.org/t/p/original/doxmzTQxpuh3uTlND5nHt4XeYeZ.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Documentário"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["80208dd02","87052febf","307f6f7d9","1d56f82a7","735235a56"]
+        }
+        },
+        quarentaedoisdiasdeescuridao: {
+        name: "42 Dias de Escuridão (2022)",
+        synopsis: "Para encontrar a irmã, uma mulher lidera uma busca frenética no Chile em meio ao frenesi da mídia e à investigação policial. Inspirada em um caso real.",
+        poster: "https://image.tmdb.org/t/p/w500/cLEF0d66x6UC9tJ5KYI8OlEU4DR.jpg",
+        background: "https://image.tmdb.org/t/p/original/e47hkgnEGOGA0n4TRSf67T2QaTH.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Mistério"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["0f858dfbe","3a42ffa53","91aa0d26b","3cd76ce4f","bd2d8e8dd","f7fa02283"]
+        }
+        },
+        quarentaecincorpm: {
+        name: "45 rpm (2019)",
+        synopsis: "O enredo gira em torno do estabelecimento de uma gravadora na década de 1960 e das pessoas envolvidas na complexa indústria da música.",
+        poster: "https://image.tmdb.org/t/p/w500/dkWii81Ru6NCvWPInbNy1sTZ293.jpg",
+        background: "https://image.tmdb.org/t/p/original/w9zIpFqy8tNFn3v1j8svXAj4qm1.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["0fc8206fb","085d79392","2492fdec4","4f8fdebc1","0634a3dba","922a6ff06","87c2890ce","a315e2e3d","1fd4344c9","bc091091c",
+              "44d231c0b","7d09dbc6c","335c59908"]
+        }
+        },
+        cinquentamdois: {
+        name: "50M² (2021)",
+        synopsis: "Em busca da verdade sobre seu passado, um homem comete uma traição e assume uma nova identidade em um bairro de Istambul.",
+        poster: "https://image.tmdb.org/t/p/w500/3m0aiNtGZo6URftj88zGIrsv0V2.jpg",
+        background: "https://image.tmdb.org/t/p/original/kY1s5oWOxXOInWlY02TXrM7s2rT.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Crime, Mistério"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["b29030f01","b52423fc1","3bb33e430","c61343513","151a762c4","546dd9214","7a2d85e25","8d16b6923"]
+        }
+        },
+        cemcode: {
+        name: "100 Code (2015)",
+        synopsis: "Jovens loiras de olhos azuis foram assassinadas ao longo dos últimos doze meses. Tommy Conley (Dominic Monaghan, de LOST), um detetive de Nova Iorque, é enviado à Suécia para observar e aconselhar a polícia local nas investigações. Ele se une ao sueco Mikael Eklund (Michael Nyqvist, de Zero Hour), um veterano da homicídios que trabalha de acordo com as regras. Extremamente nacionalista, Mikael não vê com bons olhos a presença de Conley, criticando a cultura americana sempre que pode. Apesar dos dois não se suportarem, eles precisam encontrar uma forma de trabalharem juntos.",
+        poster: "https://image.tmdb.org/t/p/w500/tg9fpeSvD8QvPOjt1ZASz3GkqT.jpg",
+        background: "https://image.tmdb.org/t/p/original/nG93f33al8Zq2tQ3d8oMiQfJlij.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Crime"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["63b4dd26c","d0bac0de4","60b7f8598","2383b281a","a0ac67fce","fb3d563ef","72c741fb3","ca724e9af","d479c8693","be437dd5d",
+              "8b1ed6b63","f72a2399c"]
+        }
+        },
+        cemcoisasparafazerantesdohighschool: {
+        name: "100 Coisas Para Fazer Antes do High School (2014)",
+        synopsis: "CJ Martin está determinada a fazer com que seus dias na escola sejam épicos! Ela e seus melhores amigos da vida toda, Fenwick e Crispo, estão fazendo uma lista ampla de desafios. Juntos eles vão arriscar, criar memórias e fazer com que cada dia seja uma aventura!",
+        poster: "https://image.tmdb.org/t/p/w500/ntgFg3wq5EqKRAy9IQKIWQqMQv5.jpg",
+        background: "https://image.tmdb.org/t/p/original/7LXOqwlvQlbLCBCMtfuiWXBcXuS.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Comédia, Família"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["8c4b12838","ba9a3a9a4","28dc74428","c3c56423d","3989b8de0","ae5fd1075","d200d552a","36de77be3","036f8617e","0d1fe6bcb",
+              "4e9b8d611","130dbd09a","be70da218","6f153a7ad","ed5a063a2","caba39926","c8604b0b3","7326afc7d","ee400464f","84bc384dd",
+              "d823d1dc6","a68c297bb","19942e294","184767ac6","df55e4b0c"]
+        }
+        },
+        centoenoventainteligencia: {
+        name: "190: Inteligência Contra o Crime (2022)",
+        synopsis: "Em São Paulo, a Polícia Militar e o GATE se arriscam diariamente em invasões, perseguições e situações-limite. Estratégia e inteligência são as principais armas na batalha contra o crime, acompanhada de perto com body cams exclusivas.",
+        poster: "https://image.tmdb.org/t/p/w500/kapqgnjRDf5HPH7fBTDcLW6kQxx.jpg",
+        background: "https://image.tmdb.org/t/p/original/zqXmAHH7Q1eQUEyaVgFHlxJ83VQ.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Documentário, Reality"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["c17746df3","0500d3b14","9a98ab52c","92a63af2a","d75343530","d5dc8f9d7","3ac42c45c","9ee1157d6"]
+        }
+        },
+        duzentosevintevolts: {
+        name: "220 Volts (2011)",
+        synopsis: "Paulo Gustavo retrata situações constrangedoras que acontecem no cotidiano de qualquer pessoa. O programa é uma mistura de stand-up comedy, entrevistas e quadros humorísticos. Paulo vai às ruas para saber o que as pessoas pensam sobre temas como sexo, morte e preconceito, e também interpreta diferentes papéis em esquetes com muito bom humor.",
+        poster: "https://image.tmdb.org/t/p/w500/2lbX4JNrUTSxkd1twP6CSsOipMW.jpg",
+        background: "https://image.tmdb.org/t/p/original/9yNOc1358tTYI2TlkrfFFRvuhWv.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Comédia"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["39c89fdcd","25baec83b","8a3cd135b","5c2acbd31","2ae0761ad","2b65606c1","ccb5c8457","23bd8d3d6","0a280fbbc","18b36dae7",
+              "9f02a863c","8722bce06","d7ff67b7c"],
+          2: ["c1a24748d1","d6d9ae6d6","67fa38ec1","7ebaeda83","e660c23ce","45d164c40","ae7f49694","228c8640e","688cc4671","83c646829",
+              "ac1d3fc6e","6114febdd","2267d7faa"],
+          3: ["11e3a6a31","052708953","b99ed59b0","7d072856b","5b0ce5b18","99c83b2d6","2bb34b107","9fbe2678a","2b04dc14a","9956d62c9",
+              "f388e1e6a","6fe9fc05e","7d547c5e9"],
+          4: ["caab0a1fc","ad3e95ecf","298e67462","43d8241f6","4a49c8fee","eb697a3cb","b392d4a23","ff92402d9","083ac0282","4c2e97876",
+              "a1254d2bc","607ea9e7e","7bb8cbed3"],
+          5: ["77ed95466","2aa1ea991","bc3edfbf9","30674e98e","06325f957","58c44df31","3b314e102","6ef85c137","1a67a52e9","3c8789087"],
+          Especial: ["433ec81f8"]
+          
+        }
+        },
+        quinhentosequarentaeoitodiascapturadaporumaceita: {
+        name: "548 Dias: Capturada por uma Seita (2023)",
+        synopsis: "A jovem Patricia Aguilar desaparece, deixando sua família arrasada. Passam semanas angustiantes até recuperarem a esperança quando a Patricia dá sinal de vida, mas ela fala e age de forma estranha, como se fosse controlada por outra pessoa. E eles logo descobrem que ela foi ao Peru, seduzida pelo guru de uma seita, e começam a lutar para trazê-la de volta, apesar da resistência de Patricia. Do ponto de vista dos protagonistas, esta é a história de uma família superando uma tragédia.",
+        poster: "https://image.tmdb.org/t/p/w500/vcZsUXuQgRTFXuoBFOezU9YljyP.jpg",
+        background: "https://image.tmdb.org/t/p/original/gDPqbmCGSSZKFShYTM2YNvD7q5e.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Documentário"],
+        language: ["Legendado"],
+        seasons: {
+          1: ["9b3041b31","3e675928d","018dd0999"]
+          }
+        },
+        seisseisseisparkavenue: {
+        name: "666 Park Avenue (2012)",
+        synopsis: "O que você faria para ter tudo o que você deseja? Entre 666 Park Avenue, o endereço mais sedutor de Nova York. Todos nós temos algumas necessidades, desejos e ambições ardentes. Para os moradores de The Drake, o edifício de apartamentos principal no Upper East Side de Manhattan, todos serão atendidos – por um preço – cortesia do misterioso proprietário do edifício, Gavin Doran. Mas tenha cuidado com o que deseja, porque o preço que você precisa pagar é a sua alma.",
+        poster: "https://image.tmdb.org/t/p/w500/ogiB7HOq82NlQTMkqk8piIm5pSW.jpg",
+        background: "https://image.tmdb.org/t/p/original/b3MmsGiTvNOjSdhpdqzqdLJu0nt.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Ficção científica e fantasia,  Drama, Mistério"],
+        language: ["Lengendado"],
+        seasons: {
+          1: ["36ccae1b0","dd760b356","29ffae981","18777eaab","4c3bad8a2","adf4dafb7","de6ed715b","8a5d31c0c","0b7044152","578982d99",
+              "cebf2f449","17c5c8704","ea3616752"]
+          }
+        },
+        oitocentosmetros: {
+        name: "800 metros (2022)",
+        synopsis: "Em 2017, a Espanha sofreu dois ataques terroristas promovidos por jovens da comunidade local. Como isso aconteceu? Esta série investiga.",
+        poster: "https://image.tmdb.org/t/p/w500/wW4HeeUUyTXRqHjxm3s9KIBkJ7t.jpg",
+        background: "https://image.tmdb.org/t/p/original/6mxXwNeH2EJD7bLpJtbtWG9erak.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Documentário"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["f5d2cb107","8bd90c306","2f332a34f"]
+          }
+        },
+        miloitocentoseoitenteetres: {
+        name: "1883 (2021)",
+        synopsis: "Uma prequela de 'Yellowstone', '1883' segue a família Dutton enquanto eles fogem da pobreza no Texas e embarcam em uma jornada pelas Grandes Planícies em busca de um futuro melhor em Montana.",
+        poster: "https://image.tmdb.org/t/p/w500/waLbm384SQDwLTCn6ttPqQS5kfV.jpg",
+        background: "https://image.tmdb.org/t/p/original/uQUHCqxHsG9blvtCoL7vluMG9Jp.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Faroeste"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["1aa7fd369","428062903","cbc6b88ad","d17949c64","df7d010e6","5cb463278","8a1ac5396","980d9a2d6","049cf1afc","d0e3a4592"]
+          }
+        },
+        miloitocentosenoventaenove: {
+        name: "1899 (2022)",
+        synopsis: "O ano é 1899 e eventos misteriosos mudaram o rumo de um navio de imigrantes a caminho de Nova York. Agora, os passageiros terão que desvendar um enigma alucinante.",
+        poster: "https://image.tmdb.org/t/p/w500/8KGvYHQNOamON6ufQGjyhkiVn1V.jpg",
+        background: "https://image.tmdb.org/t/p/original/oZMEWCcnFWGdp4W4ICdJgkw1RYf.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Mistério, Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["2dc8545bc","e0684e9eb","50ca5da98","beb29c300","b043119be","a3dee8a78","c5d887977","e3cc01935"]
+          }
+        },
+        milnovicentosevintetres: {
+        name: "1923 (2022)",
+        synopsis: "Siga uma nova geração da família Dutton durante o início do século XX, quando pandemias, secas históricas, o fim da Lei Seca e a Grande Depressão assolam o oeste montanhoso e os Duttons que o chamam de lar.",
+        poster: "https://image.tmdb.org/t/p/w500/t2BpkYRH8GRX9sSDirXQGPz58aG.jpg",
+        background: "https://image.tmdb.org/t/p/original/9I6LgZ5110ycg4pyobJxGTFWFCF.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Faroeste"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["ff85ca16f","27fbf120a","516da66f0","4ff808251","9e83790ac","e66aecd15","0d6d076a9","f2002cdbb"],
+          2: ["0dc670be9","d0b8cf784","442482b7f","6bac5167a","30b078a9b","2e0bb8a5a","db667c2ba"]
+          }
+        },
+        milnovecentoseoitentaetres: {
+        name: "1983 (2018)",
+        synopsis: "Neste suspense sombrio de história alternativa, um estudante de direito ingênuo e um policial veterano descobrem uma conspiração que tiranizou a Polônia por décadas.",
+        poster: "https://image.tmdb.org/t/p/w500/zv2R0UvZ93hpeNcIkSKDeHtQC3S.jpg",
+        background: "https://image.tmdb.org/t/p/original/uDYbBU2CGOfqHf24SrQV65RmMz7.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Crime, Mistério"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["166cea09d","f1ead3fd6","99390f3df","4ce3d8c91","41cba5e62","b20704878","9e15e4ad1","bb5a5a9a7"]
+          }
+        },
+        milnovecentosenoventaedois: {
+        name: "1992 (2024)",
+        synopsis: "Após a morte do marido em uma explosão, uma viúva se une a um ex-policial para investigar uma série de assassinatos ligados à Exposição Universal de Sevilha de 1992.",
+        poster: "https://image.tmdb.org/t/p/w500/brg7JhfiUDZWsKCMLi7nQK4rAi3.jpg",
+        background: "https://image.tmdb.org/t/p/original/tH339xcZPiktjK7uzOdWZ81x7PF.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Drama, Mistério"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["675ad2e11","b9725b722","9338ef8f8","52c111d3c","524221493","02248c358"]
+          }
+        },
+        doismilenoventaeum: {
+        name: "2091 (2016)",
+        synopsis: "É o ano 2091. Os sete melhores jogadores do mundo são recrutados por uma companhia poderosa para viajar até a lua de Calisto e jogar um contra o outro em um videogame extremo. Mas tudo vai mudar quando um deles descobrir a verdade sinistra que se esconde no jogo e que pode colocar em risco a própria vida.",
+        poster: "https://image.tmdb.org/t/p/w500/jxdbJnEWq7wImofZEwMI57Sp5j5.jpg",
+        background: "https://image.tmdb.org/t/p/original/i8kTfZ3TW77CiRIR0zivMDMfUWL.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Ficção científica e fantasia ,  ação e aventura"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["f0fce408c","2f73aef8c","702987b41","21d577b09","3d625554c","f1c37e90c","8d1755b4e","51eb462dd","f11e658d0","f2c563198",
+              "847029116","f90ea4640"]
+          }
+        },
+        quatromilequatrocentos: {
+        name: "4400 (2021)",
+        synopsis: "A trama segue 4400 pessoas que desaparecem sem deixar rastros nos últimos cem anos e todos retornam em um instante, sem terem envelhecido e sem memórias sobre o que aconteceu com eles. Enquanto o governo se apressa em analisar potenciais ameaçadas e conter a história, os 4400 devem lidar com o fato de que eles retornaram com algumas… atualizações. E com a crescente certeza que eles voltaram por uma razão específica.",
+        poster: "https://image.tmdb.org/t/p/w500/nTYDhLtHffPAJKWn2w8sfnYhLwt.jpg",
+        background: "https://image.tmdb.org/t/p/original/7wfFmI8VZTgglYEUioAcwikxUAa.jpg",
+        categories: ["Números e Símbolos"],
+        genero: ["Ficção científica e fantasia ,  Drama"],
+        language: ["Legendado"],
+        seasons: {
+          1: ["7f3e6a97b","36672696f","0a07994c4","3eb06fda5","30837653f","1aae60002","a2744ea19","aae641543","206464fae","d1c6314a7",
+              "99d49fd5f","7286d11c2","455eb02ba"]
+          }
+        },
+        aagenciacentraldeinteligencia: {
+        name: "A Agência: Central de Inteligência (2024)",
+        synopsis: "Martian é um agente da CIA forçado a abandonar sua vida secreta e voltar para Londres. Lá, ele precisa lidar com um antigo amor que reaparece, reacendendo sentimentos e dilemas.",
+        poster: "https://image.tmdb.org/t/p/w500/mRgfl4J0tVt3twmQ3C2zs8N5rG9.jpg",
+        background: "https://image.tmdb.org/t/p/original/fNA0mMdHlRwVrQSRlYONmSAO8Su.jpg",
+        categories: ["Letra A"],
+        genero: ["Drama, Mistério"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["8de818e38","765aa3e60","a230ea074","26e214dc1","032485c23","a0fce0b65","b79f24b5b","106352fb5","64d8bbace","85e017ba4"]
+          }
+        },
+        aagriculturadofuturo: {
+        name: "A Agricultura do Futuro (2023)",
+        synopsis: "Benedikt Bösel era banqueiro de investimentos, mas a crise financeira chegou e, com ela, a busca por um propósito. Hoje, é agricultor e líder visionário de uma equipe de jovens que está testando um tipo de agricultura novo e radical na luta contra a mudança climática.",
+        poster: "https://image.tmdb.org/t/p/w500/jKKhaznn7ZlAqaQeDUeCaQaDelS.jpg",
+        background: "https://image.tmdb.org/t/p/original/nsHJXRgzapg1k66Kk7BUguIRC64.jpg",
+        categories: ["Letra A"],
+        genero: ["Documentário"],
+        language: ["Legendado"],
+        seasons: {
+          1: ["e5ae88995","bada58577","18c3f8ced","50465ee9e","709806371","7a2043aa2"]
+          }
+        },
+        aamigagenial: {
+        name: "A Amiga Genial (2018)",
+        synopsis: "Depois de saber que sua amiga de longa data, Lila Cerullo, desapareceu sem deixar vestígios, a escritora Elena Greco relembra sua turbulenta amizade em uma perigosa e fascinante Nápoles, Itália.",
+        poster: "https://image.tmdb.org/t/p/w500/9gtjWDaWe6IffKHQuCs4Il7kw5C.jpg",
+        background: "https://image.tmdb.org/t/p/original/iIYR1FuBD5ma2L2KjbHHWYgFu6Y.jpg",
+        categories: ["Letra A"],
+        genero: ["Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["3dd890fb3","532092165","db9ee4c34","b3d9005ce","c1fc2126d","b7a1568d5","dc458d417","71f0147e5"],
+          2: ["e579add54","655707e56","8eba59be8","3b622100d","d9cfd3fa8","65496a916","507f5e3ed","ebd8d4cda"],
+          3: ["8db246ba9","4c4c8be88","0c6bf977d","89547aed3","a2cb7ea04","78b975f82","ec4013bf2","56539ca73"],
+          4: ["97eb73847","1a8903f99","99d9f256a","dffe7037f","d37533502","aa2a01955","77acc48a6","90c11071a","a73e28816","f0a0ec78f"]
+          }
+        },
+        aanatomiadegrey: {
+        name: "Grey's Anatomy (2005)",
+        synopsis: "Os médicos do Grey Sloan Memorial Hospital lidam diariamente com casos e consequências de vida ou morte. É um no outro que eles encontram apoio, conforto, amizade e, às vezes, até mais que amizade... Juntos, eles descobrem o quanto a vida profissional e a pessoal podem ser complicadas e se misturarem no meio do caminho.",
+        poster: "https://image.tmdb.org/t/p/w500/Als9Xo4MoZxJeMenHtNLOoBzqwT.jpg",
+        background: "https://image.tmdb.org/t/p/original/fgvM6m7gAd8kDAaLF16aflbOSAK.jpg",
+        categories: ["Letra A"],
+        genero: ["Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["1cbed836f","6811366ff","dc4f8c282","90abf4dd7","274814b18","4eb3f33a3","82015f6bf","aa9977bbe","5a925db26"],
+          2: ["263d44fa7","3be15f2c5","98007de3a","1fd0994f3","f4c8a8c1c","f5b81eac3","c771ba65a","28250b909","ee89b2382","fe869fad7",
+              "d2f4fbdc9","bb4889067","177585105","4e6ce2afc","33d4d41df","d63270598","4f24a4121","98f6c7357","eeb99cf6b","9c7029447",
+              "fc405ee9e","92e9018ae","1b8bf7b72","bacb19761","7d9188754","36c48fb5e","b697b4bc3"],
+          3: ["4810489c4","196559fc9","0f2001d71","e4809405b","26014bcec","fdc2c4a83","5afb39ced","a18291463","369cf1783","391affebc",
+              "4d085e715","7eccb29ce","97c4c6e36","0fc9a7cab","aa0fcde8c","dcf33e748","94fe29c47","bc16ee532","37eb28d16","a09be3df1",
+              "9dc2f69b7","459b98517","600f110c6","35a621d7a","6140ce080"],
+          4: ["59b04db11","141fe428f","92c8bd8da","9cdb8fed1","b3fb83247","902ab36d2","7d66f5de3","d6ad33db2","1e2d972b3","673877c44",
+              "a6d4f0d94","6076e0623","ee03326c8","66ce37b85","4ef80d3aa","a18481279","3b78e28e5"],
+          5: ["b418c56cd","91d35c95a","a4e8985b1","b99a146f7","9593a472f","b6e7bdffe","0e2c2cfcc","7e0eb3366","9051dcfb1","4d34d8056",
+              "3d189b147","8950cf959","28f5f365d","7eb42bba7","49fd72c6a","a07b31169","5a73f83e5","0760157eb","37b2cb5b5","de55d8f38",
+              "dbba70ae9","69f498f11","8064270e3","b3bb5b82e"],
+          6: ["b1c2df6dd","001005cb6","e58054200","0073131cd","a1ea616b6","b36ad376f","f8b09513d","120690625","ea823f939","3b6f9aa80",
+              "b68764a43","6dc3a9f7f","ee1f8b4c2","24fb7cdc7","fc68e619d","26504e910","b0de7b168","e4d58aa9c","056fd766e","51ba1e397",
+              "bcafe1754","349384e78","4f0377672","256ae746c"],
+          7: ["dde12e7a6","090de8b47","b2d5b0c6a","183276b06","e7e0ffb9a","9479a99e3","1f580579f","5de5e36aa","1b417057a","b486b1e6f",
+              "5c0e2da93","961359284","ce330ac9f","cab70a9ad","26b97dbcd","bb40fb347","43e384533","2ca2b275e","b9e03eb79","9c63449ab",
+              "08a8ba789","be9530d32"],
+          8: ["a9df93d94","ba55f042f","07bfb6356","b02e8a23b","f8b474251","e96cf978b","c7bfda696","81a784c23","a22dabdc4","06a3d6f89",
+              "750e46ac3","7bf7b0dcf","5c9be0adf","4308119fc","9dc61e470","a02cfb51d","af537dc20","99f200645","ac42baa23","ee12ccd19",
+              "74b45d449","b8bd7c062","efa2598fb","f6693b5aa"],
+          9: ["97e6cd607","6bb00be3b","1050d6307","2691bde80","ca5c6a066","8425cd212","de34150ed","8b7b74d7b","f3d3cedc5","72bc9948f",
+              "1cfd493f7","1e5ee8d91","de79dc925","634c864bd","53b06d9cd","74e20455c","e3f08cb7a","b14a6f985","7d44cf8f0","f3ad8a616",
+              "9adb06299","194ed12c3","91774c931","cdb386312"],
+          10: ["8911f602d","3938348d3","94cb4a8d0","e2c4ddf23","887bb6d8d","134437e94","4b86e662c","3a983e537","f59a1e934","ea01c6dae",
+               "107e78594","38f1ed3fd","7eafbc222","77519e47a","4d1db454e","9b7bf98dc","2f81e8cef","b31415fb4","8d50b4cc1","1b4dbac50",
+               "ab777018e","9edfdef3b","64e7969c0","1805ab701"],
+          11: ["4a4aabb0d","774412680","c92318556","7f5b056ae","c2adea454","ab34f627f","8b138d3b9","037f08d44","fc46a4ed4","e09206a8a",
+               "0862366f8","872bcb0d2","0258052f1","21c32668e","0b9bad3e6","91d154a84","043a1687a","553725792","06cfad422","3fdfafe55",
+               "eabc3ae21","52bf66170","2a4b00a69","f7eb02db2","ee9b9689c"],
+          12: ["835a9acdb","a0b20a6ed","f8ecf66e7","e181de767","626104398","3610acaaa","d6d299ad5","d78f27f7f","936c9da05","0758e353f",
+               "44b1b0392","e2b1d69ea","0f73fb841","e61db9d81","c6e4c4841","e0497ef6c","5521e8688","9c260ca8b","6dfe8dbcb","6a42d25ce",
+               "681c86713","d61d27325","eb59433ba","7d58c3bb0"],
+          13: ["8aeb14c00","2f2bc9120","fa90e7d21","c5616b00c","457673381","f9b9614b6","bad74b5ba","e4c158f10","8ea758757","9d8b6a57c",
+               "3300582ec","32bb70579","c30ca5159","bf2af9f59","2e34dfd7c","edab2e497","2ba032a4c","318e80bc1","ec8a6d745","fec11fd5c",
+               "9c0e4fb70","6279b8fe6","ac5518302","5676b977e"],
+          14: ["042cafbf3","06f151f89","ef0957fff","608f13214","94dc52d70","92da6beea","f84ba6f29","5b20b308d","7f89b5faa","fed6084ee",
+               "23f404610","4091cb4bd","79d7d502a","ca4b0a94b","2bf44e404","8fa9c75c1","aff80a8ed","8cb12d8c0","1bcd1a349","baf6f7f62",
+               "7a948695c","1b695be07","edbc67867","a0c34cd5a"],
+          15: ["7269b29c6","70ee172f0","d7df94ee2","588d990b7","154fb6214","c6e62fd0e","6e567c065","2ce02f489","dc5f139c8","d94fbb65e",
+               "c7eab18f4","63d46d38c","61d7001ad","b29164a10","d80c441c1","02b8a709f","b6b092577","21d24dc95","0d3819a3c","73d01f538",
+               "0f94733a0","2c60b83e5","05c5e7a72","a16958f0e","2c81d0b9b"],
+          16: ["78efbeacc","6f3b58426","95fd0c315","07da6cb3a","56aabf521","5b5635161","e49d1b71e","59e5954a3","24f56a468","cf1a3c878",
+               "b9ff5b55c","3b3ebc7c1","29f3781d1","709ed3069","4af1a542f","bd68075b3","d04251c04","3cd95e3d2","91a2256e7","d233842ab",
+               "b7308bb02"],
+          17: ["d08376b15","5197d0fa8","9485438d5","6bffc4930","f4b9373dd","81c8bea75","83b114d37","cca8c2fc7","5e38b5f46","31eab42a5",
+               "4fce9967d","35d85c1ad","04fbe77fd","12e4d1e1e","baa5ec7ac","bc789396c","f6ed4d53b"],
+          18: ["1fd62b8d9","ac5469cd4","5d4d2eccc","cc75e7460","b0f82bb58","8d01dbcb3","2237662ff","17f5d221f","11baac87e","c6e645236",
+               "61b040b38","20ff93116","7131c601e","4f8656de6","6bee9e7dd","0042737a4","13684c08d","5f51116d9","53406ffbf","ae29a1cab"],
+          19: ["b1238372f","b7ab41508","5f858a23d","fdeb46d58","45664e7d0","49d8133f1","ac4f61df1","466aa71a4","2d15df214","6569737fa",
+               "1b52e22c9","a55e51ace","3e112a05b","fec88d779","8eb511c0d","71849ab2b","f6550a78c","a4201efd8","7586160ea","7311b64b9"],
+          20: ["997b69b5b","8b4245389","adb80cfe6","56bbe527f","336ad277c","bec4342af","99dcd3627","b06f82573","d60a827ed","185c467b5"],
+          21: ["117b293bd","8a94890d8","fbfbde632","9804604ac","59100309a","bb61952d4","7695ef38b","4fa73cd9f","6f41e0a5b","cf409d06c",
+               "e13e75616","6d2f8033b","9e8f0115b","38a1d1213","f479f8d88","d9c46a656","f9d36d191","4103f7a1d"]
+          }
+        },
+        aartedocrime: {
+        name: "A Arte do Crime (2015)",
+        synopsis: "A realidade dos crimes e a intriga por trás da fachada glamurosa das grandes casas de leilões de Nova York.",
+        poster: "https://image.tmdb.org/t/p/w500/wcGISqrjaRPxm6Yw3GJdry68CtM.jpg",
+        background: "https://image.tmdb.org/t/p/original/rnoutgER1XP0HJz2bj0LPtgEEZr.jpg",
+        categories: ["Letra A"],
+        genero: ["Crime, Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["a17880c97","443807c03","5819654dc","49547f85c","6aaffd407","21d781f5a","5064e8e03","2756ab991","db585b205","c40d0eb28"],
+          2: ["24c547657","2ad749afb","5a582295a","be8df9256","3901b8a35","4025a25bf","2d2a8a00b","572080ce6","6ad0571bc","6ea1839ec"]
+          }
+        },
+        aassombracaodeenfield: {
+        name: "A Assombração De Enfield (2015)",
+        synopsis: "A trama retrata uma série de eventos bizarros em torno dos fenômenos coletivamente conhecidos como 'O Poltergeist de Enfield'. O drama baseia-se em gravações e declarações de testemunhas para atrair o público para os acontecimentos sobrenaturais que se desdobram.",
+        poster: "https://image.tmdb.org/t/p/w500/qwB262cW73Gro2nG3GoRI8ePm5c.jpg",
+        background: "https://image.tmdb.org/t/p/original/R3s99tkCjK8acXifjwWUkzSkqw.jpg",
+        categories: ["Letra A"],
+        genero: ["Drama, Mistério"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["4b574e1f1","a70ae826c","d2f4c63fa"]
+          }
+        },
+        aatriz: {
+        name: "A Atriz (2023)",
+        synopsis: "Yasemin Derin, uma famosa atriz na Turquia, vive uma vida dupla há muitos anos. Oculta pela fama, Yasemin leve uma segunda vida que a arrasta pra uma aventura cheia de segredos.",
+        poster: "https://image.tmdb.org/t/p/w500/tdl6MgyyDZRVChnTyixSr48o4mb.jpg",
+        background: "https://image.tmdb.org/t/p/original/tGJToFgrRJIznVE8OCKJXJoNAiX.jpg",
+        categories: ["Letra A"],
+        genero: ["Drama, Crime"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["550aed019","8c29dd0ad","740a2962c","f305ae99e","3be5db1ba","3a4082192","954a9c8ac","b5122da7b"]
+          }
+        },
+        aautonomia: {
+        name: "A Autonomia (2018)",
+        synopsis: "Um drama distópico estrelado por alguns dos maiores talentos de atuação de Israel, Autonomies é um conto globalmente relevante centrado nas questões ardentes de identidade, religião, política e liberdade pessoal. A história se passa em uma realidade alternativa da atual Israel, uma nação rasgada e dividida por um muro no secular 'Estado de Israel', com Tel Aviv como sua capital, e a 'Autonomia Haredi' em Jerusalém, dirigida por um grupo religioso ultra-ortodoxo. Vivendo na Autonomia, entre esse inquieto status quo territorial, está Broide, um negociante de rodas Haredi que ganha a vida contrabandeando pequenos contrabandos entre as duas regiões. Um dia ele recebe uma oferta de emprego que muda sua vida: ele é convidado a sequestrar uma garotinha no centro de uma batalha de custódia entre duas famílias - uma Haredi e uma secular - e contrabandeá-la através da fronteira entre os dois territórios.",
+        poster: "https://image.tmdb.org/t/p/w500/che2DITXSJlwlaKsQOZugXPwGy3.jpg",
+        background: "https://image.tmdb.org/t/p/original/ax2DqVjVShu4wtHBgo1Nb9hmA8X.jpg",
+        categories: ["Letra A"],
+        genero: ["Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["d35afe1fe","8f3970257","5068bb755","c856b9e18","2d48ca150"]
+          }
+        },
+        abatalhadaspizzas: {
+        name: "A Batalha das Pizzas (2022)",
+        synopsis: "Em um mundo repleto de opiniões divergentes, há uma coisa que une a todos... o amor universal pela pizza. O reality reúne concorrentes de todas esferas da vida obcecados por pizza que vão mostrar suas habilidades e batalhar por um prêmio em dinheiro. Acenda o forno, a primeira competição de pizza começou!",
+        poster: "https://image.tmdb.org/t/p/w500/wrqlHXTLpSbsXM5ZDzV99MrmQo1.jpg",
+        background: "https://image.tmdb.org/t/p/original/gpIjHdM7sQfB1mMupz46LaXHWBq.jpg",
+        categories: ["Letra A"],
+        genero: ["Reality"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["45c0ac0aa","86a84dd2a","4d53e7760","d52fead15","062f4afde","6eee2f95c","e972cb384","85be9fd43","5ca28694f","dfc05951e"]
+          }
+        },
+        abatalhadoscem: {
+        name: "A Batalha dos 100 (2023)",
+        synopsis: "Nesta acirrada competição de fitness, 100 participantes com ótimo preparo físico lutam pelo título de melhor corpo.",
+        poster: "https://image.tmdb.org/t/p/w500/x5zev4oAG1KeQwtN6SIQOHlHQ7.jpg",
+        background: "https://image.tmdb.org/t/p/original/msrw4yMwqrUgGDzQSRRNSgkamBt.jpg",
+        categories: ["Letra A"],
+        genero: ["Reality"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["8b5223d8f","c377b424d","f5aca58f6","53ee4027c","c0a861949","ee1aba3e0"]
+          }
+        },
+        abatalhapelotopo: {
+        name: "A Batalha Pelo Topo (2021)",
+        synopsis: "Kieran, dono da Excel Esports, procura um novo começo para sua equipe depois de terminar em décimo lugar no Campeonato Europeu de League of Legends.",
+        poster: "https://image.tmdb.org/t/p/w500/qVxUrk65lYcPPKJwWi9NvZkFE5Y.jpg",
+        background: "https://image.tmdb.org/t/p/original/rZ9xrl4d4bsJl1UOJ9Nm0ciwwta.jpg",
+        categories: ["Letra A"],
+        genero: ["Documentário"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["4a6554913","c08a793d8","44b49d3b4","71727a7d8","74a7e03b9"]
+          }
+        },
+        abeiradocaos: {
+        name: "À Beira do Caos (2021)",
+        synopsis: "A crise da meia-idade bateu à porta. Agora, quatro amigas compartilham as dores e as delícias de suas vidas pessoais e profissionais.",
+        poster: "https://image.tmdb.org/t/p/w500/59288xuObda3dsxWQ6lWXCYlxhG.jpg",
+        background: "https://image.tmdb.org/t/p/original/jqgo2taA3cviaHoXJhC5bnRKBui.jpg",
+        categories: ["Letra A"],
+        genero: ["Comédia, Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["c7f260048","3a9dcbb92","1b30aa6ee","feb94bb60","654e7b7cf","322493a52","8b2c8c77c","0f55fe221","2d24dfd62","d9e8567b7",
+              "82ebe7091","fb2cfe737"]
+          }
+        },
+        abelaeaferadoismiledoze: {
+        name: "A Bela e a Fera (2012)",
+        synopsis: "Durante uma investigação, a detetive Catherine Chandler acaba reencontrando Vincent Keller, um homem que a salvou de um ataque anos antes. Mas agora Keller sofre de uma doença que o transforma em monstro quando se irrita.",
+        poster: "https://image.tmdb.org/t/p/w500/ingpnfyqLUs72V6YR4bQJ6vc33V.jpg",
+        background: "https://image.tmdb.org/t/p/original/sh8VTWog9ogT70NWLcJxQf4K2iz.jpg",
+        categories: ["Letra A"],
+        genero: ["Drama , Ficção Científica & Fantasia"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["8ca476718","5902f6779","7d891f974","4f5d48454","3f433b382","9167c7eb9","6c6df5bf3","124b2e194","c6dbc845f","587668a29",
+              "20a1afa0e","9d0737092","894f5a474","0e7e8909b","474cea137","d722f22c7","390411f46","295da5589","47174ba55","4c8fc4362",
+              "a4317f680","2617ff534"],
+          2: ["1a1851c14","051d72481","95da60a50","2ef1a3bb1","edbf4e3d4","862543e17","044ed4478","6d1cd8420","98a3756a4","1ed2928cd",
+              "06c6d8926","4b0088cdc","39e0af12a","908237696","68303f3da","7bf55f764","8c109b657","c34453ebc","8f2948a06","2b15efa50",
+              "b00a357ad","170f21f33"],
+          3: ["eab96276c","55b7f0141","0333fcd5f","9d9900983","84d25632c","7d1e1b241","bcee01a34","abadb1bf6","4c5794c07","9b7814f4a",
+              "398e0839e","4d0f1a84f","25e65952d"],
+          4: ["25ed6289d","e3c2902e4","c16e56371","704afe1cd","45615165d","0f1cd030f","b1042d5a0","c61d635da","45c2ba205","4679c9908",
+              "b0567bec0","36856d3c5","00f0a76e7"]
+          }
+        },
+        abelaeopadeiro: {
+        name: "A Bela e o Padeiro (2020)",
+        synopsis: "Após uma noite agitada com a celebridade da moda Noa Hamilton, Daniel um padeiro de Miami, precisa conviver com o holofote da mídia em sua vida.",
+        poster: "https://image.tmdb.org/t/p/w500/5xLeagwKgi7KdB4QgwZw22MzjJS.jpg",
+        background: "https://image.tmdb.org/t/p/original/dFavwH1wMsVdvzHoJ5we2omMckH.jpg",
+        categories: ["Letra A"],
+        genero: ["Comédia, Drama"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["a7887218e","f2d1e07f1","a55cdbfc9","b42ce0ed5","57a6cd3d3","340253101","4c72c59f3","97dd5b301","4c0581480"]
+          }
+        },
+        abelezasecretadosanimais: {
+        name: "A Beleza Secreta dos Animais (2021)",
+        synopsis: "Esta série imersiva segue as criaturas mais magníficas do mundo, registrando momentos nunca antes vistos, dos mais comoventes aos mais chocantes.",
+        poster: "https://image.tmdb.org/t/p/w500/2L7YNEVhuiWWl52Smpa6RPbG9d3.jpg",
+        background: "https://image.tmdb.org/t/p/original/tExscftlsu5gxID7hZ1NNZLjvTJ.jpg",
+        categories: ["Letra A"],
+        genero: ["Documentário"],
+        language: ["Dublado"],
+        seasons: {
+          1: ["7993c4903","9962db680","89bff3973","a6d2aa545"],
+          2: ["c89c1150c","ccf36aef2","9f64d5e5f","481b81557"]
+          }
+        },
+        abencao: {
+        name: "A Bênção (2020)",
+        synopsis: "A vida de sete pessoas muda profundamente ao se envolverem na criação de um medicamento capaz de suprimir o medo mais fundamental do ser humano: o medo da morte.",
+        poster: "https://image.tmdb.org/t/p/w500/7box11foqtnEwFQieRaJrR1yNBY.jpg",
+        background: "https://image.tmdb.org/t/p/original/wJIw2mhdSLIMihaS45WO1DCP4P6.jpg",
+        categories: ["Letra A"],
+        genero: ["Drama, Mistério"],
+        language: ["Idioma Original"],
+        seasons: {
+          1: ["06036e002","e852db8c3","73600d456","8b38450f1","820a539df","80e10b300","2296e13ae","17de0b0f2"]
+          }
+        },
+        nova: {
+        name: "Nova Série",
+        synopsis: "Sinopse em breve...",
+        poster: "https://image.tmdb.org/t/p/w500/.jpg",
+        background: "https://image.tmdb.org/t/p/original/9yNOc1358tTYI2TlkrfFFRvuhWv.jpg",
+        categories: ["Letra A"],
+        genero: ["Documentário"],
+        language: [""],
+        seasons: {
+          1: ["01","02","03","04","05","06","07","08","09","10",
+              "01","02","03","04","05","06","07","08","09","20",
+              "01","02","03","04","05","06","07","08","09","30",],
+          2: ["01","02","03","04","05","06","07","08","09","10",
+              "01","02","03","04","05","06","07","08","09","20",
+              "01","02","03","04","05","06","07","08","09","30",],
+          3: ["01","02","03","04","05","06","07","08","09","10",
+              "01","02","03","04","05","06","07","08","09","20",
+              "01","02","03","04","05","06","07","08","09","30",],
+          4: ["01","02","03","04","05","06","07","08","09","10",
+              "01","02","03","04","05","06","07","08","09","20",
+              "01","02","03","04","05","06","07","08","09","30",]
+          
+        
+        
+        
+        
+        
+        }
+        }
+        };
+
+
+// === Elementos ===
+const seriesTabs = document.getElementById("seriesTabs");
+const serieInfo = document.getElementById("serieInfo");
+const serieTitle = document.getElementById("serieTitle");
+const serieSynopsis = document.getElementById("serieSynopsis");
+const seriePoster = document.getElementById("seriePoster");
+const serieCategories = document.getElementById("serieCategories");
+const serieGênero = document.getElementById("serieGênero");
+const serieLanguage = document.getElementById("serieLanguage");
+const seasonEpisodesContainer = document.getElementById("seasonEpisodesContainer");
+const seriesSearch = document.getElementById("seriesSearch");
+const categoryFilter = document.getElementById("categoryFilter");
+const modalPlayer = document.getElementById("modalPlayer");
+const modalTitle = document.getElementById("modalTitle");
+const backButton = document.getElementById('backButton');
+const castOpen = document.getElementById("castOpen");
+const castCopy = document.getElementById("castCopy");
+
+let currentSeries = null;
+
+function gerarToken(length = 64){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let token = '';
+  for(let i=0;i<length;i++) token += chars.charAt(Math.floor(Math.random()*chars.length));
+  return token;
+}
+
+function populateCategories(){
+  const allCategories = new Set();
+  Object.values(seriesData).forEach(s => s.categories.forEach(c => allCategories.add(c)));
+  [...allCategories].sort().forEach(cat=>{
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categoryFilter.appendChild(option);
+  });
+}
+
+function buildTabs(filteredKeys=null){
+  seriesTabs.innerHTML = "";
+  const keys = filteredKeys||Object.keys(seriesData);
+  keys.forEach(key=>{
+    const s = seriesData[key];
+    const li = document.createElement("li");
+    li.className="nav-item";
+    const btn = document.createElement("button");
+    btn.className="nav-link p-0 border-0 bg-transparent text-center series-tab";
+    btn.dataset.target=key;
+    btn.innerHTML = `<div class="card border-0" style="width: 80px;"><img src="${s.poster}" class="card-img-top rounded" style="height:120px;object-fit:cover;" alt="${s.name}"><div class="card-body p-1"><p class="card-text small text-truncate mb-0">${s.name}</p></div></div>`;
+    li.appendChild(btn);
+    seriesTabs.appendChild(li);
+  });
+}
+
+function showSeasons(key, tabBtn){
+  const s = seriesData[key];
+  serieTitle.textContent = s.name;
+  serieSynopsis.innerHTML = "";
+
+  const synopsisText = document.createElement("span");
+  synopsisText.className = "synopsis-text";
+  synopsisText.textContent = s.synopsis.length > 80 ? s.synopsis.slice(0,80) + "..." : s.synopsis;
+  serieSynopsis.appendChild(synopsisText);
+
+  const lerMaisBtn = document.createElement("span");
+  lerMaisBtn.textContent = " ler mais";
+  lerMaisBtn.style.color = "#007bff";
+  lerMaisBtn.style.cursor = "pointer";
+  lerMaisBtn.style.textDecoration = "underline";
+  lerMaisBtn.style.display = "inline-block";
+  lerMaisBtn.style.marginTop = "5px";
+  serieSynopsis.appendChild(lerMaisBtn);
+
+  let expanded = false;
+
+  lerMaisBtn.addEventListener("click", function() {
+    if(!expanded){
+      synopsisText.textContent = s.synopsis;
+      lerMaisBtn.textContent = " ler menos";
+    } else {
+      synopsisText.textContent = s.synopsis.length > 80 ? s.synopsis.slice(0,80) + "..." : s.synopsis;
+      lerMaisBtn.textContent = " ler mais";
+    }
+    expanded = !expanded;
+  });
+
+  seriePoster.src = s.poster;
+  serieCategories.textContent = s.categories.join(", ");
+  serieGênero.textContent = s.genero.join(", ");
+  serieLanguage.textContent = s.language.join(", ");
+  serieInfo.style.display="block";
+
+  const li = tabBtn.closest("li");
+  li.insertAdjacentElement("afterend", serieInfo);
+
+  seasonEpisodesContainer.innerHTML="";
+  let seasonId=0;
+  for(const [seasonNum, episodes] of Object.entries(s.seasons)){
+    seasonId++;
+    const container = document.createElement("div");
+    container.className="accordion mb-2";
+    container.id=`accordionSeason${seasonId}`;
+    const item = document.createElement("div");
+    item.className="accordion-item";
+    const headerId = `heading${seasonId}`;
+    const collapseId = `collapse${seasonId}`;
+    item.innerHTML=`
+      <h2 class="accordion-header" id="${headerId}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">Temporada ${seasonNum}</button>
+      </h2>
+      <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}" data-bs-parent="#accordionSeason${seasonId}">
+        <div class="accordion-body d-flex flex-wrap gap-2">
+          ${episodes.map((vid,idx)=>`<button class="btn btn-outline-primary open-player" data-vid="${vid}" data-title="${s.name} - Temporada ${seasonNum} - Episódio ${idx+1}">Episódio ${idx+1}</button>`).join("")}
+        </div>
+      </div>
+    `;
+    container.appendChild(item);
+    seasonEpisodesContainer.appendChild(container);
+  }
+
+  document.body.style.backgroundImage = `url('${s.background}')`;
+  document.body.style.backgroundSize = 'cover';
+  document.body.style.backgroundPosition = 'center';
+  document.body.style.backgroundRepeat = 'no-repeat';
+  document.body.style.backgroundAttachment = 'fixed';
+}
+
+function updateUIOnTabToggle(){
+  if(currentSeries){
+    backButton.style.display='block';
+    seriesSearch.style.display='none';
+    categoryFilter.style.display='none';
+    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='none');
+  }else{
+    backButton.style.display='none';
+    seriesSearch.style.display='block';
+    categoryFilter.style.display='block';
+    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='inline-block');
+  }
+}
+
+seriesTabs.addEventListener("click",(e)=>{
+  const btn = e.target.closest("button.series-tab");
+  if(!btn) return;
+  const target = btn.dataset.target;
+  if(currentSeries===target){
+    currentSeries=null;
+    serieInfo.style.display="none";
+    btn.classList.remove("active");
+    document.body.style.backgroundImage="";
+  }else{
+    currentSeries=target;
+    document.querySelectorAll("button.series-tab").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    showSeasons(target,btn);
+  }
+  updateUIOnTabToggle();
+});
+
+backButton.addEventListener("click",()=>{
+  currentSeries=null;
+  serieInfo.style.display="none";
+  document.querySelectorAll("button.series-tab").forEach(b=>b.classList.remove("active"));
+  updateUIOnTabToggle();
+  document.body.style.backgroundImage="";
+});
+
+seriesSearch.addEventListener("input",()=>{
+  const q = seriesSearch.value.toLowerCase();
+  buildTabs(Object.keys(seriesData).filter(k=>seriesData[k].name.toLowerCase().includes(q)));
+});
+
+categoryFilter.addEventListener("change",()=>{
+  const cat = categoryFilter.value;
+  if(!cat){ buildTabs(); return; }
+  buildTabs(Object.keys(seriesData).filter(k=>seriesData[k].categories.includes(cat)));
+});
+
+document.body.addEventListener("click",(e)=>{
+  if(e.target.classList.contains("open-player")){
+    const vid = e.target.dataset.vid;
+    const title = e.target.dataset.title;
+    const token = gerarToken(64);
+    const expires = Date.now() + 5 * 60 * 1000;
+    const secureSrc = `https://outbound-proxy-us-east1-0-glob-usercontent-client-id-0866832316.googleapis.com.de/embed.php?vid=${vid}&token=${token}&expires=${expires}`;
+    modalPlayer.src = secureSrc;
+    modalTitle.textContent = title;
+    new bootstrap.Modal(document.getElementById("playerModal")).show();
+  }
+});
+
+document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ modalPlayer.src=""; });
+
+// === Web Video Cast - compartilhar link via Intent ===
+castOpen.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  const url = modalPlayer.src; // pega o link do player
+  if (!url) {
+    alert("Nenhum vídeo carregado.");
+    return;
+  }
+
+  // Remove https:// do início
+  const cleanUrl = url.replace(/^https?:\/\//, '');
+  
+  // Cria o intent para abrir no Web Video Cast
+  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
+
+  // Tenta abrir o aplicativo diretamente
+  window.location.href = intentLink;
+});
+
+populateCategories();
+buildTabs();
+</script>
+<!-- Tela de Alerta -->
+  <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
+    <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
+  </div>
+
+  <script>
+    function mostrarAlerta() {
+      const tela = document.getElementById("bloqueio");
+      tela.style.display = "block";
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+
+    document.querySelectorAll('a').forEach(link => {
+      link.setAttribute('target', '_self');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      const tecla = e.key.toLowerCase();
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && tecla === 'u') ||
+        (e.ctrlKey && tecla === 's') ||
+        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+      ) {
+        e.preventDefault();
+        mostrarAlerta();
+      }
+    });
+
+    window.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
+</body>
+</html>
