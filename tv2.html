@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JC TV STREAMING</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+      color: #000;
+    }
+
+    #seriesTabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      margin-top: 100px;
+    }
+    .search-bar {
+      width: 200px;
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1050;
+    }
+    .canal-card {
+      background-color: #3333;
+      border-radius: 8px;
+      padding: 6px;
+      text-align: center;
+      color: #000;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .canal-card:hover {
+      transform: scale(1.03);
+    }
+    .channel-card img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+    }
+    .canal-nome {
+      margin-top: 6px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      line-height: 1.1;
+      word-break: break-word;
+      white-space: normal;
+    }
+    footer.footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: black;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      z-index: 1000;
+    }
+    footer.footer img {
+      height: 30px;
+      width: auto;
+    }
+
+    /* Modal ainda existe, mas não será usado */
+    .modal-fullscreen .modal-dialog {
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0;
+      height: 100vh;
+    }
+    .modal-fullscreen .modal-content {
+      height: 100vh;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+    }
+    .modal-header {
+      background: #121212;
+      border-bottom: 1px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+      color: #eee;
+      flex-shrink: 0;
+    }
+    .modal-title { margin: 0; font-weight: 600; font-size: 1.2rem; flex: 1; user-select: none; }
+    #btnFechar, #btnProg {
+      border: none;
+      background-color: #222;
+      color: #eee;
+      font-weight: 600;
+      padding: 6px 14px;
+      margin-left: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      user-select: none;
+    }
+    #btnFechar:hover, #btnProg:hover { background-color: #444; }
+
+    .btn-group-toggle {
+      position: relative;
+      display: inline-block;
+    }
+    #btnEspelhar {
+      border: none;
+      background-color: #FFC107;
+      color: #000;
+      font-weight: 600;
+      padding: 6px 14px;
+      margin-left: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      user-select: none;
+    }
+    #btnEspelhar:hover { background-color: #444; }
+    #espelharDropdown {
+      display: none;
+      position: absolute;
+      top: 40px;
+      right: 0;
+      font-size: 12px;
+      padding: 4px 10px;
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 5px;
+      z-index: 1001;
+      flex-direction: column;
+      min-width: 180px;
+    }
+    #espelharDropdown button {
+      background: none;
+      color: #eee;
+      border: none;
+      text-align: left;
+      padding: 8px 12px;
+      cursor: pointer;
+      width: 100%;
+    }
+    #espelharDropdown button:hover { background: #444; }
+
+    .modal-body {
+      display: flex;
+      flex: 1 1 auto;
+      height: 100%;
+      padding: 0;
+      overflow: hidden;
+    }
+    #playerContainer {
+      flex: 1 1 auto;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #playerFrame { width: 100%; height: 100%; border: none; background: black; }
+    #programacaoPanel {
+      width: 0;
+      background: #121212;
+      border-left: 2px solid #333;
+      overflow: hidden;
+      transition: width 0.3s ease;
+      flex-shrink: 0;
+      height: 100%;
+    }
+    #programacaoPanel.show { width: 350px; }
+    #programacaoFrame { width: 100%; height: 100%; border: none; }
+
+  </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="mb-4">
+      <!-- Barra de pesquisa central fixa -->
+<div class="search-bar">
+  <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar canal..." />
+</div>
+    <h1 class="text-center mb-4"></h1>
+    <!-- Container dos canais -->
+    <div class="row g-3" id="canalContainer">
+<p> 
+<hr><h6 style="color: #000;"></h6>
+
+      <!-- Canal exemplo -->
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/band.html" data-title="Band">
+          <img src="https://www.mediafire.com/convkey/7dcd/ors0qr3jqbwm2sh5g.jpg"  alt="Band" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Band">Band</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/globo_sp.html" data-title="Globo SP">
+          <img src="https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg"  alt="Globo SP" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Globo SP">Globo SP</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/globo_rj.html" data-title="Globo RJ">
+          <img src="https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg"  alt="Globo RJ" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Globo RJ">Globo RJ</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/globo_nordeste.html" data-title="Globo Nordeste">
+          <img src="https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg"  alt="Globo Nordeste" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Globo Nordeste">Globo Nordeste</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/sbt.html" data-title="SBT">
+          <img src="https://www.mediafire.com/convkey/ec97/n1ustsu38sqw0vj5g.jpg"  alt="SBT" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="SBT">SBT</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/record.html" data-title="Record">
+          <img src="https://www.mediafire.com/convkey/996b/3hk43pafo0b5zve5g.jpg"  alt="Record" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Record">Record</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/band_news.html" data-title="Band News">
+          <img src="https://www.mediafire.com/convkey/2ef7/f9duyhtq2fvdja95g.jpg"  alt="Band News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Band News">Band News</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/cnn_brasil.html" data-title="CNN Brasil">
+          <img src="https://www.mediafire.com/convkey/9cf0/ufwwfpli3cxsayv5g.jpg"  alt="CNN Brasil" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="CNN Brasil">CNN Brasil</div>
+        </div>
+      </div>
+
+    <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/cnn_brasil_money.html" data-title="CNN Brasil Money">
+          <img src="https://www.mediafire.com/convkey/3c55/79782iw447zo65s5g.jpg"  alt="CNN Brasil Money" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="CNN Brasil Money">CNN Brasil Money</div>
+        </div>
+      </div>
+
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/globo_news.html" data-title="Globo News">
+          <img src="https://www.mediafire.com/convkey/d707/vany601v3i6oltz5g.jpg"  alt="Globo News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Globo News">Globo News</div>
+        </div>
+      </div>
+
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/jp_news.html" data-title="JP News">
+          <img src="https://www.mediafire.com/convkey/c32e/z6n71wps9nuofum5g.jpg"  alt="JP News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="JP News">JP News</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/record_news.html" data-title="Record News">
+          <img src="https://www.mediafire.com/convkey/4ea5/qlxfi1vsvu7m5m55g.jpg"  alt="Record News" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Ao Vivo 24 Horas">Record News</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/times_brasil.html" data-title="Times Brasil CNBC">
+          <img src="https://www.mediafire.com/convkey/6637/zi5qubqemnotbij5g.jpg"  alt="Times Brasil CNBC" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Times Brasil CNBC">Times Brasil CNBC</div>
+        </div>
+      </div>
+      
+      <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/band_sports.html" data-title="Band Sports">
+          <img src="https://www.mediafire.com/convkey/1e18/eblhu8culfgis5f5g.jpg"  alt="Band Sports" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Band Sports">Band Sports</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/combate.html" data-title="Combate">
+          <img src="https://www.mediafire.com/convkey/8692/4u9xbfujsnwx8a95g.jpg"  alt="Combate" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Combate">Combate</div>
+        </div>
+      </div>
+
+    <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/sportv.html" data-title="Sportv">
+          <img src="https://www.mediafire.com/convkey/cd23/p1rxf0qpxtclpw75g.jpg"  alt="Sportv" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Sportv">Sportv</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/sportv2.html" data-title="Sportv 2">
+          <img src="https://www.mediafire.com/convkey/9c1e/318ioitp90nqrsa5g.jpg"  alt="Sportv 2" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Sportv 2">Sportv 2</div>
+        </div>
+      </div>
+
+     <div class="col-4 col-sm-3 col-md-2 col-lg-2 col-xl-1">
+        <div class="canal-card" data-bs-toggle="modal" data-bs-target="#playerModal" data-src="https://jctvstreaming-vip.github.io/server-tv3456/sportv3.html" data-title="Sportv 3">
+          <img src="https://www.mediafire.com/convkey/a89c/8hoohulrzb92th55g.jpg"  alt="Sportv 3" style="max-width: 80px; width: 80px; height: 80px; height: auto; display: block; margin: 0 auto;" />
+          <div class="canal-nome" title="Sportv 3">Sportv 3</div>
+        </div>
+      </div>
+
+     
+
+     </div>
+    </div>
+  </div>
+
+     
+<!-- Rodapé institucional após os canais -->
+<div class="col-12 mt-4">
+   <div class="playerButtons" id="serverButtons"></div>
+  <div style="margin-top: 40px; font-size: 0.85rem; color: #000; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <p><br></p>
+    <p></p>
+  </div>
+</div>
+
+
+  <!-- Modal -->
+<div class="modal fade modal-fullscreen" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="playerModalLabel">Reproduzindo...</h5>
+        <div>
+          <button id="btnProg" type="button" title="Ver Programação">📺 Programação</button>
+          <div class="btn-group-toggle">
+            <button id="btnEspelhar" type="button" title="Espelhar">📺 Espelhar</button>
+            <div id="espelharDropdown">
+              <button id="castOpen" data-action="webcast" style="display:flex; align-items:center; gap:6px;">
+                <img src="https://x.gd/gflG1" alt="Web Video Cast Logo" style="width:15px;height:15px;"> Web Video Cast
+              </button>
+            </div>
+          </div>
+          <button id="btnFechar" type="button" aria-label="Fechar modal">❌ Fechar</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div id="playerContainer">
+          <iframe id="playerFrame" src="" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+        </div>
+        <div id="programacaoPanel">
+          <iframe id="programacaoFrame" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <footer class="footer" id="siteFooter">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo"/>
+    <span>JC TV STREAMING © 2025</span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const playerModal = document.getElementById("playerModal");
+const modalPlayer = document.getElementById("playerFrame");
+const programacaoPanel = document.getElementById("programacaoPanel");
+const programacaoFrame = document.getElementById("programacaoFrame");
+const btnFechar = document.getElementById("btnFechar");
+const btnProg = document.getElementById("btnProg");
+const btnEspelhar = document.getElementById("btnEspelhar");
+const espelharDropdown = document.getElementById("espelharDropdown");
+const castOpen = document.getElementById("castOpen");
+const siteFooter = document.getElementById("siteFooter");
+const searchInput = document.getElementById("searchInput");
+const canalContainer = document.getElementById("canalContainer");
+
+    const programacaoUrls = {
+      "A&E": "https://mi.tv/br/canais/a-e",
+      "Adult Swim": "https://mi.tv/br/canais/trutv",
+      "AMC": "https://mi.tv/br/canais/amc-brasil",
+      "Animal Planet": "https://mi.tv/br/canais/animal-planet",
+      "Arte1": "https://mi.tv/br/canais/arte-1",
+      "AXN": "https://mi.tv/br/canais/axn",
+      "Band": "https://mi.tv/br/canais/band", 
+      "Band News": "https://mi.tv/br/canais/band-news",
+      "Band Sports": "https://mi.tv/br/canais/bandSports",
+      "BIS": "https://mi.tv/br/canais/bis",
+      "Canal Brasil": "https://mi.tv/br/canais/canal-brasil",
+      "Canção Nova": "https://mi.tv/br/canais/canc-o-nova",
+      "Cartoon Network": "https://mi.tv/br/canais/cartoon",
+      "Cartoonito": "https://mi.tv/br/canais/boomerang",
+      "Cinemax": "https://mi.tv/br/canais/cinemax",
+      "CNN Brasil": "https://mi.tv/br/canais/cnn-brasil",
+      "CNN Brasil Money": "https://abre.ai/jctv-guia",
+      "Combate": "https://mi.tv/br/canais/combate-hd",
+      "Comedy Central": "https://mi.tv/br/canais/comedy-central",
+      "Curta!": "https://mi.tv/br/canais/curta",
+      "Discovery Channel": "https://mi.tv/br/canais/discovery-hd",
+      "Discovery Home & Health": "https://mi.tv/br/canais/discovery-home-health",
+      "Discovery Science": "https://mi.tv/br/canais/discovery-science",
+      "Discovery Theater": "https://mi.tv/br/canais/discovery-theater-hd",
+      "Discovery Turbo": "https://mi.tv/br/canais/discovery-turbo",
+      "Discovery World": "https://mi.tv/br/canais/discovery-world-hd",
+      "ESPN": "https://mi.tv/br/canais/espn",
+      "ESPN 2": "https://mi.tv/br/canais/espn-2",
+      "ESPN 3": "https://mi.tv/br/canais/espn-plus",
+      "ESPN 4": "https://mi.tv/br/canais/fox-sports",
+      "ESPN 5": "https://mi.tv/br/canais/fox-sports-2",
+      "ESPN 6": "https://mi.tv/br/canais/espn-extra",
+      "Fish TV": "https://mi.tv/br/canais/fishtv",
+      "Food Network": "https://mi.tv/br/canais/food-network",
+      "Globo News": "https://mi.tv/br/canais/globo-news-hd",
+      "Globo Nordeste": "https://mi.tv/br/canais/rede-globo-aracaju",
+      "Globo RJ": "https://mi.tv/br/canais/globo-rj",
+      "Globo SP": "https://mi.tv/br/canais/globo-sp",
+      "Globoplay Novelas": "https://mi.tv/br/canais/viva",
+      "Gloob": "https://mi.tv/br/canais/gloob", 
+      "Gloobinho": "https://mi.tv/br/canais/gloobinho", 
+      "GNT": "https://mi.tv/br/canais/gnt", 
+      "HBO": "https://mi.tv/br/canais/hbo", 
+      "HBO 2": "https://mi.tv/br/canais/hbo-2", 
+      "HBO Family": "https://mi.tv/br/canais/hbo-family-hd", 
+      "HBO Mundi": "https://mi.tv/br/canais/max-1", 
+      "HBO Plus": "https://mi.tv/br/canais/hbo-plus-brasil-hd", 
+      "HBO POP": "https://mi.tv/br/canais/max-up", 
+      "HBO Signature": "https://mi.tv/br/canais/hbo-signature", 
+      "HBO Xtreme": "https://mi.tv/br/canais/maxprime", 
+      "HGTV": "https://mi.tv/br/canais/hgtv", 
+      "History": "https://mi.tv/br/canais/history-channel", 
+      "History 2": "https://mi.tv/br/canais/h2", 
+      "Investigação Discovery": "https://mi.tv/br/canais/investigacao-discovery", 
+      "JP News": "https://abre.ai/jctv-guia", 
+      "Lifetime": "https://mi.tv/br/canais/lifetime-brazil", 
+      "Megapix": "https://mi.tv/br/canais/megapix", 
+      "Modo Viagem": "https://mi.tv/br/canais/globosat", 
+      "MTV": "https://mi.tv/br/canais/mtv-brasil", 
+      "MTV 00s": "https://abre.ai/jctv-guia", 
+      "MTV Live": "https://mi.tv/br/canais/mtv-live-hd", 
+      "Multishow": "https://mi.tv/br/canais/multishow", 
+      "Nick Jr.": "https://mi.tv/br/canais/nick-jr", 
+      "Nickelodeon": "https://mi.tv/br/canais/nickelodeon", 
+      "Nosso Futebol": "https://abre.ai/jctv-guia", 
+      "Canal Off": "https://mi.tv/br/canais/off", 
+      "Paramount Network": "https://mi.tv/br/canais/paramount-channel", 
+      "Premiere Clubes": "https://mi.tv/br/canais/premiere-clubes", 
+      "Premiere 2": "https://mi.tv/br/canais/premiere-2", 
+      "Premiere 3": "https://mi.tv/br/canais/premiere-3", 
+      "Premiere 4": "https://mi.tv/br/canais/premiere-4", 
+      "Premiere 5": "https://abre.ai/jctv-guia", 
+      "Premiere 6": "https://mi.tv/br/canais/premiere-6", 
+      "Premiere 7": "https://mi.tv/br/canais/premiere-7", 
+      "Premiere 8": "https://mi.tv/br/canais/premiere-8", 
+      "Prime Box Brazil": "https://mi.tv/br/canais/prime-box-brazil", 
+      "Record News": "https://mi.tv/br/canais/record-news-hd", 
+      "Record News": "https://mi.tv/br/canais/record-news-hd", 
+      "Record": "https://mi.tv/br/canais/record", 
+      "RedeTV!": "https://mi.tv/br/canais/rede-tv", 
+      "RedeTV!": "https://mi.tv/br/canais/rede-tv", 
+      "Sabor & Arte": "https://abre.ai/jctv-guia", 
+      "SBT": "https://mi.tv/br/canais/sbt", 
+      "Sony Channel": "https://mi.tv/br/canais/sony", 
+      "Sony Movies": "https://abre.ai/jctv-guia", 
+      "Space": "https://mi.tv/br/canais/space", 
+      "Sportv": "https://mi.tv/br/canais/sportv", 
+      "Sportv 2": "https://mi.tv/br/canais/sportv-2", 
+      "Sportv 3": "https://mi.tv/br/canais/sportv-3",
+      "SportyNet": "https://abre.ai/jctv-guia", 
+      "SportyNet +1": "https://abre.ai/jctv-guia", 
+      "SportyNet +2": "https://abre.ai/jctv-guia", 
+      "SportyNet +3": "https://abre.ai/jctv-guia", 
+      "Studio Universal": "https://mi.tv/br/canais/studio-universal", 
+      "Telecine Action": "https://mi.tv/br/canais/telecine-action", 
+      "Telecine Cult": "https://mi.tv/br/canais/telecine-cult", 
+      "Telecine Fun": "https://mi.tv/br/canais/telecine-fun", 
+      "Telecine Pipoca": "https://mi.tv/br/canais/telecine-pipoca", 
+      "Telecine Premium": "https://mi.tv/br/canais/telecine-premium", 
+      "Telecine Touch": "https://mi.tv/br/canais/telecine-touch", 
+      "Times Brasil CNBC": "https://abre.ai/jctv-guia", 
+      "TLC": "https://mi.tv/br/canais/tlc", 
+      "TNT": "https://mi.tv/br/canais/tnt", 
+      "TNT Novelas": "https://abre.ai/jctv-guia", 
+      "TNT Séries": "https://mi.tv/br/canais/tnt-series-hd", 
+      "Travel Box Brazil": "https://mi.tv/br/canais/travel-box-brazil", 
+      "TV Evangelizar": "https://abre.ai/jctv-guia",
+      "UFC Fight Pass": "https://abre.ai/jctv-guia", 
+      "Universal TV": "https://mi.tv/br/canais/universal", 
+      "Universal TV": "https://mi.tv/br/canais/universal", 
+      "USA Network": "https://mi.tv/br/canais/syfy", 
+      "Warner TV": "https://mi.tv/br/canais/warner-channel",
+    };
+
+    // Modal abrir canal
+playerModal.addEventListener("show.bs.modal", function(event) {
+  const card = event.relatedTarget;
+  const src = card.getAttribute("data-src");
+  const title = card.getAttribute("data-title");
+  if (!src) { event.preventDefault(); alert("Este canal ainda não está disponível."); return; }
+  modalPlayer.src = src;
+  document.getElementById("playerModalLabel").textContent = `Reproduzindo: ${title}`;
+  programacaoFrame.src = programacaoUrls[title] || "";
+  programacaoPanel.classList.remove("show");
+  siteFooter.classList.add("d-none");
+});
+
+// Modal fechar
+btnFechar.addEventListener("click", () => {
+  const modal = bootstrap.Modal.getInstance(playerModal);
+  if(modal) modal.hide();
+});
+playerModal.addEventListener("hidden.bs.modal", () => {
+  modalPlayer.src = "";
+  programacaoFrame.src = "";
+  programacaoPanel.classList.remove("show");
+  siteFooter.classList.remove("d-none");
+});
+
+// Toggle programação
+btnProg.addEventListener("click", () => { programacaoPanel.classList.toggle("show"); });
+
+// Toggle dropdown
+btnEspelhar.addEventListener("click", () => { 
+  espelharDropdown.style.display = espelharDropdown.style.display === "flex" ? "none" : "flex";
+});
+
+// Web Video Cast - Intent com token 84 caracteres
+castOpen.addEventListener("click", (e) => {
+  e.preventDefault();
+  const url = modalPlayer.src;
+  if (!url) { alert("Nenhum vídeo carregado."); return; }
+
+  // Gera token
+  const gerarToken = (tamanho=84) => {
+    const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+|~-=";
+    let token = "";
+    for(let i=0;i<tamanho;i++) token += chars.charAt(Math.floor(Math.random()*chars.length));
+    return token;
+  };
+  const token = gerarToken();
+
+  // Encaminha para o proxy do seu servidor
+  const proxyUrl = `https://meusite.com/proxy?token=${token}&url=${encodeURIComponent(url)}`;
+
+  // Cria intent sem expor a URL real
+  const cleanUrl = proxyUrl.replace(/^https?:\/\//, '');
+  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
+
+  window.location.href = intentLink;
+});
+
+// Busca de canais
+searchInput.addEventListener("input", () => {
+  const filter = searchInput.value.toLowerCase();
+  canalContainer.querySelectorAll(".canal-card").forEach((canal) => {
+    const title = canal.getAttribute("data-title")?.toLowerCase() || "";
+    canal.parentElement.style.display = title.includes(filter) ? "" : "none";
+  });
+});
+
+// Bloqueios básicos de devtools
+function mostrarAlerta() {
+  const tela = document.getElementById("bloqueio");
+  tela.style.display = "block";
+  setTimeout(()=> location.reload(),1000);
+}
+document.addEventListener("keydown", function(e) {
+  const tecla = e.key.toLowerCase();
+  if(e.key === "F12" || (e.ctrlKey && tecla==='u') || (e.ctrlKey && tecla==='s') || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(tecla))) {
+    e.preventDefault(); mostrarAlerta();
+  }
+});
+window.addEventListener("contextmenu", e => e.preventDefault());
+</script>
+
+<!-- Tela de Alerta -->
+<div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
+  <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
+  <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
+</div>
+
+<script>
+  // Mostrar o alerta e recarregar após 2 segundos
+  function mostrarAlerta() {
+    const tela = document.getElementById("bloqueio");
+    tela.style.display = "block";
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
+  }
+
+  // Força todos os links a abrirem na mesma aba
+  document.querySelectorAll('a').forEach(link => {
+    link.setAttribute('target', '_self');
+  });
+
+  // Bloqueia ações de desenvolvedor (com alerta)
+  document.addEventListener('keydown', function(e) {
+    const tecla = e.key.toLowerCase();
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && tecla === 'u') ||
+      (e.ctrlKey && tecla === 's') ||
+      (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+    ) {
+      e.preventDefault();
+      mostrarAlerta();
+    }
+  });
+
+  // Bloqueia botão direito (sem alerta)
+  window.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+</script>
+</body>
+</html>
