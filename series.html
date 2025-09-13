@@ -1367,7 +1367,7 @@ document.body.addEventListener("click",(e)=>{
     const title = e.target.dataset.title;
     const token = gerarToken(64);
     const expires = Date.now() + 5 * 60 * 1000;
-    const secureSrc = `https://outbound-proxy-us-east1-0-glob-usercontent-client-id-0866832316.googleapis.com.de/embed.php?vid=${vid}&token=${token}&expires=${expires}`;
+    const secureSrc = `https://redecanais.ee/embed.php?vid=${vid}&token=${token}&expires=${expires}`;
     modalPlayer.src = secureSrc;
     modalTitle.textContent = title;
     new bootstrap.Modal(document.getElementById("playerModal")).show();
