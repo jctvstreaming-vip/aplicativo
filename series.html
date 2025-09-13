@@ -1202,14 +1202,6 @@ const castOpen = document.getElementById("castOpen");
 const castCopy = document.getElementById("castCopy");
 
 let currentSeries = null;
-
-function gerarToken(length = 64){
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let token = '';
-  for(let i=0;i<length;i++) token += chars.charAt(Math.floor(Math.random()*chars.length));
-  return token;
-}
-
 function populateCategories(){
   const allCategories = new Set();
   Object.values(seriesData).forEach(s => s.categories.forEach(c => allCategories.add(c)));
@@ -1365,9 +1357,7 @@ document.body.addEventListener("click",(e)=>{
   if(e.target.classList.contains("open-player")){
     const vid = e.target.dataset.vid;
     const title = e.target.dataset.title;
-    const token = gerarToken(64);
-    const expires = Date.now() + 5 * 60 * 1000;
-    const secureSrc = `https://redecanais.ee/embed.php?vid=${vid}&token=${token}&expires=${expires}`;
+    const secureSrc = `https://redecanais.ee/embed/${vid}`;
     modalPlayer.src = secureSrc;
     modalTitle.textContent = title;
     new bootstrap.Modal(document.getElementById("playerModal")).show();
