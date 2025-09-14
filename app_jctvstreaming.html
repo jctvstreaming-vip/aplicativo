@@ -8,190 +8,62 @@
 <title>JC TV STREAMING</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <style>
-  body {
-    background: #fff;
-    color: #000;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-  }
-    html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* evita scroll para barras */
-  } 
-#player, #app-content {
-  position: fixed; /* garante que fique por cima */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
-}
-  #particles-js {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: -1;
-    background: #fff;
-  }
-.content {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding-top: 80px;
-    padding-bottom: 40px;
-  }
-  .logo {
-    max-width: 80px; /* logo menor */
-    margin-bottom: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 30px rgba(184, 134, 11, 0.6);
-    transition: transform 0.3s ease;
-  }
+  body { background: #fff; color: #000; margin: 0; padding: 0; overflow-x: hidden; }
+  html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; } 
+  #player, #app-content { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
+  #particles-js { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; background:#fff; }
+  .content { position: relative; z-index:1; text-align:center; padding-top:80px; padding-bottom:40px; }
+  .logo { max-width: 80px; margin-bottom:20px; border-radius:12px; box-shadow:0 0 30px rgba(184,134,11,0.6); transition: transform 0.3s ease; }
   .logo:hover { transform: scale(1.05); }
-
-  /* Título principal */
-  .headline {
-    font-size: 2rem; /* maior */
-    font-weight: bold;
-    color: #b8860b; /* cor diferente */
-    text-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
-  }
-
-  /* Textos menores */
-  .subtext {
-    font-size: 1.2rem; /* maior */
-    color: black; /* cor mais escura */
-    margin-top: 20px;
-    text-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
-  }
-
-  .iframePlayer {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: 9999;
-    background: #fff;
-  }
-
-  #iframeVideo {
-    width: 100%; height: 100%;
-    border: none;
-  }
-
-  #backButton {
-  display: none;
-  position: fixed;
-  top: 2px;       /* afasta um pouco do topo */
-  left: 0px;      /* afasta um pouco da esquerda */
-  z-index: 1055;
-  background-color: #FFC107;
-  color: #000000;
-  border: none;
-  padding: 8px 10px;    /* menor que antes */
-  border-radius: 10px;   /* menor arredondamento */
-  cursor: pointer;
-  font-weight: bold;     /* Texto em negrito */
-  font-size: 12px;      /* fonte menor */
-  transition: 0.3s ease;
-}
-
-#backButton:hover {
-  background-color: #007BFF;
-  color: #fff;           /* melhora contraste no hover */
-}
- #backButton i {
-    font-size: 20px;            /* tamanho mini do ícone */
-  }
-  /* Player / botões */
-  .playerContent {
-    text-align: center;
-    padding: 50px 20px 20px;
-  }
-  .playerButtons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 30px;
-  }
-  .playerButtons button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: black;
-  color: #fff;
-  font-weight: bold;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  font-size: 14px;
-}
-
-.playerButtons button:hover {
-  background: #FFC107;
-  color: #000;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-}
-
-  /* Footer */
-  footer.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: black;
-    color: #fff; /* cor diferente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    font-size: 1rem; /* maior */
-    z-index: 1000;
-  }
-  footer.footer img {
-    height: 30px;
-    width: auto;
-  }
+  .headline { font-size:2rem; font-weight:bold; color:#b8860b; text-shadow:0 0 10px rgba(255,204,0,0.6); }
+  .subtext { font-size:1.2rem; color:black; margin-top:20px; text-shadow:0 0 4px rgba(0,0,0,0.2); }
+  .iframePlayer { display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; background:#fff; }
+  #iframeVideo { width:100%; height:100%; border:none; }
+  #backButton { display:none; position:fixed; top:2px; left:0; z-index:1055; background-color:#FFC107; color:#000; border:none; padding:8px 10px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:12px; transition:0.3s ease; }
+  #backButton:hover { background-color:#007BFF; color:#fff; }
+  #backButton i { font-size:20px; }
+  .playerContent { text-align:center; padding:50px 20px 20px; }
+  .playerButtons { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:30px; }
+  .playerButtons button { display:flex; align-items:center; gap:8px; background:black; color:#fff; font-weight:bold; padding:10px 16px; border:none; border-radius:12px; transition:all 0.3s ease; cursor:pointer; backdrop-filter:blur(5px); box-shadow:0 4px 8px rgba(0,0,0,0.1); font-size:14px; }
+  .playerButtons button:hover { background:#FFC107; color:#000; transform:translateY(-2px); box-shadow:0 6px 12px rgba(0,0,0,0.2); }
+  footer.footer { position:fixed; bottom:0; left:0; width:100%; background:black; color:#fff; display:flex; justify-content:center; align-items:center; gap:10px; padding:10px 20px; font-size:1rem; z-index:1000; }
+  footer.footer img { height:30px; width:auto; }
 </style>
 </head>
 <body>
 
-<!-- Adicione Bootstrap Icons no <head> -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
 <div id="particles-js"></div>
 
+<!-- Tela cheia (TV, Filmes, etc.) -->
 <div class="iframePlayer">
-  <button id="backButton" type="button">
-    <i class="bi bi-house"></i>
-  </button>
+  <button id="backButton" type="button"><i class="bi bi-house"></i></button>
   <iframe id="iframeVideo" allowfullscreen></iframe>
 </div>
 
+<!-- Modal do Chat Limpo -->
+<div class="modal fade" id="chatModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content bg-white text-dark p-2" style="border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.3);">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title">Chat ao Vivo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body p-0" style="height:400px;">
+        <iframe id="iframeChat" src="" allowfullscreen style="width:100%; height:100%; border:none; border-radius:10px;"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Conteúdo Principal -->
 <div class="container playerContent">
   <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="JC TV STREAMING Logo" class="logo" />
-
   <h1 class="headline">JC TV STREAMING</h1>
-  <p class="subtext">
-    Entretenimento sem limites!
-  </p>
-
+  <p class="subtext">Entretenimento sem limites!</p>
   <div class="playerButtons" id="serverButtons"></div>
-
-  <p class="subtext">
-    Seja bem vindo ao maior servidor de conteúdos do país!
-  </p>
+  <p class="subtext">Seja bem vindo ao maior servidor de conteúdos do país!</p>
 </div>
 
 <footer class="footer">
@@ -200,144 +72,92 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 particlesJS("particles-js", {
   particles: {
-    number: { value: 100 },
-    color: { value: "#b8860b" },
-    shape: { type: "circle" },
-    opacity: { value: 0.4 },
-    size: { value: 3, random: true },
-    line_linked: { enable: true, distance: 100, color: "#1e3c72", opacity: 1, width: 1 },
-    move: { enable: true, speed: 2, direction: "none", out_mode: "out" }
+    number:{value:100},
+    color:{value:"#b8860b"},
+    shape:{type:"circle"},
+    opacity:{value:0.4},
+    size:{value:3, random:true},
+    line_linked:{enable:true, distance:100, color:"#1e3c72", opacity:1, width:1},
+    move:{enable:true, speed:2, direction:"none", out_mode:"out"}
   },
-  interactivity: {
-    events: {
-      onhover: { enable: true, mode: "repulse" },
-      onclick: { enable: true, mode: "push" }
-    },
-    modes: {
-      repulse: { distance: 120 },
-      push: { particles_nb: 4 }
-    }
+  interactivity:{
+    events:{onhover:{enable:true, mode:"repulse"}, onclick:{enable:true, mode:"push"}},
+    modes:{repulse:{distance:120}, push:{particles_nb:4}}
   },
-  retina_detect: true
+  retina_detect:true
 });
 
-// Botões de servidores
+// Lista de links
 const links = [
-  { 
-    nome: `<img src="https://cdn-icons-png.flaticon.com/256/550/550486.png" alt="TV" style="width:30px;height:30px;margin-right:1px;">TV AO VIVO`,
-    url: "https://jctvstreaming-vip.github.io/aplicativo/tv.html"
-  },
-  { 
-    nome: `<img src="https://cdn-icons-png.flaticon.com/512/2459/2459778.png" alt="Filmes" style="width:30px;height:30px;margin-right:1px;">FILMES`,
-    url: "https://jctvstreaming-vip.github.io/aplicativo/filmes.html"
-  },
-  { 
-    nome: `<img src="https://cdn-icons-png.flaticon.com/512/2980/2980219.png" alt="Séries" style="width:30px;height:30px;margin-right:1px;">SÉRIES`,
-    url: "https://jctvstreaming-vip.github.io/aplicativo/series.html"
-  },
-  { 
-    nome: `<img src="https://cdn-icons-png.flaticon.com/256/5190/5190335.png" alt="Séries" style="width:30px;height:30px;margin-right:1px;">ANIMAÇÃO`,
-    url: "https://jctvstreaming-vip.github.io/aplicativo/desenhos.html"
-  },
-  { 
-    nome: `<img src="https://cdn-icons-png.flaticon.com/256/1071/1071164.png" alt="Séries" style="width:30px;height:30px;margin-right:1px;">ANIMES`,
-    url: "https://jctvstreaming-vip.github.io/aplicativo/animes.html"
-  },
-  { 
-    nome: `<img src="https://cdn-icons-png.flaticon.com/256/5347/5347299.png" alt="Séries" style="width:30px;height:30px;margin-right:1px;">DORAMAS`,
-    url: "#"
-  }
+  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/550/550486.png" style="width:30px;height:30px;margin-right:1px;">TV AO VIVO`, url:"https://jctvstreaming-vip.github.io/aplicativo/tv.html" },
+  { nome:`<img src="https://cdn-icons-png.flaticon.com/512/2459/2459778.png" style="width:30px;height:30px;margin-right:1px;">FILMES`, url:"https://jctvstreaming-vip.github.io/aplicativo/filmes.html" },
+  { nome:`<img src="https://cdn-icons-png.flaticon.com/512/2980/2980219.png" style="width:30px;height:30px;margin-right:1px;">SÉRIES`, url:"https://jctvstreaming-vip.github.io/aplicativo/series.html" },
+  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/5190/5190335.png" style="width:30px;height:30px;margin-right:1px;">ANIMAÇÃO`, url:"https://jctvstreaming-vip.github.io/aplicativo/desenhos.html" },
+  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/1071/1071164.png" style="width:30px;height:30px;margin-right:1px;">ANIMES`, url:"https://jctvstreaming-vip.github.io/aplicativo/animes.html" },
+  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/5347/5347299.png" style="width:30px;height:30px;margin-right:1px;">DORAMAS`, url:"#"}
 ];
 
 const serverButtons = document.getElementById("serverButtons");
 const iframeWrapper = document.querySelector(".iframePlayer");
 
+// Criação de botões
 links.forEach(link => {
   const btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "btn btn-sm";
-  btn.innerHTML = link.nome; // corrigido para HTML
-  btn.onclick = () => {
-    document.getElementById("iframeVideo").src = link.url;
-    iframeWrapper.style.display = "block";
-    document.getElementById("backButton").style.display = "block";
+  btn.type="button";
+  btn.className="btn btn-sm";
+  btn.innerHTML = link.nome;
+  btn.onclick = ()=>{
+    document.getElementById("iframeVideo").src=link.url;
+    iframeWrapper.style.display="block";
+    document.getElementById("backButton").style.display="block";
   };
   serverButtons.appendChild(btn);
 });
 
-// Botão Menu Principal
-const backButton = document.getElementById("backButton");
-backButton.addEventListener("click", () => {
-  document.getElementById("iframeVideo").src = "";
-  iframeWrapper.style.display = "none";
-  backButton.style.display = "none";
+// Botão Chat
+const chatButton = document.createElement("button");
+chatButton.type="button";
+chatButton.className="btn btn-sm";
+chatButton.innerHTML=`<img src="https://cdn-icons-png.flaticon.com/256/5347/5347299.png" style="width:30px;height:30px;margin-right:5px;">CHAT`;
+chatButton.onclick = ()=>{
+  document.getElementById("iframeChat").src="https://chat-jctvstreaming.chatango.com/embed?bg=ffffff&text=000000&t=1#";
+  const modal = new bootstrap.Modal(document.getElementById("chatModal"));
+  modal.show();
+};
+serverButtons.appendChild(chatButton);
+
+// Botão voltar
+document.getElementById("backButton").addEventListener("click", ()=>{
+  document.getElementById("iframeVideo").src="";
+  iframeWrapper.style.display="none";
+  document.getElementById("backButton").style.display="none";
 });
 
-// Bloqueios de teclas e clique direito
-function mostrarAlerta() {
-  alert("Ação não permitida!");
-  location.reload();
+// Proteções contra inspeção
+function mostrarAlerta(){
+  const tela=document.getElementById("bloqueio");
+  if(tela) tela.style.display="block";
+  setTimeout(()=>{location.reload();},1000);
 }
-
-document.addEventListener('keydown', function(e) {
-  const tecla = e.key.toLowerCase();
-  if (
-    e.key === "F12" ||
-    (e.ctrlKey && tecla === 'u') ||
-    (e.ctrlKey && tecla === 's') ||
-    (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
-  ) {
+document.addEventListener('keydown',function(e){
+  const tecla=e.key.toLowerCase();
+  if(e.key==="F12"||(e.ctrlKey&&['u','s'].includes(tecla))||(e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(tecla))){
     e.preventDefault();
     mostrarAlerta();
   }
 });
-
-window.addEventListener('contextmenu', function(e) {
-  e.preventDefault();
-});
+window.addEventListener('contextmenu',function(e){e.preventDefault();});
 </script>
+
 <!-- Tela de Alerta -->
 <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
   <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
   <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
 </div>
 
-<script>
-  // Mostrar o alerta e recarregar após 2 segundos
-  function mostrarAlerta() {
-    const tela = document.getElementById("bloqueio");
-    tela.style.display = "block";
-    setTimeout(() => {
-      location.reload();
-    }, 1000);
-  }
-
-  // Força todos os links a abrirem na mesma aba
-  document.querySelectorAll('a').forEach(link => {
-    link.setAttribute('target', '_self');
-  });
-
-  // Bloqueia ações de desenvolvedor (com alerta)
-  document.addEventListener('keydown', function(e) {
-    const tecla = e.key.toLowerCase();
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && tecla === 'u') ||
-      (e.ctrlKey && tecla === 's') ||
-      (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
-    ) {
-      e.preventDefault();
-      mostrarAlerta();
-    }
-  });
-
-  // Bloqueia botão direito (sem alerta)
-  window.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-  });
-</script>
 </body>
 </html>
