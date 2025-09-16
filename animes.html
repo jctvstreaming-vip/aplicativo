@@ -765,18 +765,18 @@ castOpen.addEventListener("click", (e) => {
   e.preventDefault();
 
   const url = modalPlayer.src; // pega o link do player
-  if (!url) {
-    alert("Nenhum vídeo carregado.");
-    return;
+  if (!url) { 
+    alert("Nenhum vídeo carregado."); 
+    return; 
   }
 
-  // Remove https:// do início
-  const cleanUrl = url.replace(/^https?:\/\//, '');
-  
-  // Cria o intent para abrir no Web Video Cast
-  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
+  const episodioTitulo = modalTitle.textContent || "JC TV STREAMING"; // Título do episódio
+  const cleanUrl = url.replace(/^https?:\/\//,''); // remove https:// do início
 
-  // Tenta abrir o aplicativo diretamente
+  // Cria o Intent com título
+  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;S.title=${encodeURIComponent(episodioTitulo)};end`;
+
+  // Redireciona para o Web Video Cast
   window.location.href = intentLink;
 });
 
