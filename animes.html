@@ -764,19 +764,25 @@ document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ 
 castOpen.addEventListener("click", (e) => {
   e.preventDefault();
 
-  const url = modalPlayer.src; // pega o link do player
-  if (!url) { 
-    alert("Nenhum vídeo carregado."); 
-    return; 
-  }
+  const url = modalPlayer.src;
+  if (!url) { alert("Nenhum vídeo carregado."); return; }
 
-  const episodioTitulo = modalTitle.textContent || "JC TV STREAMING"; // Título do episódio
-  const cleanUrl = url.replace(/^https?:\/\//,''); // remove https:// do início
+  const episodioTitulo = (modalTitle.textContent || "JC TV Streaming").trim();
+  const encodedTitle = encodeURIComponent(episodioTitulo);
 
-  // Cria o Intent com título
-  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;S.title=${encodeURIComponent(episodioTitulo)};end`;
+  // 1) cria URL com title em query string (fallback caso o app leia o ?title=)
+  const urlWithTitle = url + (url.includes('?') ? '&' : '?') + 'title=' + encodedTitle;
 
-  // Redireciona para o Web Video Cast
+  // 2) remove protocolo para montar o intent:// (forma padrão usada por browsers)
+  const urlNoProto = urlWithTitle.replace(/^https?:\/\//,''); 
+
+  // 3) monta intent com várias chaves de extras (string extras com prefixo S.)
+  const intentLink = 
+    `intent://${urlNoProto}#Intent;action=android.intent.action.VIEW;scheme=https;package=com.instantbits.cast.webvideo;` +
+    `S.title=${encodedTitle};S.name=${encodedTitle};S.filename=${encodedTitle};S.mediaTitle=${encodedTitle};` +
+    `S.android.intent.extra.TITLE=${encodedTitle};end`;
+
+  // 4) redireciona (é preciso um gesto do usuário — click — para o navegador permitir)
   window.location.href = intentLink;
 });
 
