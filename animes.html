@@ -153,7 +153,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         genero: ["Ação & Aventura, Animação, Mistério"],
         language: ["Legendado"],
         seasons: {
-          1: ["5472c541c&title=JC TV STREAMING","dc2ba50b1","4d4a3bc65","2dcb4f966","834d3a752","d8b312ad8","d0133d3e4","d7412983c","52535c978","fd652bc10",
+          1: ["5472c541c","dc2ba50b1","4d4a3bc65","2dcb4f966","834d3a752","d8b312ad8","d0133d3e4","d7412983c","52535c978","fd652bc10",
               "a8d24c369","4e9a8f59c","d720470f0","a234cf687","1d512deae","4b2b3b440","805ada52e","b2c7bf073","c2c31eca0","cac8a976e",
               "1b001ecb1","e37eaebc5","db1342eef","05b434adb","6202a656a","7e51e078f","412c083e6","ff37ac30c"]
         }
@@ -782,7 +782,7 @@ castOpen.addEventListener("click", (e) => {
   // Intent final
   const intentLink = `intent://${cleanUrl}#Intent;action=android.intent.action.VIEW;scheme=https;package=com.instantbits.cast.webvideo;end`;
 
-  window.location.href = intentLink;
+  window.location.href = "about:blank";
 });
 
 populateCategories();
