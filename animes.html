@@ -770,10 +770,13 @@ castOpen.addEventListener("click", (e) => {
     return;
   }
 
-  const episodioTitulo = modalTitle.textContent || "JC TV STREAMING"; // Título do episódio
-  const cleanUrl = url.replace(/^https?:\/\//, ''); // Remove http:// ou https:// do início
+  // Nome do episódio para aparecer na barra do Web Video Cast
+  const episodioTitulo = modalTitle.textContent || "JC TV STREAMING";
 
-  // Intent no formato correto
+  // Remove protocolo da URL (http:// ou https://)
+  const cleanUrl = url.replace(/^https?:\/\//, '');
+
+  // Monta Intent correto
   const intentLink = `intent://${cleanUrl}#Intent;action=android.intent.action.VIEW;scheme=https;package=com.instantbits.cast.webvideo;S.title=${encodeURIComponent(episodioTitulo)};end`;
 
   // Abre diretamente no Web Video Cast
