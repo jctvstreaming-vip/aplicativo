@@ -764,25 +764,24 @@ document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ 
 castOpen.addEventListener("click", (e) => {
   e.preventDefault();
 
-  const url = modalPlayer.src; // Link original
-  if (!url) {
+  const episodioTitulo = modalTitle.textContent || "JC TV STREAMING";
+
+  // Pega o ID do vídeo na URL
+  const videoId = modalPlayer.src.split("id=")[1];
+
+  if (!videoId) {
     alert("Nenhum vídeo carregado.");
     return;
   }
 
-  const episodioTitulo = (modalTitle.textContent || "JC TV STREAMING").trim();
-  const encodedTitle = encodeURIComponent(episodioTitulo);
+  // URL falsa que o Web Video Cast verá
+  const fakeUrl = `https://b01.jctvstreaming-vip.workers.dev/${videoId}`;
 
-  // Adiciona o título na query string
-  const urlComTitulo = url + (url.includes('?') ? '&' : '?') + 'title=' + encodedTitle;
+  // Intent com o título amigável
+  const intentLink = `intent://${fakeUrl}#Intent;action=android.intent.action.VIEW;scheme=https;package=com.instantbits.cast.webvideo;S.title=${encodeURIComponent(episodioTitulo)};end`;
 
-  // Remove protocolo
-  const cleanUrl = urlComTitulo.replace(/^https?:\/\//, '');
-
-  // Intent final
-  const intentLink = `intent://${cleanUrl}#Intent;action=android.intent.action.VIEW;scheme=https;package=com.instantbits.cast.webvideo;end`;
-
-   window.location.href = intentLink;
+  // Abre diretamente no Web Video Cast
+  window.location.href = intentLink;
 });
 
 populateCategories();
