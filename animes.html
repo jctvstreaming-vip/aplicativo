@@ -760,34 +760,23 @@ document.body.addEventListener("click",(e)=>{
 
 document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ modalPlayer.src=""; });
 
-// === Web Video Cast - compartilhar link via Intent invisível ===
+// === Web Video Cast - compartilhar link via Intent ===
 castOpen.addEventListener("click", (e) => {
   e.preventDefault();
 
-  const url = modalPlayer.src; // pega o link real do player
+  const url = modalPlayer.src; // pega o link do player
   if (!url) {
     alert("Nenhum vídeo carregado.");
     return;
   }
 
-  const title = modalTitle.textContent || "Episódio";
-
-  // Cria iframe invisível para carregar o vídeo em background
-  let hiddenFrame = document.getElementById("hiddenFrame");
-  if (!hiddenFrame) {
-    hiddenFrame = document.createElement("iframe");
-    hiddenFrame.id = "hiddenFrame";
-    hiddenFrame.style.display = "none";
-    document.body.appendChild(hiddenFrame);
-  }
-  hiddenFrame.src = url; // carrega o vídeo em background
-
-  // Cria intent para abrir no Web Video Cast
-  // Passamos o link real (src) mas o título aparece para o usuário
+  // Remove https:// do início
   const cleanUrl = url.replace(/^https?:\/\//, '');
-  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;S.title=${encodeURIComponent(title)};end`;
+  
+  // Cria o intent para abrir no Web Video Cast
+  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
 
-  // Abre o Web Video Cast sem mostrar nada no navegador
+  // Tenta abrir o aplicativo diretamente
   window.location.href = intentLink;
 });
 
