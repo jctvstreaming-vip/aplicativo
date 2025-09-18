@@ -7,15 +7,6 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 <style>
 body { background: #fff; color: #000; padding: 1rem; }
-/* Centraliza os cards da aba de séries */
-      #seriesTabs {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      padding: 1rem 0;
-      margin-top: 100px; /* espaço para a barra fixa */
-    }
 #seriesTabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; padding: 1rem 0; margin-top: 100px; }
 .series-tab { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background-color: #eee; border-radius: 0.5rem; max-width: 100%; white-space: normal; cursor: pointer; }
 .series-tab img { width: 100%; height: 100%; border-radius: 5px; flex-shrink: 0; }
@@ -27,47 +18,10 @@ body { background: #fff; color: #000; padding: 1rem; }
 .serie-details div { flex: 1; }
 #serieInfo h4 { font-size: 1.1rem; }
 #serieInfo p { font-size: 0.95rem; }
-#backButton {
-  display: none;
-  position: fixed;
-  top: 2px;       /* afasta um pouco do topo */
-  right: 0px;      /* afasta um pouco da esquerda */
-  z-index: 1055;
-  background-color: #FFC107;
-  color: #000000;
-  border: none;
-  padding: 8px 10px;    /* menor que antes */
-  border-radius: 10px;   /* menor arredondamento */
-  cursor: pointer;
-  font-weight: bold;     /* Texto em negrito */
-  font-size: 12px;      /* fonte menor */
-  transition: 0.3s ease;
-}
-
-#backButton:hover {
-  background-color: #007BFF;
-  color: #fff;           /* melhora contraste no hover */
-}
- /* Footer */
-  footer.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: black;
-    color: #fff; /* cor diferente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    font-size: 1rem; /* maior */
-    z-index: 1000;
-  }
-  footer.footer img {
-    height: 30px;
-    width: auto;
-  }
+#backButton { display: none; position: fixed; top: 2px; right: 0px; z-index: 1055; background-color: #FFC107; color: #000000; border: none; padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.3s ease; }
+#backButton:hover { background-color: #007BFF; color: #fff; }
+footer.footer { position: fixed; bottom: 0; left: 0; width: 100%; background: black; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 10px 20px; font-size: 1rem; z-index: 1000; }
+footer.footer img { height: 30px; width: auto; }
 #centralSearch { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 200px; z-index: 1050; display: flex; flex-direction: column; gap: 8px; }
 #serieSynopsis .synopsis-text { display: block; overflow: hidden; }
 </style>
@@ -102,9 +56,8 @@ body { background: #fff; color: #000; padding: 1rem; }
   <div class="playerButtons" id="serverButtons"></div>
 </div>
 
-<!-- Rodapé institucional após os canais -->
 <div class="col-12 mt-4">
-   <div class="playerButtons" id="serverButtons"></div>
+  <div class="playerButtons" id="serverButtons"></div>
   <div style="margin-top: 40px; font-size: 0.85rem; color: #000; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
     <p><br></p>
     <p></p>
@@ -141,442 +94,31 @@ body { background: #fff; color: #000; padding: 1rem; }
   <span>JC TV STREAMING © 2025</span>
 </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-     const seriesData = {        
-        hacksignum: {
-        name: ".hack//Sign (2002)",
-        synopsis: "conta a história de Tsukasa, um Wavemaster que se torna incapaz de sair do jogo online The World após um evento misterioso.",
-        poster: "https://image.tmdb.org/t/p/w500/wNplB2ViLejqtyU76Qz2iv3oZPM.jpg",
-        background: "https://image.tmdb.org/t/p/original/aKiRNVzI6dMSH3VVMdObVroVbJ2.jpg", // imagem para fundo
-        categories: ["Números e Símbolos"],
-        genero: ["Ação & Aventura, Animação, Mistério"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["5472c541c","dc2ba50b1","4d4a3bc65","2dcb4f966","834d3a752","d8b312ad8","d0133d3e4","d7412983c","52535c978","fd652bc10",
-              "a8d24c369","4e9a8f59c","d720470f0","a234cf687","1d512deae","4b2b3b440","805ada52e","b2c7bf073","c2c31eca0","cac8a976e",
-              "1b001ecb1","e37eaebc5","db1342eef","05b434adb","6202a656a","7e51e078f","412c083e6","ff37ac30c"]
-        }
-        },
-        hackliminality: {
-        name: ".hack//Liminality (2002)",
-        synopsis: "Yuki Aihara era uma estudante que um dia foi ao cinema da escola e, enquanto assistia a um filme, as palavras O Mundo apareceram de repente na tela grande e, de repente, toda a cidade de Yokohama ficou sem energia devido a um corte de energia.",
-        poster: "https://m.media-amazon.com/images/M/MV5BYmRlMjUxMDctZjJkNi00MmVhLTlhODgtMzBmMmU4YjFiZjhiXkEyXkFqcGc@._V1_.jpg",
-        background: "https://image.tmdb.org/t/p/original/qKoB3nXkZ4x2uUj43b38RBwPPbR.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Mistério, Ação & Aventura, Drama, Animação"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["4b1795b42","1248cc563","4203c81a6","be2772560"]
-        }
-        },
-        hacklegendofthetwilight: {
-        name: ".hack//Legend of the Twilight (2003)",
-        synopsis: "Shugo e Rena coincidentemente ganham personagens lendários para jogar em The World. Quando monstros invencíveis aparecem e jogadores são hospitalizados, ele se envolve na investigação desse fenômeno familiar.",
-        poster: "https://image.tmdb.org/t/p/w500/hyUXuEph9lbaoqQZDwOA2wh2SbE.jpg",
-        background: "https://image.tmdb.org/t/p/original/5y9y0oetN6W5CZRYcwLXPPFYVrD.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Ação & Aventura, Drama, Animação"],
-        language: ["Dublado"],
-        seasons: {
-          1: ["58bbeed18","7e52f5234","3956db0e3","cf157eeb2","acf548cfd","cdf0774d4","fea26fc90","20f4b5799","d523f7e8a","0354e1010",
-              "80dff60bb","b737b5a0e"]
-        }
-        },
-        hackroots: {
-        name: ".hack//Roots (2006)",
-        synopsis: "hack//Roots abrange o período em que Haseo passou com Shino e Ovan na guilda conhecida como Twilight Brigade, antes dos jogos.",
-        poster: "https://image.tmdb.org/t/p/w500/tYcPkoqrtdwAoMeDXgCsgS5LNC1.jpg",
-        background: "https://image.tmdb.org/t/p/original/82EuElEQLcif0w0kEaNugbp2dqt.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Ação & Aventura, Drama, Animação"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["3d0b0a2a9","95c2968c4","051cf58ab","dae0145db","157a471a9","29fc67b77","e9b7e31f0","e773e577c","2f54b10fc","8fde66903",
-              "1059aded6","a33cab994","3f5e68fee","00fc77c96","24f052324","108195496","e6798a8c3","93477091c","453003119","767387a6d",
-              "775645c07","be6a4a9bf","0c9b9f7ee","a31406bc4","33a17b035","04b08f4a2"]
-        }
-        },
-        hackgutrilogy: {
-        name: ".hack//G.U. Trilogy (2007)",
-        synopsis: "Nesta busca por vingança contra Tri-Edge e para acordar Shino de seu coma Haseo procura através do The World como um PKK dos PK. Ele acaba conhecendo uma garoda chamada Atolli que se irrita com sua atitude infantil e ignorante com ela e que acaba se interessando em ajudá-lo em sua busca. E ela acaba despertando feridas antigas devido ao design de seu personagem ser igual ao de Shino. Ele forma novas alianças e tenta descobrir o mistério por trás dos comas que atingem os jogadores e da entidade conhecida como AIDA.",
-        poster: "https://image.tmdb.org/t/p/w500/pWqBAViWtcLxHoO9f1JD17gzpRH.jpg",
-        background: "https://image.tmdb.org/t/p/original/n8hvnVWD5UhShOqUnORbwEpIjLx.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Animação, Ação, Aventura, Mistério"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["fd90d326a","20fcfae4e","4abd25fe2"]
-        }
-        },
-        hackquantum: {
-        name: ".hack//Quantum (2010)",
-        synopsis: "Tobias, Mary e Sakuya estão no The World. Juntos, eles formam um grupo inseparável, caminhando para o raiar do dia e percorrendo masmorras em busca dos artefatos da aventura. Mas quando o trio se perde neste labirinto virtual, um encontro casual com a misteriosa entidade conhecida apenas como Eremita mudará suas vidas para sempre.",
-        poster: "https://image.tmdb.org/t/p/w500/l3ZQOdIcDO0Mnlc7aYNVNkElzp3.jpg",
-        background: "https://image.tmdb.org/t/p/original/nvjHCKXRL9xkcHvvmyDQIdWe6oi.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Mistério, Animação, Drama, Fantasia"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["720b3017f","24dc71256","e72d08620","cc2a985e9","16d24219a"]
-        }
-        },
-        niningashinobuden: {
-        name: "2x2 Ninin ga Shinobuden (2004)",
-        synopsis: "Este anime conta as peripécias de Shinobu uma aprendiz de ninja em sua jornada para se tornar a melhor ninja do mundo juntamente com sua amiga Kaede, seu mestre Onsokomaru e Sasuke. Shinobu passa por várias confusões e o ingrediente principal deste anime é seu lado comédia non-sense começando pelo Onsokomaru que é uma bolinha amarela voadora, Sasuke o ninja trapalhão e Kaede a melhor amiga e por quem Shinobu morre de paixão. Pra quem gosta de anime de comédia esse anime é um prato cheio que traz também muitos jutsus. Acompanhe a jornada de Shinobu para se tornar a melhor ninja do mundo!",
-        poster: "https://image.tmdb.org/t/p/w500/9cYziUSyImP1C6oYuNF3yrFQSMM.jpg",
-        background: "https://image.tmdb.org/t/p/original/jXd2v6D6DiBtKBRUVwLNi159rUG.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Animação, Comédia"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["6f21f4d53","229decba2","d4dcfe641","9954c071b","05abe5f57","61a32523c","0772b94ca","3383dd12e","346898de6","8e3e7bdc2",
-              "9683b8a78","5d5e82ac0"]
-        }
-        },
-        seteghost: {
-        name: "07-Ghost (2009)",
-        synopsis: "Teito Klein, é um jovem aluno da academia militar que não possui grandes aspirações. Tratado como ralé pelos colegas por sua posição inferior na sociedade, Teito, depende apenas de seu amigo Mikage, com quem conta para os piores momentos.",
-        poster: "https://image.tmdb.org/t/p/w500/xmqAgtAnhNNi4q9PUIHYE0NThXl.jpg",
-        background: "https://image.tmdb.org/t/p/original/iCTqQXF08jmwUNhlySvOBg1WTjh.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Animação, Drama"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["639555ab6","f72ad4731","0a8caa601","301b621c1","8ffb34deb","bcdcaf9ae","cfc57d4ec","865788462","0f9948ccb","70de5f551",
-              "053348515","2c34b0c45","8d45855d0","54c082a06","35c90d8f3","f1ce34c4e","6a53f4d9a","d481bbda1","520690455","4882819c0",
-              "0faa43545","81d76a664","5ba5fc67a","1d8bc62d1","75b51832e"]
-        }
-        },
-        seteseeds: {
-        name: "7Seeds (2019)",
-        synopsis: "A tímida Natsu desperta fazendo parte de um grupo escolhido para garantir a sobrevivência da humanidade. Juntos, eles precisam seguir suas vidas na Terra transformada.",
-        poster: "https://image.tmdb.org/t/p/w500/eeGRd3ENc9vetozwDDMhl9S7l3G.jpg",
-        background: "https://image.tmdb.org/t/p/original/moI1fOrXKak8RIXaLHRozkoIh4Y.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Animação, Ficção científica e fantasia, Drama"],
-        language: ["Dublado"],
-        seasons: {
-          1: ["bc7ed7c02","19ed8cc56","8de275e97","5f022c5be","01360d915","20eafd99d","13dd088da","f9c121783","1b024d542","778a6e9bf",
-              "5019d7981","1fc60a3be","59c763c2f","df0f37af9","56bfd6686","97af83e75","325c83936","f70546936","0bec253d7","c60d42326",
-              "9cbbfae9a","4b9e04954","cbcd02f4c","0178de23b"]
-        }
-        },
-        zerozeronoveum: {
-        name: "009-1 (2006)",
-        synopsis: "A história ocorre no meio de uma guerra fria num futuro distante, quando o mundo foi dividido em dois blocos, leste e oeste. No meio de guerras entre espiões, surge uma bela espiã de uma agência secreta de inteligência chamada Mylene Hoffmann, code name 009-1. Ela é uma das agentes do grupo feminino \"Grupo Número 9\", um dos dez grupos na Organização Zero Zero (uma organização do Bloco Ocidental). Quase todo o seu corpo foi mecanizado e a maioria das partes são equipadas com funções especiais, necessárias para as atividades de um espião. Ela tem amnésia e é uma das agentes que mais se sobressai dentro da Organização Zero Zero",
-        poster: "https://image.tmdb.org/t/p/w500/r1zbGhkKXmzZR8h5y7LQxiE8yW9.jpg",
-        background: "https://image.tmdb.org/t/p/original/byuLWybI5Am5I6f7tGVr8H1k3Kn.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Animação ,  Ação e Aventura ,  Ficção Científica & Fantasia ,  Guerra e Política ,  Drama"],
-        language: ["Dublado"],
-        seasons: {
-          1: ["5fa90cbed","0a83dce41","5e5e15a22","3161df250","df9b18cfc","7e4468b19","a2336798d","3aeec2868","24e1a3ee8","5800041b7",
-              "82d0b4d89","6aa7bc2ee","47adfa35e"]
-        }
-        },
-        onzeeyes: {
-        name: "11eyes (2009)",
-        synopsis: "Após a morte da irmã há cinco anos atrás, Satsuki Kakeru levava uma vida vazia, só conseguiu voltar a sua vida normal, com a ajuda de sua amiga de infância Minase Yuka e outros amigos na escola. Até que, um dia, o céu fica vermelho de repente e a Lua escurece. Todos, além de Kakeru e Yuka, desaparecem e monstros começam a percorrer as ruas. Tudo que eles puderam fazer foi apenas fugir e se esconder. Após um tempo, o mundo volta ao normal. Mas quando todo mundo achava que era um sonho, a Noite Vermelha ocorre novamente. Kakeru e Yuka conseguem encontrar mais quatro pessoas que estão envolvidas neste fenômeno misterioso: Kusakabe Misuzu, Kukuri Tachibana, Hirohara Yukiko e Tajima Takahisa. Eles se reúnem e tentam sobreviver, mas a partir daí a situação apenas piora...",
-        poster: "https://image.tmdb.org/t/p/w500/o0UnWewTlZbtkRQDQGrKMGzruVI.jpg",
-        background: "https://image.tmdb.org/t/p/original/cQ00og9D1sFwZ3Q8UlTMfmtlp83.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Ação & aventura, Animação, Ficção científica & fantasia"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["082352992","af8f5d6a4","ed2a02c14","e8b140a51","b554ff18d","8d2a27571","cb3e26187","68ac38b25","dfc1e773c","4c531ff26",
-              "1af9091d3","b4e4eaec8","7aed92d0f"]
-        }
-        },
-        trintasainohokentaiiku: {
-        name: "30-sai no Hoken Taiiku (2011)",
-        synopsis: "Imagawa é um homem de 30 anos virgem que recebe a visita do Deus do Sexo, que lhe ajudará passo a passo a conseguir uma namorada.",
-        poster: "https://image.tmdb.org/t/p/w500/izvmVfsgwUjxbEBLhM4UL5agJSZ.jpg",
-        background: "https://image.tmdb.org/t/p/original/3jDhbBpJSh85uHsuSt6VLIp3cj9.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Animação, Comédia"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["3d485f0ec","32b20e5f5","cdd588b13","54bc9bc6a","1b255727a","d655d432e","903723682","97d291d20","f4aa08eb9","e0c304f49",
-              "49e9208d3","59ac65da9"]
-        }
-        },
-        cemcoisasparafazerantesdevirarzumbi: {
-        name: "100 Coisas para Fazer Antes de Virar Zumbi (2023)",
-        synopsis: "Com apenas três anos em sua carreira numa empresa infernal, Akira Tendo está esgotado mental e fisicamente... tudo isso com 24 anos de idade. Até mesmo sua paixão do time de contabilidade, Saori, não quer nada com ele. Então, quando a vida começa a parecer uma grande decepção, acontece! O apocalipse zumbi atinge sobre o Japão! Cercado por hordas de zumbis famintos, Akira chega a uma conclusão que mudará para sempre sua vida… Ao perceber que não precisa mais trabalhar, Akira agora vai viajar pelo Japão, festejar todo dia e realizar tudo o que deseja!",
-        poster: "https://image.tmdb.org/t/p/w500/wUgE1ceORQzsZnGrASVKjEaGkzO.jpg",
-        background: "https://image.tmdb.org/t/p/original/90b5d67rcpYfh5aVOwfd9jrbnfL.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Animação, Ação & aventura, Comédia, Ficção científica & fantasia"],
-        language: ["Dublado"],
-        seasons: {
-          1: ["f4fbe559c","017ad4d33","bc36e877b","8ad4375eb","f43a75f43","dc87ac237","21baecc4e","417f28ab8","7270ddd88","1f919c0bf",
-              "2c99e58cf","7927c7e92"]
-        }
-        },
-        oitocentoseumairbats: {
-        name: "801 T.T.S Airbats (1994)",
-        synopsis: "A Japanese Self Defense Force tem um lugar para aqueles aviadores problemáticos 801 esquadrão tático do treinamento feminino da base aérea de Iruma, aonde os pilotos e os aviões vão a uma base regular.",
-        poster: "https://image.tmdb.org/t/p/w500/bPq5zzehzRu0APoGIhzJ3Mi0yTD.jpg",
-        background: "https://image.tmdb.org/t/p/original/flxb4GFEOULSxM6ttaHtjXuenVp.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Animação, Ação & aventura, Comédia"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["accf1d391","d4b12986a","5ed99a866","34e6c0fad","050e587ce","f8e613782","20b3e8522"]
-        }
-        },
-        doismilevintejapaosubmerso: {
-        name: "2020: Japão Submerso (2020)",
-        synopsis: "Uma série de terremotos assola o Japão colocando os laços de uma família à prova e lançando o país no caos.",
-        poster: "https://image.tmdb.org/t/p/w500/4cAN9ssi58CLuS3HCv3TfyVXPQp.jpg",
-        background: "https://image.tmdb.org/t/p/original/6aJMl28iBbhZLxDIj3Vqfaonzv2.jpg",
-        categories: ["Números e Símbolos"],
-        genero: ["Ficção científica & fantasia, Animação, Ação & aventura, Drama"],
-        language: ["Dublado"],
-        seasons: {
-          1: ["d472d9eb4","99d9d0e34","cefdc3de8","2135059aa","0035be687","150176d50","7e60299dc","a1cc6494b","36210dbcd","4677a63a0"]
-        }
-        },
-        achannel: {
-        name: "A-Channel (2011)",
-        synopsis: "A história gira em torno da vida diária de quatro garotas do ensino médio: a volúvel Run, a inconsequente Tooru, a tímida Yuuko e a líder Nagi.",
-        poster: "https://image.tmdb.org/t/p/w500/7KMqrwModP0BTgdQyQdoX7IfDbP.jpg",
-        background: "https://image.tmdb.org/t/p/original/1odIANpFgDSMJWLSh1wpImiB3K6.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Comédia"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["ec79e292f","976ae90d4","418d0b430","86d73bb94","b3f6b2753","7787237b3","3e0fa18d7","a8bf44684","883115d02","335e70db0",
-              "46701f14b","de85ba7c8"],
-          OVA: ["275df9e41","5119cf1cd","4ebb083a3","89f2867c5","621bb8344","cbf9eacc1"]
-        }
-        },
-        adarkrabbitsevenlives: {
-        name: "A Dark Rabbit has Seven Lives (2011)",
-        synopsis: "O protagonista é Kurogane Taito, um estudante desapontado com a realidade que vive completamente desmotivado. A história começa quando ele morre atropelado. Justamente nesse momento, Taito consegue se lembrar da promessa que fez à Himea, há 9 anos. Essa garota, que na verdade era um demônio, usou um feitiço que tornou Taito imortal e com um corpo que se regenera por completo. Graças a esse feitiço, Taito revive e reencontra Himea. Porém, todo esse acontecimento tornará sua vida bem agitada.",
-        poster: "https://image.tmdb.org/t/p/w500/g9UcSYDXnO9upPIkG5T0EGH7pVu.jpg",
-        background: "https://image.tmdb.org/t/p/original/jHnZscollAZ8IaOiqYYcFmJp0tK.jpg",
-        categories: ["Letra A"],
-        genero: ["Ficção científica & fantasia, Animação, Comédia"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["9ee76e322","cdb1164eb","270ba94bf","05c20512c","dd7ad04fa","046b20af7","2b1c2daf9","9d0494a42","a592837a8","aa224d710",
-              "abfd50b96","6400344c9"],
-          OVA: ["a2b8552c1"]
-        }
-        },
-        aflorestadopiano: {
-        name: "A Floresta do Piano (2018)",
-        synopsis: "A história acompanha a vida de dois garotos, que se conheceram por intermédio da música, com vidas totalmente diferentes. Enquanto Kai Ichinose é filho de uma prostituta e começou a tocar em um piano abandonado em uma floresta perto de sua casa, Shuuei Amamiya é filho de dois pianistas de prestígio.",
-        poster: "https://image.tmdb.org/t/p/w500/vzfybIx2C14gVQDlyhagYTOMuI6.jpg",
-        background: "https://image.tmdb.org/t/p/original/4jnKzUscDamhS5eRRrSJsYRjW2p.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Drama"],
-        language: ["Dublado"],
-        seasons: {
-          1: ["ae810f6d5","450e25967","d7786a6bc","14e10b210","5842315ee","e5aea7475","fc1170c80","6c82db411","b01a7718d","e1c41a86f",
-              "316ac46c5","5cd901ac5"],
-          2: ["433cba19a","6616884f6","f97c99a4c","3830db3f2","9fbb619d0","e93206752","0c03116d6","fbcb3c9df","39cce849a","933eb01ec",
-              "15acfb690","40808606c"]
-        }
-        },
-        ailhadassombras: {
-        name: "A Ilha das Sombras (2022)",
-        synopsis: "Shinpei Ajiro retorna à sua cidade natal após dois anos para o enterro de seu amigo de infância, Ushio Kofune. Sou Hishigata, seu melhor amigo, acha a morte de Ushio suspeita e teme que possa haver novas vítimas. No dia seguinte, eles ouvem um presságio sinistro e a família vizinha desaparece misteriosamente. Mio diz que viu uma sombra estranha três dias antes da morte de Ushio..",
-        poster: "https://image.tmdb.org/t/p/w500/urusDr7Cfv2QZ6rNzzMB0rGJPci.jpg",
-        background: "https://image.tmdb.org/t/p/original/iVkpmj6ZrtbUhJ3C9eeNZKdrxzZ.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Drama, Mistério"],
-        language: ["Dublado"],
-        seasons: {
-          1: ["dde9bd687","310c8007f","3e33e962f","bd55e11ac","e570ad5b5","22d19b891","9bf50ed22","baec30fe2","840dce42a","20efad485",
-              "706a1c70e","cb0aad023","5c898b93e","870f24e06","9d21c6f51","ab1dcd9f9","64b71b8cc","084a19723","7b8474a4c","a7f28b2e1",
-              "3bc8b7b2a","9e6e1ae24","d141c7ad5","6c01c2f5f","84132a0c1"]
-        }
-        },
-        aseriepokemon: {
-        name: "A Série Pokémon: Horizontes (2023)",
-        synopsis: "Dois jovens aventureiros em uma jornada eletrizante visitam novas terras, revelam antigos mistérios e encontram Pokémon e Poké Bolas inéditos.",
-        poster: "https://image.tmdb.org/t/p/w500/gvT5IBN2syZjlJdPppd6LfxIX2D.jpg",
-        background: "https://image.tmdb.org/t/p/original/ce3tNNbhj1Com0VxD2PUXAQ9RgL.jpg",
-        categories: ["Letra A"],
-        genero: ["Ficção científica & fantasia, Ação & aventura, Kids, Comédia, Animação"],
-        language: ["Dublado"],
-        seasons: {
-          1: ["8b89d056c","53a0dfdb4","15e6982b7","2bab03075","7027a389b","f179b6370","c52f0eac2","6bd1e82b2","6d3501e51","62cb647ab",
-              "89c08a8c5","ee8189e2f","a0eea387e","7a78c1f1f","1b41cef08","685fe6f66","0c5849749","9688499a5","aa467947c","96a75b45a",
-              "197f984fd","3ca7df17d","e064f2bb8"]
-        }
-        },
-        adpolicefiles: {
-        name: "A.D. Police Files (1990)",
-        synopsis: "A.D. Police é um spin-off da conhecida série Bubblegum Crisis, e conta história de um grupo de elite da polícia que combate o crime na futurística cidade de Megatokyo. O ano é 2027 em Megatokyo, seis anos antes das Knight Sabers aparecerem. Os Boomers (seres humanos artificiais) ainda são um avanço relativamente novo, implementar e integrá-los à sociedade é bem complicado, às vezes, até fatal . O A.D. Police é uma força especial treinada para tratar dos crimes envolvendo os Boomers. Leon McNichol é um novato na polícia que está começando a se expor aos horrores e as tragédias diárias que ocorrem em Megatokyo. Ele e sua veterana parceira, Gina Marceau, aprendem lentamente sobre a linha tênue que separa o homem da máquina.",
-        poster: "https://image.tmdb.org/t/p/w500/wOFURyVYIoYr1pc70UJzV9P9J9j.jpg",
-        background: "https://image.tmdb.org/t/p/original/42giJvZuUVpKh6F76Cz91uZHMN1.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Ficção científica & fantasia, Ação & aventura"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["6165471f1","7ab456b4b","2cf8182b5"]
-        }
-        },
-        adpolicetoserveandprotect: {
-        name: "A.D. Police: To Serve and Protect (1999)",
-        synopsis: "A.D. Police é um spin-off da conhecida série Bubblegum Crisis, e conta história de um grupo de elite da polícia que combate o crime na futurística cidade de Megatokyo. Suas armas e equipamentos, incluindo armaduras cibernéticas como a K-11 e K-12, são bastante pesadas para uma força policial normal, mas leves se comparados as de um exército. A A.D. Police dispõe de uma grande liberdade de ação em suas atividades, não raro interditando grandes áreas da cidade e causando estragos vultosos às propriedades durante o cumprimento de seu dever. Apesar da dedidição a seu trabalho, os cidadãos de Megatokyo tendem a não gostar e a não confiar nos membros da AD Police, os vendo como corruptos e ineficientes.",
-        poster: "https://image.tmdb.org/t/p/w500/xh895Mq6cSxdlA5UFqPbNcaF7kJ.jpg",
-        background: "https://image.tmdb.org/t/p/original/suWT4Dk3osHoUP4kh1HGAgFIyFa.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Ação & aventura, Crime, Ficção científica & fantasia"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["a059be704","8941a2291","7e771df4d","98c303aae","5dfb1e9cf","46e91f8ed","460dd5f4f","62fda947d","834243150","cdf8bd675",
-              "29d04dc1c","2e2c8621b"]
-        }
-        },
-        aico: {
-        name: "A.I.C.O. (2018)",
-        synopsis: "Tudo o que Aiko conhecia era mentira. Agora, ela está se juntando a um time de infiltradores para chegar ao lugar onde a erupção começou e salvar sua família.",
-        poster: "https://image.tmdb.org/t/p/w500/1vOPpRqrYwwKf4HV4ybSfb4j3oo.jpg",
-        background: "https://image.tmdb.org/t/p/original/xeXUyppDTcW3T809dL1rnufaufg.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Ação & aventura, Ficção científica & fantasia"],
-        language: ["Dublado"],
-        seasons: {
-          1: ["7cd9d5d36","1fae01577","f09916b1f","61d2e3976","8d0439765","0b506df65","57e845343","10dab5d52","4f55fece0","6ee687620",
-              "a230a6a97","5e15ee61c"]
-        }
-        },
-        abarenbourikishimatsutarou: {
-        name: "Abarenbou Rikishi!! Matsutarou (2014)",
-        synopsis: "A história é sobre Matsutarou Sakaguchi, um homem bruto dono de uma força muito acima da de pessoas comuns. Ele nunca proferiu palavras como “trabalho duro”, “ambição” e “sonho”, o oposto de um típico protagonista de shounen; contudo, ele é mais forte do que qualquer um e inigualável no sumô.",
-        poster: "https://image.tmdb.org/t/p/w500/ooB6hGsWN03bwfCQJgnO2QTdP5t.jpg",
-        background: "https://image.tmdb.org/t/p/original/loaZVcKQbsiTbNWvjLiRGfvTCyf.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["b87c205e0","1ec92e48a","bc9bb0015","b26bc03ac","3d49992b3","171cd132e","a9c28ad15","8e7c4798e","a300a7640","417f6c59c",
-              "741178519","8e8f9c6b7","c3d3a2ed8","f1f71192b","4178718e8","5c25bd577","82dd94cdd","d09f16085","915430f34","f56dfe849",
-              "e54055203","a3f43995e","6d1579892"]
-        }
-        },
-        Abenobashimahoushoutengai: {
-        name: "Abenobashi Mahou Shouten Gai (2002)",
-        synopsis: "Sasshi e Arumi são amigos de infância que moram em Abenobashi (Bairro Comercial de Osaka). Infelizmente, um acontecimento próximo terá de separa-los - a família dela, seu Pai (Papa) e seu avô (Masayuki), mudará para Hokkaido e obviamente ela terá de acompanha-los. Alías, seu pai quer se mudar, mas seu avô não... Enquanto esse impasse não é resolvido, Sasshi e Arumi vivem como se nada fosse acontecer, apesar de ambos estarem tristes por isso, mais ainda no caso de Sasshi. Um imprevisto muda os planos. Enquanto tentava espantar um gato de uma estátua, Masayuki cai e é internado. A estátua é quebrada, um pelicano. Por conta disso, a viagem é adiada. No meio de tudo isso, após Sasshi e Arumi presenciarem pessoas virando cogumelos (!?!?) e verem a cidade se desmontando (...?), só resta ao dois um caminho a percorrer: uma estrada formada por um arco-íris... que leva a um castelo... Confusos, começam a tentar desvendar os segredos do lugar e eles estão muito perdidos!",
-        poster: "https://image.tmdb.org/t/p/w500/sN4zNahurpDdIlyKgiF3O5Ak8hf.jpg",
-        background: "https://image.tmdb.org/t/p/original/oO1ZOYYkc5BM6LatmXY62vAxjSc.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Ação & aventura, Comédia"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["177a747aa","8854ed841","1dc1817ba","8f7b77705","5d1e5bc81","903eb5895","c80d9980d","c20e7946f","ecc264a7e","5f4460e9a",
-              "5a360daac","55d7f15a0","18d696a27"]
-        }
-        },
-        absoluteduo: {
-        name: "Absolute Duo (2015)",
-        synopsis: "A história começa com Blaze - um tipo de arma que é a manifestação da alma de um ser humano. Tooru Kokonoe passa a ser qualificado para usá-lá, mas por algum motivo a sua Blaze não é uma arma e sim um escudo. Além disso, ele se matriculou em uma escola que ensina técnicas de combate e graças ao sistema de duplas de combate da escola, ele acaba indo viver com uma linda garota de cabelos prateados.",
-        poster: "https://image.tmdb.org/t/p/w500/bwi1CAR5hjKrKrDLUMqplEWeN6z.jpg",
-        background: "https://image.tmdb.org/t/p/original/5kaOtqaskCfxNBmxoIFuaAikywx.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Comédia, Ação & aventura"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["90739a32c","3503f6404","f2e232f6c","c789d2cbe","b4b210973","7a3abd427","cd20f98f9","b9b20b427","2673851c5","273d8a350",
-              "d987ef7e3","c510a802f"]
-        }
-        },
-        accelworld: {
-        name: "Accel World (2012)",
-        synopsis: "Está preparado para entrar num mundo acelerado? No futuro, a era da tecnologia está no apogeu dos mundos virtuais e agora pode facilmente conectar-se de qualquer lugar simplesmente sincronizando sua mente com as redes, mas isso será um benefício para os estudantes oprimidos por valentões!?",
-        poster: "https://image.tmdb.org/t/p/w500/lUatfX1FkANXzyCLbymsWuwFGEx.jpg",
-        background: "https://image.tmdb.org/t/p/original/clNR2BABiVEcaPRQbCT1y1bHz0R.jpg",
-        categories: ["Letra A"],
-        genero: ["Ação & aventura, Animação, Ficção científica & fantasia, Drama"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["ff10d0956","0a8c1847f","12e1f607a","c12985b82","b0c846836","c7558a758","78607d076","3720812bb","781a03193","4b0526087",
-              "d4cdec05c","82957abb9","be8ce163a","34626a3e7","3555a4987","e76954058","8351feb2a","5006c8890","8633c6c6c","d5e0f04aa",
-              "7df9d89f6","b8d44f9d3","85f7645b5","e7666b9f3"],
-          Especiais: ["83aa0dad1","1fc8c454d","7307d8e89","75e1fc416","700726b7d","9b229bf71","770945f4b","48501987e"],
-          OVA: ["f544c1473","6fe881998"]
-        }
-        },
-        acchikocchi: {
-        name: "Acchi Kocchi (2012)",
-        synopsis: "Uma grande Série de animação de televisão japonesa, Acchi Kocchi Online é totalmente baseado no grande mangá que teve o seu dia marcado no dia 05 do mês de abril e também na data de 28 de abril do ano de 2012. A Animação teve dois grandes episódios já lançadosásti e um episodio extra também foi lançado sendo ele um ova na data 16 de novembro do ano de 2012, o anime Acchi Kocchi Online, com o seu disco em blu-ray e 6 volumes já em DVD em seu país de origem no qual é o Japão. A grande abertura deste fantástico anime de televisão japonesa é  Atchi de Kotchi (あ っ ち で こ っ ち で?) no qualé cantado por Rumi Okubo, Hitomi  Nabatame, Nobuhiko Okamoto, Shintaro Asanuma e também por Kaory Fukuhara, sobre o encerramento de Acchi Kocchi Online e o seu tema destaque é Te o Gyu Shite ne (手 を ギ ュ し て ね?, titulo traduzido é “apertar a minha mão bem apertado”) que é cantado por Rumi Okubo.  Tendo o seu lançamento Acchi Kocchi Online foi induzida por Sentai Filmworks em que lançou a série anima em DVD na imensa America do Norte na data de 16 do mês de abril do ano de 2013.",
-        poster: "https://image.tmdb.org/t/p/w500/dZpeGTSrO8Xr7ZI08eM7C61v0a3.jpg",
-        background: "https://image.tmdb.org/t/p/original/9BSTUCDIQrcupqhn8J7pJDFghs2.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Comédia"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["d03b8be5a","f00250d60","efac816fd","b45c86d5d","fee8a422b","9a5b9070b","a81f9873d","64ed616f5","a6c92a952","b89a19325",
-              "24fb2ec2c","c6f513533"]
-        }
-        },
-        aceattorney: {
-        name: "Ace Attorney (2016)",
-        synopsis: "O advogado iniciante Naruhodo Ryuichi levanta-se para salvar seus clientes provando suas inocências nos casos mais incomuns! O réu é culpado ou inocente? Acreditando na inocência de seu cliente, Naruhodo vai à corte e batalha seus juízes rivais. Com a palavra objeção! e evidências limitadas, Naruhodo dá à volta por cima quando todas as chances estão contra ele e parece que não há mais nada a fazer. Não perca as cenas cômicas entre ele e seu mentor Ayasaho Chihiro, sua assistente Asayato Mayoi e seu promotor rival Mitsuguri Reiji e várias personagens únicas! O anime também mostrará a relação de infância entre Naruhodo e seus amigos. Com as habilidades que herdou de seu mentor, Naruhodo revela a verdade!",
-        poster: "https://image.tmdb.org/t/p/w500/ykBxH5jDVNprP5dcfLa32pTLW5h.jpg",
-        background: "https://image.tmdb.org/t/p/original/plQXVdg0JUlYmttW35k4WaYsAhy.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Crime, Drama, Mistério"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["5017de088","f2b71f347","366039ff2","503332d8b","d9d16e1b6","1fc110f85","bb7ec1134","2507b17ee","9523164db","f1d87d222",
-              "2b31671fc","84c9566b4","48e245682","3cbc55040","7bda3ced1","1b357ca1b","78d2177ad","90d5a6a65","c66ceef34","e52c42266",
-              "ce6d57bb7","3e79d96ed","3652b4622","b6d3bb5c7"],
-          2: ["1a316184f","73710a4e0","95278b151","916572d73","e718de11e","9f912aaaf","4f12c4c24","514f244fb","786c2423d","45c7d9d1b",
-              "e0ad1422d","a480fcf62","969b28377","c45435acf","6c4d0ffad","6865d0c69","e05774650","b94df48ea","df577d204","d25eb793e",
-              "0e3bfef66","57f222ab5","ce54f4f93",]
-        }
-        },
-        activeraidkidoukyoushuushitsudaihachigakari: {
-        name: "Active Raid: Kidou Kyoushuushitsu Dai Hachi Gakari (2016)",
-        synopsis: "Situado numa parte de Tóquio que virou uma confusão, a história segue a Unidade 8 da 3ª Divisão de Infantaria Móvel da 5ª Divisão de Segurança Pública Especial, popularmente chamada de “Unidade 8”, que usa exoesqueletos poderosos conhecidos como Willwear para combater o aumento de criminalidade. A inspetora assistente Kazari Asami é designada para Unidade 8 com a tarefa de avaliar o estado da unidade e relatar aos superiores, mas o verdadeiro objetivo dela é reabilitar esse grupo desleixado, casual e injusto.",
-        poster: "https://image.tmdb.org/t/p/w500/c1o3sK5FHr26IQ4JzsNElY6kqW2.jpg",
-        background: "https://image.tmdb.org/t/p/original/nFK1szk19NxWRnP9gV9wYNutvhy.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Ação & aventura, Crime"],
-        language: ["Legendado"],
-        seasons: {
-          1: ["d6d4c8653","9c5065678","d766036b0","f3d3c0bf3","dc05b77ed","c5e26067b","cce93f7d0","f60e9e15d","7e5413cc9","ad7cdd769",
-              "a8f2a3f3c","85d5028a1","5cafeb3cc","fb500cf58","aa47a26b8","e84f68938","a2702d6b8","6889bfc6b","760e5b3eb","fa0c9c61b",
-              "9f36546d9","2c0a0b430","aabe145ef","e22e03a99"]
-        }
-        },
-        nova: {
-        name: "Nova Série",
-        synopsis: "Sinopse em breve...",
-        poster: "https://image.tmdb.org/t/p/w500/.jpg",
-        background: "https://image.tmdb.org/t/p/original/.jpg",
-        categories: ["Letra A"],
-        genero: ["Animação, Ação & aventura, Crime"],
-        language: [""],
-        seasons: {
-          1: ["fdp1e1","fdp1e2","fdp1e3","fdp1e4","fdp1e5","fdp1e6","fdp1e7","fdp1e8","fdp1e9","fdp1e10",
-              "fdp1e11","fdp1e12","fdp1e13","fdp1e14","fdp1e15","fdp1e16","fdp1e17","fdp1e18","fdp1e19","fdp1e20",
-              "fdp1e21","fdp1e22","fdp1e23","fdp1e24","fdp1e25"],
-          2: ["fdp1e1","fdp1e2","fdp1e3","fdp1e4","fdp1e5","fdp1e6","fdp1e7","fdp1e8","fdp1e9","fdp1e10",
-              "fdp1e11","fdp1e12","fdp1e13","fdp1e14","fdp1e15","fdp1e16","fdp1e17","fdp1e18","fdp1e19","fdp1e20",
-              "fdp1e21","fdp1e22","fdp1e23","fdp1e24","fdp1e25"],
-          3: ["fdp1e1","fdp1e2","fdp1e3","fdp1e4","fdp1e5","fdp1e6","fdp1e7","fdp1e8","fdp1e9","fdp1e10",
-              "fdp1e11","fdp1e12","fdp1e13","fdp1e14","fdp1e15","fdp1e16","fdp1e17","fdp1e18","fdp1e19","fdp1e20",
-              "fdp1e21","fdp1e22","fdp1e23","fdp1e24","fdp1e25"],
-          4: ["fdp1e1","fdp1e2","fdp1e3","fdp1e4","fdp1e5","fdp1e6","fdp1e7","fdp1e8","fdp1e9","fdp1e10",
-              "fdp1e11","fdp1e12","fdp1e13","fdp1e14","fdp1e15","fdp1e16","fdp1e17","fdp1e18","fdp1e19","fdp1e20",
-              "fdp1e21","fdp1e22","fdp1e23","fdp1e24","fdp1e25"]
-        
-        
-        
-        
-        }
-        }
-        };
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const seriesData = {
+  hacksignum: {
+    name: ".hack//Sign (2002)",
+    synopsis: "conta a história de Tsukasa, um Wavemaster que se torna incapaz de sair do jogo online The World após um evento misterioso.",
+    poster: "https://image.tmdb.org/t/p/w500/wNplB2ViLejqtyU76Qz2iv3oZPM.jpg",
+    background: "https://image.tmdb.org/t/p/original/aKiRNVzI6dMSH3VVMdObVroVbJ2.jpg",
+    categories: ["Números e Símbolos"],
+    genero: ["Ação & Aventura, Animação, Mistério"],
+    language: ["Legendado"],
+    seasons: {1: ["5472c541c","dc2ba50b1","4d4a3bc65","2dcb4f966","834d3a752","d8b312ad8","d0133d3e4","d7412983c","52535c978","fd652bc10","a8d24c369","4e9a8f59c","d720470f0","a234cf687","1d512deae","4b2b3b440","805ada52e","b2c7bf073","c2c31eca0","cac8a976e","1b001ecb1","e37eaebc5","db1342eef","05b434adb","6202a656a","7e51e078f","412c083e6","ff37ac30c"]}
+  },
+  hackliminality: {
+    name: ".hack//Liminality (2002)",
+    synopsis: "Yuki Aihara era uma estudante que um dia foi ao cinema da escola e, enquanto assistia a um filme, as palavras O Mundo apareceram de repente na tela grande e, de repente, toda a cidade de Yokohama ficou sem energia devido a um corte de energia.",
+    poster: "https://m.media-amazon.com/images/M/MV5BYmRlMjUxMDctZjJkNi00MmVhLTlhODgtMzBmMmU4YjFiZjhiXkEyXkFqcGc@._V1_.jpg",
+    background: "https://image.tmdb.org/t/p/original/qKoB3nXkZ4x2uUj43b38RBwPPbR.jpg",
+    categories: ["Números e Símbolos"],
+    genero: ["Mistério, Ação & Aventura, Drama, Animação"],
+    language: ["Legendado"],
+    seasons: {1: ["4b1795b42","1248cc563","4203c81a6","be2772560"]}
+  }
+};
 
-  
 // === Elementos ===
 const seriesTabs = document.getElementById("seriesTabs");
 const serieInfo = document.getElementById("serieInfo");
@@ -593,9 +135,9 @@ const modalPlayer = document.getElementById("modalPlayer");
 const modalTitle = document.getElementById("modalTitle");
 const backButton = document.getElementById('backButton');
 const castOpen = document.getElementById("castOpen");
-const castCopy = document.getElementById("castCopy");
 
 let currentSeries = null;
+
 function populateCategories(){
   const allCategories = new Set();
   Object.values(seriesData).forEach(s => s.categories.forEach(c => allCategories.add(c)));
@@ -760,64 +302,32 @@ document.body.addEventListener("click",(e)=>{
 
 document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ modalPlayer.src=""; });
 
-// === Web Video Cast - compartilhar link via Intent ===
+// === Web Video Cast - enviar nome do episódio e redirecionar para link real ===
 castOpen.addEventListener("click", (e) => {
   e.preventDefault();
+  const title = modalTitle.textContent;
+  const realUrl = modalPlayer.src;
+  if (!realUrl) { alert("Nenhum vídeo carregado."); return; }
 
-  const url = modalPlayer.src; // pega o link do player
-  if (!url) {
-    alert("Nenhum vídeo carregado.");
-    return;
-  }
-
-  // Remove https:// do início
-  const cleanUrl = url.replace(/^https?:\/\//, '');
-  
-  // Cria o intent para abrir no Web Video Cast
-  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
-
-  // Tenta abrir o aplicativo diretamente
+  const htmlContent = `
+    <html>
+      <head>
+        <title>${title}</title>
+        <meta http-equiv="refresh" content="0;url=${realUrl}">
+      </head>
+      <body>
+        <p style="font-family:sans-serif;text-align:center;margin-top:50px;font-size:18px;">${title}</p>
+      </body>
+    </html>
+  `;
+  const dataUrl = "data:text/html;base64," + btoa(unescape(encodeURIComponent(htmlContent)));
+  const intentLink = `intent://${dataUrl.replace(/^https?:\/\//,'')}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
   window.location.href = intentLink;
 });
 
+// === Inicialização ===
 populateCategories();
 buildTabs();
 </script>
-<!-- Tela de Alerta -->
-  <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
-    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
-    <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
-  </div>
-
-  <script>
-    function mostrarAlerta() {
-      const tela = document.getElementById("bloqueio");
-      tela.style.display = "block";
-      setTimeout(() => {
-        location.reload();
-      }, 1000);
-    }
-
-    document.querySelectorAll('a').forEach(link => {
-      link.setAttribute('target', '_self');
-    });
-
-    document.addEventListener('keydown', function(e) {
-      const tecla = e.key.toLowerCase();
-      if (
-        e.key === "F12" ||
-        (e.ctrlKey && tecla === 'u') ||
-        (e.ctrlKey && tecla === 's') ||
-        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
-      ) {
-        e.preventDefault();
-        mostrarAlerta();
-      }
-    });
-
-    window.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
-  </script>
 </body>
 </html>
