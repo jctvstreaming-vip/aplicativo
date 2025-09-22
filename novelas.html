@@ -76,7 +76,7 @@ body { background: #fff; color: #000; padding: 1rem; }
 <button id="backButton" class="btn btn-primary btn-lg">Voltar</button>
 
 <div id="centralSearch">
-  <input type="search" id="seriesSearch" class="form-control" placeholder="Pesquisar Novela...">
+  <input type="search" id="seriesSearch" class="form-control" placeholder="Pesquisar Anime...">
   <select id="categoryFilter" class="form-select">
     <option value="">Todas as Categorias</option>
   </select>
@@ -146,6 +146,7 @@ body { background: #fff; color: #000; padding: 1rem; }
   const seriesData = {        
     hacksignum: {
       name: "A Agência (2020)",
+      year: 2020,
       synopsis: "Istambul é uma cidade repleta de estrelas e, para que estas estrelas se destaquem, há um exército de agentes trabalhando nos bastidores para encontrar o próximo papel importante. E no ponto mais alto está a Ego, a agência mais famosa da Turquia.",
       poster: "https://image.tmdb.org/t/p/w500/AwzQGOfecxJhqRAA1cAWPglYR7G.jpg",
       background: "https://image.tmdb.org/t/p/original/niAZi3VytEk6Nu4Zk0dXHonJFMQ.jpg", // imagem para fundo
@@ -172,6 +173,7 @@ body { background: #fff; color: #000; padding: 1rem; }
     },
     hackliminality: {
       name: ".hack//Liminality (2002)",
+      year: 2002,
       synopsis: "Yuki Aihara era uma estudante que um dia foi ao cinema da escola e, enquanto assistia a um filme, as palavras O Mundo apareceram de repente na tela grande e, de repente, toda a cidade de Yokohama ficou sem energia devido a um corte de energia.",
       poster: "https://m.media-amazon.com/images/M/MV5BYmRlMjUxMDctZjJkNi00MmVhLTlhODgtMzBmMmU4YjFiZjhiXkEyXkFqcGc@._V1_.jpg",
       background: "https://image.tmdb.org/t/p/original/qKoB3nXkZ4x2uUj43b38RBwPPbR.jpg", // fundo
@@ -216,7 +218,15 @@ function populateCategories(){
 
 function buildTabs(filteredKeys=null){
   seriesTabs.innerHTML = "";
-  const keys = filteredKeys||Object.keys(seriesData);
+  let keys = filteredKeys || Object.keys(seriesData);
+
+  // Ordena pelo ano mais recente (atributo 'year'), se não houver, coloca 0
+  keys.sort((a, b) => {
+    const yearA = seriesData[a].year || 0;
+    const yearB = seriesData[b].year || 0;
+    return yearB - yearA; // mais novas primeiro
+  });
+
   keys.forEach(key=>{
     const s = seriesData[key];
     const li = document.createElement("li");
