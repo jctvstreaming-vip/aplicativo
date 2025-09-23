@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,14 +8,6 @@
 <style>
 body { background: #fff; color: #000; padding: 1rem; }
 /* Centraliza os cards da aba de séries */
-      #seriesTabs {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      padding: 1rem 0;
-      margin-top: 100px; /* espaço para a barra fixa */
-    }
 #seriesTabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; padding: 1rem 0; margin-top: 100px; }
 .series-tab { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background-color: #eee; border-radius: 0.5rem; max-width: 100%; white-space: normal; cursor: pointer; }
 .series-tab img { width: 100%; height: 100%; border-radius: 5px; flex-shrink: 0; }
@@ -31,60 +22,50 @@ body { background: #fff; color: #000; padding: 1rem; }
 #backButton {
   display: none;
   position: fixed;
-  top: 2px;       /* afasta um pouco do topo */
-  right: 0px;      /* afasta um pouco da esquerda */
+  top: 2px;
+  right: 0px;
   z-index: 1055;
   background-color: #FFC107;
   color: #000000;
   border: none;
-  padding: 8px 10px;    /* menor que antes */
-  border-radius: 10px;   /* menor arredondamento */
+  padding: 8px 10px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;     /* Texto em negrito */
-  font-size: 12px;      /* fonte menor */
+  font-weight: bold;
+  font-size: 12px;
   transition: 0.3s ease;
 }
-
-#backButton:hover {
-  background-color: #007BFF;
-  color: #fff;           /* melhora contraste no hover */
+#backButton:hover { background-color: #007BFF; color: #fff; }
+/* Footer */
+footer.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: black;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  z-index: 1000;
 }
- /* Footer */
-  footer.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: black;
-    color: #fff; /* cor diferente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    font-size: 1rem; /* maior */
-    z-index: 1000;
-  }
-  footer.footer img {
-    height: 30px;
-    width: auto;
-  }
+footer.footer img { height: 30px; width: auto; }
 #centralSearch { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 200px; z-index: 1050; display: flex; flex-direction: column; gap: 8px; }
 #serieSynopsis .synopsis-text { display: block; overflow: hidden; }
-
 /* Ajuste do botão Assistir Agora */
 #assistirBtn {
-  background-color: #FFC107; /* Cor de fundo */
-  color: #000000;             /* Cor do texto */
-  font-size: 1rem;          /* Tamanho da fonte */
-  padding: 0.25rem 1rem;      /* Altura e largura */
-  border-radius: 10px;        /* Borda arredondada */
-  font-weight: bold;           /* Texto em negrito */
-  margin-left: -100px; /* ajusta a posição para a esquerda */
+  background-color: #FFC107;
+  color: #000000;
+  font-size: 1rem;
+  padding: 0.25rem 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-left: -100px;
 }
-#assistirBtn:hover {
-  background-color: #007BFF;  /* Cor ao passar o mouse */
-}
+#assistirBtn:hover { background-color: #007BFF; }
 </style>
 </head>
 <body>
@@ -107,8 +88,6 @@ body { background: #fff; color: #000; padding: 1rem; }
       <p id="serieSynopsis" class="mb-0"></p>
       <p><strong>Categoria:</strong> <span id="serieCategories"></span></p>
       <p><strong>Linguagem:</strong> <span id="serieLanguage"></span></p>
-
-      <!-- Botão Assistir Central -->
       <div class="text-center mt-3">
         <button id="assistirBtn" class="btn btn-primary btn-lg">▶ Assistir</button>
       </div>
@@ -116,7 +95,6 @@ body { background: #fff; color: #000; padding: 1rem; }
   </div>
 </div>
 
-<!-- Rodapé institucional após os canais -->
 <div class="col-12 mt-4">
    <div class="playerButtons" id="serverButtons"></div>
   <div style="margin-top: 40px; font-size: 0.85rem; color: #000; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
@@ -125,7 +103,6 @@ body { background: #fff; color: #000; padding: 1rem; }
   </div>
 </div>
 
-<!-- Modal Player -->
 <div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content bg-white text-dark">
@@ -160,6 +137,7 @@ body { background: #fff; color: #000; padding: 1rem; }
     const seriesData = {
       eoventolevou: {
         name: "...E o Vento Levou (1939)",
+        year: 1939,
         synopsis: "Scarlett O'Hara é uma jovem mimada que consegue tudo o que quer. No entanto, algo falta em sua vida: o amor de Ashley Wilkes, um nobre sulista que deve se casar com a sua prima Melanie. Tudo muda quando a Guerra Civil americana explode e Scarlett precisa lutar para sobreviver e manter a fazenda da família.",
         poster: "https://image.tmdb.org/t/p/w500/lY3jrnJAx7msVcnvWF4Jk3AOl4R.jpg",
         background: "https://image.tmdb.org/t/p/original/4FHcxMtVruMr7ltU2cItWssLjTP.jpg", // imagem para fundo
@@ -169,6 +147,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       hackgutrilogy: {
         name: ".hack//G.U. Trilogy (2007)",
+        year: 2007,
         synopsis: "Nesta busca por vingança contra Tri-Edge e para acordar Shino de seu coma Haseo procura através do The World como um PKK dos PK. Ele acaba conhecendo uma garoda chamada Atolli que se irrita com sua atitude infantil e ignorante com ela e que acaba se interessando em ajudá-lo em sua busca. E ela acaba despertando feridas antigas devido ao design de seu personagem ser igual ao de Shino. Ele forma novas alianças e tenta descobrir o mistério por trás dos comas que atingem os jogadores e da entidade conhecida como AIDA.",
         poster: "https://image.tmdb.org/t/p/w500/pWqBAViWtcLxHoO9f1JD17gzpRH.jpg",
         background: "https://image.tmdb.org/t/p/original/yP7G4z6CYrfRT3mwOYTJpLzeGQo.jpg",
@@ -178,6 +157,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       hackalemdomundo: {
         name: ".hack//Além do mundo (2012)",
+        year: 2012,
         synopsis: "Em 2024, as crianças vivem desde o nascimento em um mundo conectado por redes. Uma alegre criança de 14 anos do ginasial chamada Yuuki Sora não têm interesse em jogos, mas seus amigos a fazem entrar no popular mmorpg The World. Entretanto, devido a um certo acontecimento no The World, anomalias começam a ocorrer no mundo real.",
         poster: "https://image.tmdb.org/t/p/w500/tW9FYOBX6pBWHfDtvwparLrXnag.jpg",
         background: "https://image.tmdb.org/t/p/original/28BHk7qzkjU3URuSYPSPyXffbuI.jpg",
@@ -187,6 +167,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       quinhentosdiascomela: {
         name: "(500) Dias com Ela (2009)",
+        year: 2009,
         synopsis: "Um romântico escritor se surpreende quando sua namorada Summer termina o namoro repentinamente. Com isso, ele relembra vários momentos dos 500 dias que passaram juntos para tentar descobrir onde seu caso de amor se perdeu e vai redescobrindo suas verdadeiras paixões.",
         poster: "https://image.tmdb.org/t/p/w500/wkspryd5Ve93npEge3OFYCRgYwY.jpg",
         background: "https://image.tmdb.org/t/p/original/1M2i4Mxd03elGOTmEkIvqrHfmyS.jpg",
@@ -196,6 +177,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       desencontroperfeito: {
         name: "(Des)encontro Perfeito (2015)",
+        year: 2015,
         synopsis: "Nancy (Lake Bell) tem 34 anos de idade e leva uma vida fracassada no amor. Quando ela viaja a Londres para o aniversário de casamento de seus pais, conhece Jack (Simon Pegg), que confunde Nancy com a garota que ele está esperando para um encontro às cegas. Sem desfazer a confusão, Nancy assume a identidade da garota que Jack esperava, e passa uma ótima noite ao lado do pretendente. Mas uma hora a mentira vai ser descoberta...",
         poster: "https://image.tmdb.org/t/p/w500/iMyCHKgaTDub1UgzQOZ6r60YdcO.jpg",
         background: "https://image.tmdb.org/t/p/original/znc4p9S2177ClNnTlJHr1CSOIkB.jpg",
@@ -205,6 +187,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       renascer: {
         name: "(Re)Nascer (2023)",
+        year: 2023,
         synopsis: "Uma técnica de necrotério reanima com sucesso o corpo de uma menina, mas para mantê-la respirando, ela precisará colher materiais biológicos de mulheres grávidas.",
         poster: "https://image.tmdb.org/t/p/w500/qjjwYBk21klwdD86bxPro54qqaC.jpg",
         background: "https://image.tmdb.org/t/p/original/yr7ViN1uLrubY5OXgoSPd8HtAMy.jpg",
@@ -214,6 +197,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       recum: {
         name: "[REC] (2007)",
+        year: 2007,
         synopsis: "Ao longo de uma noite, uma repórter e seu cameraman acompanham um grupo de bombeiros chamados para resgatar uma mulher presa em um edifício, com resultados apavorantes. Antes de se darem conta, moradores, ajudantes e equipe de resgate são trancados dentro do edifício devido a um vírus desconhecido.",
         poster: "https://image.tmdb.org/t/p/w500/hJx9gqUJgWXRkFpIbCcNYrkqAQX.jpg",
         background: "https://image.tmdb.org/t/p/original/xfrguTH6maYiGsC8FXiQ9N3lZXw.jpg",
@@ -223,6 +207,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       recdois: {
         name: "[REC] 2: Possuídos (2009)",
+        year: 2009,
         synopsis: "Há 15 minutos a polícia não tem qualquer contato com as pessoas que estão presas dentro de um edifício em quarentena. Ninguém sabe o que aconteceu lá dentro. Neste momento, Dr. Owen e uma unidade da SWAT resolvem entrar no prédio para descobrir qual é a situação do local e desenvolver um antídoto através da coleta de sangue da jovem Medeiros.",
         poster: "https://image.tmdb.org/t/p/w500/83A9LTmRsqmWEfhquZ3cAGoxATp.jpg",
         background: "https://image.tmdb.org/t/p/original/svZPLmBwYHjlwDwHkZz4EotpXqx.jpg",
@@ -232,6 +217,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       rectres: {
         name: "[REC] 3: Gênesis (2012)",
+        year: 2012,
         synopsis: "A infecção agora está oficialmente fora do prédio. E atinge diretamente a festa de casamento de um casal inocente - na qual os convidados começam a mostrar sinais claros de uma doença terrível. Uma doença que os faz perder a consciência e sentir uma sede incontrolável de sangue.",
         poster: "https://image.tmdb.org/t/p/w500/uLIyUugRBrJrKPAFw3cC4oY31k0.jpg",
         background: "https://image.tmdb.org/t/p/original/9FgY5ejI3BlDV9LAkTG2iTX65rq.jpg",
@@ -241,6 +227,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       recquatro: {
         name: "[REC] 4: Apocalipse (2014)",
+        year: 2014,
         synopsis: "Uma repórter de TV, única sobrevivente de uma epidemia zumbi, é confinada em um barco no meio do mar, onde tentam achar a cura. Mas o perigo se encontra a bordo.",
         poster: "https://image.tmdb.org/t/p/w500/uUGdIdCl8Fy4TRcXLizRCDPQJ5R.jpg",
         background: "https://image.tmdb.org/t/p/original/qyFEOqVfnjVFQfZLlStERorrtUf.jpg",
@@ -250,6 +237,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       recquatrolegendado: {
         name: "[REC] 4: Apocalipse (2014) (LEG)",
+        year: 2014,
         synopsis: "Uma repórter de TV, única sobrevivente de uma epidemia zumbi, é confinada em um barco no meio do mar, onde tentam achar a cura. Mas o perigo se encontra a bordo.",
         poster: "https://image.tmdb.org/t/p/w500/nlSSZNESHkY1iPzYnpcRvYUr7Mz.jpg",
         background: "https://image.tmdb.org/t/p/original/948zJq2BoP48IuueUz3UpJyoagI.jpg",
@@ -259,6 +247,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       alive: {
         name: "#Alive (2020)",
+        year: 2020,
         synopsis: "Um vírus terrível destrói a cidade, e um homem se tranca no apartamento para sobreviver. Desconectado do mundo, ele tenta desesperadamente encontrar uma saída.",
         poster: "https://image.tmdb.org/t/p/w500/fUEv9INjh1HEdbD9BAExioSO65a.jpg",
         background: "https://image.tmdb.org/t/p/original/k2SY15W9QXH9qL8f4a4BbytV1BE.jpg",
@@ -268,6 +257,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       comvocevolum: {
         name: "#ComVocê: Volume: 1 (2021)",
+        year: 2021,
         synopsis: "O conceito é bastante simples: usando um aparelho smartphone ou qualquer outro recurso disponível, várias histórias foram registradas ao longo dos dias de isolamento provocado pela pandemia da COVID-19. Cada segmento traz um ponto de vista único, mostrando como as vidas das pessoas passaram por mudanças e o público pode acompanhar eventos reais sob a ótica de pessoas de diferentes origens e classes durante tempos complexos sem contato social.",
         poster: "https://image.tmdb.org/t/p/w500/dEgBV4Tuo9jFZh7rFiQEbiY91sT.jpg",
         background: "https://image.tmdb.org/t/p/original/okGPsMjrqCWGIPJUZs751lzOvqv.jpg",
@@ -277,6 +267,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       hashtaghorror: {
         name: "#Horror (2015)",
+        year: 2015,
         synopsis: "Inspirado em fatos reais, um grupo de garotas de 12 anos de idade enfrenta uma noite de horror quando um vício compulsivo por um jogo online de uma rede social, transforma um momento de cyber-bullying em uma noite de insanidade.",
         poster: "https://image.tmdb.org/t/p/w500/v9pTHwhpSWmPHU8i1pEt9VIG9Kg.jpg",
         background: "https://image.tmdb.org/t/p/original/izCwWpstY7LAm6eXIKliXACs6sK.jpg",
@@ -286,6 +277,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       hashtagnatal: {
         name: "#Natal (2022)",
+        year: 2022,
         synopsis: "Para entrar em um concurso de design, Jen conta com a ajuda de seu melhor amigo, Max, e de seu sobrinho para inventar a família perfeita, mas nem tudo sai como esperado.",
         poster: "https://image.tmdb.org/t/p/w500/l0lH0hvU0XcPfhyRKydGjRKmXtf.jpg",
         background: "https://image.tmdb.org/t/p/original/gRS55xRFpgPX2RKeFTTFIvJmA0f.jpg",
@@ -295,6 +287,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       hashtagnudes: {
         name: "#NUDES (2018)",
+        year: 2018,
         synopsis: "Leo (Guily Machovec) e Maysa (Yolanda de Paulo) são um casal enfrentando problemas no seu relacionamento. Eles então começam a sair com Adélia (Gabriela Pimenta) e Heitor (Vini Hideki), um casal que acabaram de conhecer, e essa união muda completamente suas vidas e a dinâmica que eles têm como casal.",
         poster: "https://image.tmdb.org/t/p/w500/f463CTemzbWdAMYTYfkG5rnB2Wg.jpg",
         background: "https://image.tmdb.org/t/p/original/1MbFbg2Zz8jRUQEdBs6BcxhCfQl.jpg",
@@ -304,6 +297,7 @@ body { background: #fff; color: #000; padding: 1rem; }
       },
       hashtagpartiufama: {
         name: "#PartiuFama: Cancelado no Amor (2022)",
+        year: 2022,
         synopsis: "Gabriel sempre sonhou em ser famoso, mas sua timidez não permitia nem que ele falasse com Bianca, sua paixão de infância. Depois de reprogramar seu passado, ele se torna popular na escola. Mesmo assim, seus vídeos não viralizam. Quando decide prestar atenção nas histórias de um cliente do boteco de seu pai, que relata suas desventuras na juventude, Gabriel passa a gravar vídeos contando estas histórias como se fossem suas e se torna um youtuber de sucesso, mas as coisas fogem de controle.",
         poster: "https://image.tmdb.org/t/p/w500/24eEIEi7bgGmNDnsfkC6FAQTF8.jpg",
         background: "https://image.tmdb.org/t/p/original/gYx3o2OD8UNZV76rTJXRevKvkRZ.jpg",
@@ -313,6 +307,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       hashtagautorealidade: {
         name: "#Alto Realidade (2017)",
+        year: 2017,
         synopsis: "Dani Barnes (Nesta Cooper) é uma jovem nerd percorrendo um grande sonho de ser aceita na UC Davis, a melhor universidade veterinária do mundo. Mas seus planos podem ir por água abaixo quando ela finalmente chama a atenção do garoto que ela estavam afim: a namorada dele, uma celebridade nas redes sociais, despertou sua fúria por Dani.",
         poster: "https://image.tmdb.org/t/p/w500/iZliPeiiDta9KbONAhdFSXhTxrO.jpg",
         background: "https://image.tmdb.org/t/p/original/smgZYp49OB6xo4hZewxzryrh5xN.jpg",
@@ -322,6 +317,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       hashtagseacabodiariodascampeas: {
         name: "#SeAcabó: Diário das Campeãs (2024)",
+        year: 2024,
         synopsis: "A seleção espanhola se reúne pela primeira vez para relembrar a turbulenta Copa do Mundo Feminina de 2023 e o beijo que ofuscou a vitória.",
         poster: "https://image.tmdb.org/t/p/w500/AbhsO718qA8qeHyF00FsvG7vt3f.jpg",
         background: "https://image.tmdb.org/t/p/original/8pSb6TrJp1RIW8wd6p5Tm1CLzd8.jpg",
@@ -331,6 +327,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       hashtagsemsaida: {
         name: "#SemSaída (2020)",
+        year: 2020,
         synopsis: "Uma personalidade das redes sociais viaja com seus amigos para Moscou para gravar novo conteúdo para os seus seguidores. Sempre excedendo seus limites em busca de uma nova audiência, eles entram em um mundo frio de mistério, excesso e perigoso. Quando as linhas entre vida real e rede social ficam borradas, o grupo deve lutar para escapar e sobreviver.",
         poster: "https://image.tmdb.org/t/p/w500/fUCIj47O9v5zktS81hRWktUVnSR.jpg",
         background: "https://image.tmdb.org/t/p/original/2Xh3Q0LLir3a2Ss0ASuEMgiz4Qv.jpg",
@@ -340,6 +337,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       maisvelozesmaisfuriosos: {
         name: "+ Velozes + Furiosos (2003)",
+        year: 2003,
         synopsis: "O ex-policial Brian comete uma grande traição, juntando-se a um amigo ex-presidiário no transporte de dinheiro sujo para uma importadora-exportadora muito suspeita.",
         poster: "https://image.tmdb.org/t/p/w500/mx0CB8H78PQu0g9YUWG47hdi93S.jpg",
         background: "https://image.tmdb.org/t/p/original/z3ioibdjWZOYeXjoiabFOFOfPI3.jpg",
@@ -349,6 +347,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerrozeroseteum: {
         name: "007 Contra o Satânico Dr. No (1962)",
+        year: 1962,
         synopsis: "James Bond investiga o desaparecimento de um agente britânico. Em meio às suas investigações ele descobre o esconderijo do Dr. No, um gênio louco que pretende desviar o rumo dos foguetes americanos.",
         poster: "https://image.tmdb.org/t/p/w500/zJPZPtBqPSN73m6UmpS7uTTOZSo.jpg",
         background: "https://image.tmdb.org/t/p/original/ptcXbbxTyjHfEE4d4QocNP0YQct.jpg",
@@ -358,6 +357,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerrozerosetedois: {
         name: "Moscou Contra 007 (1963)",
+        year: 1963,
         synopsis: "James Bond é incumbido de ajudar uma bela agente soviética a fugir de seu país para então tentar recuperar uma leitora de códigos na embaixada russa, em Londres. Porém, Bond não sabe que a temível organização criminosa Spectre organizou esta armadilha no intuito de executá-lo.",
         poster: "https://image.tmdb.org/t/p/w500/x06hUBmBeExMSs4Zot2V8Y3R24t.jpg",
         background: "https://image.tmdb.org/t/p/original/8JMiQa0OqsCYvbNUrQIrMzwV7g2.jpg",
@@ -367,6 +367,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerrozerosetetres: {
         name: "007 Contra Goldfinger (1964)",
+        year: 1964,
         synopsis: "James Bond é encarregado de espionar Goldfinger, um poderoso milionário cujas remessas de ouro espalhadas por diversos países podem esconder ações criminosas. Após ser capturado, Bond descobre que o plano de Goldfinger é bem maior do que ele imaginava: Goldfinger pretende roubar nada mais nada menos do que as reservas americanas de ouro, guardadas no Forte Knox.",
         poster: "https://image.tmdb.org/t/p/w500/aSFbyik1bd3xQxyPQbahdcaCYwT.jpg",
         background: "https://image.tmdb.org/t/p/original/f1Is9VLQZSRpeLMU7mIcj5aXclt.jpg",
@@ -376,6 +377,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetequatro: {
         name: "007 Contra a Chantagem Atômica (1965)",
+        year: 1965,
         synopsis: "James Bond 'Sean Connery' tenta evitar a destruição de Miami por meio de uma super bomba, roubada pela SPECTRE. A organização está exigindo um pagamento de 100 milhões de dólares em diamantes para não cumprir a ameaça de explodir a cidade. Para isso, ele vai correr contra o tempo para encontrar as armas roubadas e impedir a morte de milhões de inocentes.",
         poster: "https://image.tmdb.org/t/p/w500/ot8pEGo9Mljwkz7Ak8hv4qjBmsu.jpg",
         background: "https://image.tmdb.org/t/p/original/7DLCXCQx52YLle1qTokrjROTwVV.jpg",
@@ -385,6 +387,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetecinco: {
         name: "Com 007 Só Se Vive Duas Vezes (1967)",
+        year: 1967,
         synopsis: "Durante uma missão de rotina no espaço, uma nave americana desaparece misteriosamente da sua órbita. Os americanos suspeitam dos soviéticos e pensam em uma retaliação. No entanto, os ingleses se mantêm mais cautelosos, após existirem possibilidades da nave ter pousado perto do Mar do Japão. Assim, James Bond 'Sean Connery' vai investigar o caso, mas quando os soviéticos perdem uma espaçonave nas mesmas circunstâncias, Bond tem poucos dias para resolver esta missão e evitar a Terceira Guerra Mundial.",
         poster: "https://image.tmdb.org/t/p/w500/oUXRXL8z6Ia4RtBTnrN11WppxRa.jpg",
         background: "https://image.tmdb.org/t/p/original/cpZAXIYA0lkZMpAt7d1MmH8ojNV.jpg",
@@ -394,6 +397,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozeroseteseis: {
         name: "007 A Serviço Secreto de Sua Majestade (1969)",
+        year: 1969,
         synopsis: "Em uma praia, James Bond 'George Lazenby' evita que uma jovem mulher cometa suicídio. O pai dela é o chefe de uma poderosa organização criminosa e, impressionado com Bond, quer que ele proteja sua filha se casando com ela. Em troca, ele oferece ao famoso agente informações que o façam chegar até Ernst Blofeld 'Telly Savallas', o principal inimigo do agente. Inicialmente, James Bond concorda com o acordo, visando apenas poder matar Blofeld, mas com o tempo ele realmente fica apaixonado pela sua futura esposa. Porém, James Bond logo descobre que Blofeld planeja destruir a humanidade com um vírus altamente mortal a menos que receba perdão por todos os seus crimes. Desta maneira, a Rainha da Inglaterra pede que o agente secreto mais famoso do mundo intervenha no caso, mas a situação se complica e toma um rumo inesperado.",
         poster: "https://image.tmdb.org/t/p/w500/8lj09OvXpSgPTSHWOJ7AerBemDS.jpg",
         background: "https://image.tmdb.org/t/p/original/58pMrmwwcKamJIdjUlinE6QX1Fs.jpg",
@@ -403,6 +407,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetesete: {
         name: "007 Os Diamantes São Eternos (1971)",
+        year: 1971,
         synopsis: "Quando o governo britânico suspeita da existência de uma rede mundial de contrabando de diamantes, 007 'Sean Connery' é chamado para investigar. Ele logo descobre a extensão do problema e viaja para a América, onde o milionário proprietário de um cassino é suspeito de estar por trás de tudo. Só que ele é ninguém menos que Ernst Stavro Blofeld 'Charles Gray', o arquiinimigo de James Bond, que sabe exatamente o que tem de fazer, principalmente quando as mais poderosas potências nucleares do planeta estão envolvidas.",
         poster: "https://image.tmdb.org/t/p/w500/n0UhYapEWDcrgDgKvRKHZMyv4z6.jpg",
         background: "https://image.tmdb.org/t/p/original/htEoTYfgURlBmIkMdZlMkSI4XPF.jpg",
@@ -412,6 +417,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozeroseteoito: {
         name: "Com 007 Viva e Deixe Morrer (1973)",
+        year: 1973,
         synopsis: "O tráfico de heroína e a morte de agentes secretos colocam frente a frente James Bond 'Roger Moore' e Mr. Big 'Yaphet Kotto', o chefão do crime em Nova York. Sua organização age impulsionada pelas visões de Solitaire 'Jane Seymour', uma cartomante com poderes especiais. Quando conhece Bond, Solitaire perde os seus poderes e é condenada a morte em um ritual vudu.",
         poster: "https://image.tmdb.org/t/p/w500/oxPPkImbyUCNvdhHf1zO4S1ayKd.jpg",
         background: "https://image.tmdb.org/t/p/original/hzmmXx6UeYQeylioNbliFKjSbV7.jpg",
@@ -421,6 +427,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetenove: {
         name: "007 Contra o Homem com a Pistola de Ouro (1974)",
+        year: 1974,
         synopsis: "Quando uma bala de ouro chega ao quartel-general da inteligência britânica com um 007 gravado nela, se acredita que James Bond 'Roger Moore' será o próximo alvo de um assassino profissional Christopher Lee que cobra um milhão de dólares por serviço. Assim, Bond vai investigar a situação e acaba descobrindo que o objetivo do matador internacional seqüestrar um cientista, que inventou um conversor solar capaz de resolver a crise de energia no planeta.",
         poster: "https://image.tmdb.org/t/p/w500/rqC546GsvQqNEM4Tmlw6y132Dst.jpg",
         background: "https://image.tmdb.org/t/p/original/3tpNEbRahT8smy7RraaWa0xg9Gv.jpg",
@@ -430,6 +437,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetedez: {
         name: "007 O Espião Que Me Amava (1977)",
+        year: 1977,
         synopsis: "A Inglaterra descobre que alguém sabe como rastrear um submarino submerso e está oferecendo esta tecnologia para quem pagar mais alto. Uma crise internacional tem início quando um submarino com dezesseis mísseis nucleares desaparece, enquanto fazia uma patrulha. O agente secreto 007 'Roger Moore' é incumbido de investigar o caso e recuperar as ogivas antes que sejam disparadas e, para isto, recebe a ajuda de uma bela e sensual agente soviética 'Barbara Bach'.",
         poster: "https://image.tmdb.org/t/p/w500/l7qtdY0f2q14U41wb7Y755RCCEx.jpg",
         background: "https://image.tmdb.org/t/p/original/8lRdfsmJjUXQU3DMOOB3vVIhJxP.jpg",
@@ -438,7 +446,8 @@ body { background: #fff; color: #000; padding: 1rem; }
         seasons: { 1: ["2fbe37547"] }
        },
       zerozeroseteonze: {
-        name: "007 Contra o Foguete da Morte",
+        name: "007 Contra o Foguete da Morte (1979)",
+        year: 1979,
         synopsis: "Um avião carregando um foguete espacial sofre um acidente. Mas quando o Serviço Secreto Britânico vai examinar os destroços, não encontra nenhum vestígio da espaçonave. Assim, James Bond Roger Moore tem a missão de investigar o caso e começa indo visitar o multimilionário que construiu a aeronave e tem idéias bastantes estranhas de qual deva ser o destino da raça humana.",
         poster: "https://image.tmdb.org/t/p/w500/qLWSt8edXmWG55I16DJt5VtXsR3.jpg",
         background: "https://image.tmdb.org/t/p/original/mrDC5DLx2wljt4HZGwgkmqlzfcF.jpg",
@@ -448,6 +457,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetedoze: {
         name: "007 Somente para Seus Olhos (1981)",
+        year: 1981,
         synopsis: "Quando um navio britânico é afundado em águas estrangeiras, as superpotências mundiais começam uma corrida desesperada para achar sua carga: Um sistema submarino de controle nuclear. E James 'Bond Roger Moore' é lançado a uma de suas mais eletrizantes aventuras ao participar da procura... E evitar a devastação mundial!",
         poster: "https://image.tmdb.org/t/p/w500/v3TFKkWFgsQcBvN29s1P7meOt2j.jpg",
         background: "https://image.tmdb.org/t/p/original/z7Jp7HAsY7MqXzPYzTjJnmOQk2r.jpg",
@@ -457,6 +467,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetetreze: {
         name: "007 Contra Octopussy (1983)",
+        year: 1983,
         synopsis: "Ao tentar solucionar quem assassinou o agente 009 'Andy Bradford', James Bond 'Roger Moore' resolve seguir uma pista de uma jóia Fabergé roubada do Kremlin, que aparece em uma famosa casa de leilões de Londres. O agente 007 acredita que esta jóia pode ser a chave para solucionar o mistério, pois o agente morto foi encontrado com um Fabergé falso.",
         poster: "https://image.tmdb.org/t/p/w500/orK0ZbPR6teSzBH2ZsWlVY4m5GL.jpg",
         background: "https://image.tmdb.org/t/p/original/xTS1qCmhzH3vq7cuextO5vQA6eW.jpg",
@@ -465,7 +476,8 @@ body { background: #fff; color: #000; padding: 1rem; }
         seasons: { 1: ["820e35ec0"] }
        },
       zerozerosetequatorze: {
-        name: "007: Nunca Mais Outra Vez (1983)",
+        name: "007 Nunca Mais Outra Vez (1983)",
+        year: 1983,
         synopsis: "James Bond 'Sean Connery' é convocado para reaver bombas nucleares roubadas pela Spectre, uma terrível organização criminosa que pretende lançá-las em cidades americanas. Mas terá que enfrentar uma sexy assassina profissional, contratada especialmente para eliminá-lo.",
         poster: "https://image.tmdb.org/t/p/w500/uULahg7URW4DjPq0fANgHEw1uHC.jpg",
         background: "https://image.tmdb.org/t/p/original/45uCcAUB8Ljz3uKb1y1JHtT5aCT.jpg",
@@ -475,6 +487,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetequinze: {
         name: "007 Na Mira dos Assassinos (1985)",
+        year: 1985,
         synopsis: "O magnata Max Zorin 'Christopher Walken' pretende controlar o mercado de informática. Ele resolve arquitetar um louco plano, no qual milhares de pessoas vão morrer para ficar ainda mais rico. Após retornar da sua viagem na União Soviética com um chip de computador, James Bond 'Roger Moore' precisa investigar as indústrias de Zorin e tentar impedir que o vilão realize os seus planos.",
         poster: "https://image.tmdb.org/t/p/w500/mlv7UVryoJ3CiHrtNfL5bddiZez.jpg",
         background: "https://image.tmdb.org/t/p/original/QKepTHybC1gJO8BJls63jKmLib.jpg",
@@ -484,6 +497,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetedezeseis: {
         name: "007 Marcado para a Morte (1987)",
+        year: 1987,
         synopsis: "Georgi Koskov (Jeroen Krabbé), um general dissidente da União Soviética, escapa da Cortina de Ferro com a ajuda de James Bond 'Timothy Dalton', mas logo é recapturado através de uma sensacional missão de resgate, que transforma o Serviço Secreto Inglês em uma grande chacota. A partir de então, 007 assume o caso e vê fatos surpreendentes ao conhecer Kara Milovy 'Maryam d'Abo', uma violoncelista tcheca com quem se envolve. Bond acaba descobrindo uma grande trama ligada a Brad Whitaker 'Joe Don Baker', um grande comerciante de armamento bélico.",
         poster: "https://image.tmdb.org/t/p/w500/x0pqZMotd2S4JknksLkK8red6Zh.jpg",
         background: "https://image.tmdb.org/t/p/original/hZwFWGM3Clpvenxb137C82eODOg.jpg",
@@ -492,7 +506,8 @@ body { background: #fff; color: #000; padding: 1rem; }
         seasons: { 1: ["2ff6ee452"] }
        },
       zerozerosetedezesete: {
-        name: "007: Permissão para Matar (1989)",
+        name: "007 Permissão para Matar (1989)",
+        year: 1989,
         synopsis: "James Bond desobedece ordens e parte em uma missão para vingar a morte da mulher de seu melhor amigo, assassinada por um chefão das drogas. Ele chega à base sul-americana do narcotraficante e, disfarçado de pistoleiro, é contratado pelo criminoso.",
         poster: "https://image.tmdb.org/t/p/w500/cTRASi09SKtyzWrjmakEW3196IB.jpg",
         background: "https://image.tmdb.org/t/p/original/542y97Wv0i01MVpzzaNNHUAvplA.jpg",
@@ -502,6 +517,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetedezoito: {
         name: "007 Contra GoldenEye (1995)",
+        year: 1995,
         synopsis: "James Bond precisa impedir que o controle do poderoso satélite GoldenEye, capaz de causar pane em qualquer equipamento eletrônico do mundo, caia em mãos erradas. Para isso, contará com a ajuda da bela especialista em computação Natalya Siminova.",
         poster: "https://image.tmdb.org/t/p/w500/gp8jxHD3Yk4zeizXhlcQpJxls3u.jpg",
         background: "https://image.tmdb.org/t/p/original/vm7yMg7YiYisMSeO3mUC5NUKbSB.jpg",
@@ -511,6 +527,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetedezenove: {
         name: "007 O Amanhã Nunca Morre (1997)",
+        year: 1997,
         synopsis: "James Bond descobre que o magnata da mídia Elliot Carver colocou em prática um plano para manipular as superpotências e expandir seus negócios. O agente deve impedir que essa ideia doentia provoque uma nova guerra mundial.",
         poster: "https://image.tmdb.org/t/p/w500/bli11OpEc4jtNfRwPOdG1uiL6qB.jpg",
         background: "https://image.tmdb.org/t/p/original/fesAgiKA0pc04vScDTAQe1f9nd4.jpg",
@@ -520,6 +537,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetevinte: {
         name: "007 O Mundo Não é o Bastante (1999)",
+        year: 1999,
         synopsis: "James Bond deve proteger Elektra King, filha de um magnata do petróleo que foi brutalmente assassinado. O agente secreto é encarregado de manter Elektra longe do lunático terrorista Renard, que deseja assumir o controle do petróleo de todo o mundo.",
         poster: "https://image.tmdb.org/t/p/w500/hhdLmdw0o2weP64g8w4LvPNs3G0.jpg",
         background: "https://image.tmdb.org/t/p/original/n2jVDMcBEWsLFooO7W1ZkcMUtWS.jpg",
@@ -529,6 +547,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetevinteum: {
         name: "007 Um Novo Dia para Morrer (2002)",
+        year: 2002,
         synopsis: "Após se libertar de uma prisão na Coréia do Norte, James Bond entra em ação para perseguir o maligno Gustav Graves, que está desenvolvendo uma arma de alta tecnologia capaz de colocar o mundo em risco.",
         poster: "https://image.tmdb.org/t/p/w500/p5XYHwDfsOjItfYQAOlLwMZYb3d.jpg",
         background: "https://image.tmdb.org/t/p/original/ibJEhfV4CudcL3iaUgvhkBrfMCO.jpg",
@@ -538,6 +557,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetevintedois: {
         name: "007 Cassino Royale (2006)",
+        year: 2006,
         synopsis: "Depois de obter o status 00 e uma licença para matar, o agente secreto James Bond parte em sua primeira missão como 007. Bond precisa derrotar um banqueiro privado que financia terroristas em um jogo de pôquer de alto risco no Casino Royale, Montenegro.",
         poster: "https://image.tmdb.org/t/p/w500/7b3qmLlvm2lvJ2gxsKQ42S3RTKR.jpg",
         background: "https://image.tmdb.org/t/p/original/kjC48HRQpojr3FHx5pZF7Ro9xFg.jpg",
@@ -547,6 +567,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetevintetres: {
         name: "007 Quantum of Solace (2008)",
+        year: 2008,
         synopsis: "Após a morte de Vesper Lynd, James Bond faz com que sua próxima missão seja pessoal. A caçada àqueles envolvidos na morte da mulher de sua vida o leva ao encontro do cruel empresário Dominic Greene, que faz parte da organização que coagiu Vesper. Bond descobre que Greene planeja obter o controle total de um recurso natural vital e deve enfrentar perigo e traição para frustrar o plano.",
         poster: "https://image.tmdb.org/t/p/w500/fV0ejyUsnqd8BzHcK13C7ZJFEa1.jpg",
         background: "https://image.tmdb.org/t/p/original/1tW2fJCE6vb7lAbBMOs3eYMuA7X.jpg",
@@ -556,6 +577,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetevintequatro: {
         name: "007 Operação Skyfall (2012)",
+        year: 2012,
         synopsis: "Após uma missão mal sucedida de James Bond, a identidade de agentes secretos é revelada e o M16, atacado. Ajudado por um agente de campo, Bond deverá seguir a trilha de Silva, um homem que habita o passado de M e que tem contas a acertar.",
         poster: "https://image.tmdb.org/t/p/w500/dMquqnvnvwuugB5z8zP7uyyNYUl.jpg",
         background: "https://image.tmdb.org/t/p/original/uMTSR1Ezeb2Qws1X7X7nvLFBJtB.jpg",
@@ -565,6 +587,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozerosetevintecinco: {
         name: "007 Contra Spectre (2015)",
+        year: 2015,
         synopsis: "James Bond chega à Cidade do México e está pronto para eliminar Marco Sciarra sem que o chef M saiba da missão. O caso leva à suspensão temporária do agente, que passa a ser constantemente vigiado pelo governo britânico graças a uma tecnologia implantada em seu corpo por Q. Na tentativa de despistar os inimigos e até mesmo alguns de seus parceiros de trabalho, ele se responsabiliza por ajudar a filha de um desafeto. Toda a situação o leva ao centro de uma temida organização denominada Spectre.",
         poster: "https://image.tmdb.org/t/p/w500/ozwsRvKABRcF8VrNNvMkKt8KWyF.jpg",
         background: "https://image.tmdb.org/t/p/original/8lBViysvNJBPkl6zG1LVAaW3qhj.jpg",
@@ -573,7 +596,8 @@ body { background: #fff; color: #000; padding: 1rem; }
         seasons: { 1: ["c30404f9d"] }
        },
       zerozerosetevinteseis: {
-        name: "007: Sem Tempo para Morrer (2021)",
+        name: "007 Sem Tempo para Morrer (2021)",
+        year: 2021,
         synopsis: "Bond deixou o serviço ativo e está desfrutando de uma vida tranquila na Jamaica. Sua paz é interrompida quando o seu velho amigo Felix Leiter, da CIA, aparece pedindo sua ajuda. A missão de resgatar um cientista sequestrado acaba sendo muito mais difícil do que o esperado, deixando Bond no caminho de um vilão misterioso e armado com uma nova tecnologia perigosa.",
         poster: "https://image.tmdb.org/t/p/w500/luE0KG1rWfUptbgNtlNtL5sihyd.jpg",
         background: "https://image.tmdb.org/t/p/original/sAlir1UOMUkp0X6yIwZHcZ0DuRb.jpg",
@@ -582,7 +606,8 @@ body { background: #fff; color: #000; padding: 1rem; }
         seasons: { 1: ["9d122c9a1"] }       
        },
       zerozerosetevinteseisss: {
-        name: "007: Sem Tempo para Morrer (2021) (LEG)",
+        name: "007 Sem Tempo para Morrer (2021) (LEG)",
+        year: 2021,
         synopsis: "Bond deixou o serviço ativo e está desfrutando de uma vida tranquila na Jamaica. Sua paz é interrompida quando o seu velho amigo Felix Leiter, da CIA, aparece pedindo sua ajuda. A missão de resgatar um cientista sequestrado acaba sendo muito mais difícil do que o esperado, deixando Bond no caminho de um vilão misterioso e armado com uma nova tecnologia perigosa.",
         poster: "https://image.tmdb.org/t/p/w500/luE0KG1rWfUptbgNtlNtL5sihyd.jpg",
         background: "https://image.tmdb.org/t/p/original/sAlir1UOMUkp0X6yIwZHcZ0DuRb.jpg",
@@ -592,6 +617,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       zerozeronoverecyborg: {
         name: "009 Re:Cyborg (2012)",
+        year: 2012,
         synopsis: "Nove seres humanos normais de diferentes partes do mundo são sequestrados e transformados em ciborgues com poderes surpreendentes, criados com o propósito de serem usados como armas. Os nove ciborgues rebeldes começam a lutar contra os seus criadores, em nome da justiça e da paz no mundo. Décadas mais tarde, os nove ciborgues aparecem sem alterações pelo tempo, mas eles vivem em um mundo onde a “justiça” tem tantas nuances quanto o número de pessoas que vivem no planeta. Qual será o lugar deles no mundo agora?",
         poster: "https://image.tmdb.org/t/p/w500/eBaUVUNAWSOg70TMl7o9K3qSgYO.jpg",
         background: "https://image.tmdb.org/t/p/original/pfdCuGOx2mJuDDtRoUMxNle4R5M.jpg",
@@ -601,6 +627,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       umcontratodos: {
         name: "1 Contra Todos: O Filme (2016)",
+        year: 2016,
         synopsis: "Cadu, um advogado honesto do interior de São Paulo, esta prestes a ser pai pela segunda vez. Porém, sua vida é totalmente transformada quando ele cai em uma armadilha e a polícia encontra uma tonelada de maconha em sua casa. Revoltado com a injustiça, ele passa a agir como chefe de um cartel de drogas, exatamente do que o acusaram, diante dos bandidos e assassinos do presídio.",
         poster: "https://image.tmdb.org/t/p/w500/dwLLqTWXWdD8CFWXdlmemxWPYas.jpg",
         background: "https://image.tmdb.org/t/p/original/w7yH5aLzPTvKEkn2RFseSUp6imy.jpg",
@@ -610,6 +637,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       umcontratodosdois: {
         name: "1 Contra Todos 2: O Filme (2017)",
+        year: 2017,
         synopsis: "Cadu 'Júlio Andrade' é um exemplo de cidadão, um advogado dedicado que preza a verdade e a justiça acima de tudo. Sua amplitude moral, no entanto, acaba fazendo com que perca o emprego. Como se não bastasse, ele é confundido com o maior traficante do Brasil, indo para a cadeia. Ao chegar lá, decide manter a mentira para aumentar suas chances de sobrevivência, arrastando consigo a esposa Malu 'Júlia Lanina', grávida do segundo filho do casal.",
         poster: "https://image.tmdb.org/t/p/original/j3LiSj9xsEPEU4YeXq2t272gsZE.jpg",
         background: "https://image.tmdb.org/t/p/original/eZwXL29qElmELz04gV15BoqlkUD.jpg",
@@ -619,6 +647,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       dezcoisasparafazerantesdeseparar: {
         name: "10 Coisas Que Deveríamos Fazer Antes de Nos Separar (2020)",
+        year: 2020,
         synopsis: "Em 10 Coisas que Deveríamos Fazer Antes de Nos Separar, Abigail (Christina Ricci) conhece Benjamin (Hamish Linklater) no bar e iniciam uma conversa cômica sobre o que fariam antes de se separar – caso fossem casados. O que era uma brincadeira, acaba se tornando realidade quando os dois passam a noite juntos e Abigail fica grávida.",
         poster: "https://image.tmdb.org/t/p/w500/bS1rZqjcvk3WPCXVBgHeDY6FVRC.jpg",
         background: "https://image.tmdb.org/t/p/original/gibelK8BHbR6ldonfgChgUfUgUr.jpg",
@@ -628,6 +657,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       dezcoisasqueeuodeioemvoce: {
         name: "10 Coisas Que Eu Odeio em Você (1999)",
+        year: 1999,
         synopsis: "Em seu primeiro dia na nova escola, Cameron se apaixona por Bianca. Mas ela só poderá sair com rapazes até que Kat, sua irmã mais velha, arrume um namorado. O problema é que ela é insuportável. Cameron, então, negocia com o único garoto que talvez consiga sair com Kat – um misterioso bad-boy com uma péssima reputação.",
         poster: "https://image.tmdb.org/t/p/w500/sSr6OheCylo2rlt4Ko9OWwcmu3n.jpg",
         background: "https://image.tmdb.org/t/p/original/yvPbncYhMu9FfTjDhq0N5lgnVkO.jpg",
@@ -637,6 +667,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       dezdiasdeumhomembom: {
         name: "10 Dias de um Homem Bom (2023)",
+        year: 2023,
         synopsis: "Sadık (Nejat Isler) é um homem de grande integridade e força vital, além disso, sempre esteve muito empenhado em ajudar o próximo, por isso, começou a trabalhar como advogado. No entanto, com o tempo, ele decidiu se tornar um investigador particular em uma pequena cidade da Turquia. Lá ele tenta buscar justiça em um mundo cheio de bandidos, traficantes de pessoas e assassinos. Quando um caso sobre várias pessoas desaparecidas chega até ele, quatro mulheres muito diferentes cruzarão seu caminho. Todos eles têm muitos problemas que ele tentará resolver.",
         poster: "https://image.tmdb.org/t/p/w500/ihMCcc0vBQQyphiaoyoTvpJlTPi.jpg",
         background: "https://image.tmdb.org/t/p/original/72Cz99QcfnlcyUy7PePQZISVxxr.jpg",
@@ -646,6 +677,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       dezdiasdeumhomemmal: {
         name: "10 Dias de um Homem Mau (2023)",
+        year: 2023,
         synopsis: "Um detetive privado desgastado, destroçado e enlutado tem de desenredar à força um emaranhado de mentiras para descobrir a verdade por detrás de um homicídio numa mansão.",
         poster: "https://image.tmdb.org/t/p/w500/fl0vUwiKyxEauecs9UCh8cGRzZH.jpg",
         background: "https://image.tmdb.org/t/p/original/sil4GzTAvmxFWqsp5FWZcG7adtS.jpg",
@@ -655,6 +687,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       dezdiasdeumhomemcurioso: {
         name: "10 Dias de um Homem Curioso (2024)",
+        year: 2024,
         synopsis: "Depois que uma jovem desaparece em Istambul, um escritor entediado em busca de uma boa história decide procurá-la e acaba se envolvendo em um caso perigoso.",
         poster: "https://image.tmdb.org/t/p/w500/oYfKed3vI58cNN86OxDZ1Ryrgft.jpg",
         background: "https://image.tmdb.org/t/p/original/iF9b95STc8hUbcoBon8QQBP5K6o.jpg",
@@ -664,6 +697,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       dezhorasparaonatal: {
         name: "10 Horas para o Natal (2020)",
+        year: 2020,
         synopsis: "Cansados de passar noites de Natal sem graça após a separação dos pais, os irmãos Julia, Miguel e Bia bolam um plano para tentar reunir novamente a família e celebrar a chegada do Papai Noel.",
         poster: "https://image.tmdb.org/t/p/w500/zQF84E6xXSPur1gEbyKJ2P1BECp.jpg",
         background: "https://image.tmdb.org/t/p/original/jEjDPISst5slKJVtVydWEZkMEfl.jpg",
@@ -673,6 +707,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       dezminutosparamorrer: {
         name: "10 Minutos Para Morrer (1983)",
+        year: 1983,
         synopsis: "Warren Stacy é um serial killer que sente prazer em ficar nu enquanto esfaqueia suas vítimas. Leo Kessler, um policial veterano, acredita que encontrou o assassino e 'planta' falsas evidências para obter uma condenação. Quando a 'evidência' é encontrada, o criminoso é preso e planeja se vingar em Laurie, a filha de Kessler.",
         poster: "https://image.tmdb.org/t/p/w500/piK282L3PUlQLp0P0RY8Ehu7iAb.jpg",
         background: "https://image.tmdb.org/t/p/original/6ukR77PCApBRbmyeVxRd9S1JQlf.jpg",
@@ -682,6 +717,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       dezregrasparasalvarumcasamento: {
         name: "10 Regras Para Salvar um Casamento (2023)",
+        year: 2023,
         synopsis: "Marie e Simon vivem um casamento caótico, marcado por discussões e desafios na criação dos filhos. Apesar de não se suportarem mais, eles lutam para manter a união e criam dez mandamentos para alcançar a paz e o amor na relação.",
         poster: "https://image.tmdb.org/t/p/w500/rcmoIeno4fh6QnNmg93TVNq8aj.jpg",
         background: "https://image.tmdb.org/t/p/original/6pktUTdDV4FTUf1ilduPN2nGcHc.jpg",
@@ -691,6 +727,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       dezsegundosparavencer: {
         name: "10 Segundos para Vencer (2018)",
+        year: 2018,
         synopsis: "Cinebiografia do brasileiro bicampeão mundial de boxe Eder Jofre, interpretado por Daniel de Oliveira. O recorte cronológico acompanha o chamado Galinho de Ouro, da infância às conquistas dos históricos títulos, em 1960 (peso galo) e 1973 (peso pena).",
         poster: "https://image.tmdb.org/t/p/w500/dDj6dAjqXXRJcNZSzGtF2FrhvTh.jpg",
         background: "https://image.tmdb.org/t/p/original/7QsOWWw7GdFu4o4Y11Iij7iSUcV.jpg",
@@ -700,6 +737,7 @@ body { background: #fff; color: #000; padding: 1rem; }
        },
       dezmilac: {
         name: "10.000 A.C. (2008)",
+        year: 2008,
         synopsis: "Uma aventura épica que segue o caçador de mamutes D'Leh (Steven Strait), um jovem apaixonado por Evolet (Camilla Belle), em uma viagem por território desconhecido, na tentativa de garantir a segurança de sua tribo. Quando um bando de perigosos guerreiros sequestra sua amada, D'Leh é obrigado a liderar um pequeno grupo de caçadores em uma expedição para resgatá-la.",
         poster: "https://image.tmdb.org/t/p/w500/yS9WxbISOCzucj7484IohnrBr5b.jpg",
         background: "https://image.tmdb.org/t/p/original/nZlvmbnx5ZJYkSVocuQvOgVlWli.jpg",
@@ -709,6 +747,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezpontocincoapocalipse: {
         name: "10.5: Apocalipse (2006)",
+        year: 2006,
         synopsis: "Um novo abalo sísmico, de 10.5 na escala Richter, ameaça a costa dos EUA. Os cientistas acreditam que o movimento das placas tectônicas pode causar uma falha geológica no meio do Texas. Como a área é habitada por milhões de pessoas e possui duas usinas nucleares, um terremoto teria proporções devastadoras. Agora, Samantha precisa encontrar o seu pai, Dr. Earl Hill, para pedir sua ajuda e impedir o desastre nuclear.",
         poster: "https://image.tmdb.org/t/p/w500/5J3LDmL2sA6PeY1yA7zsODv855C.jpg",
         background: "https://image.tmdb.org/t/p/original/6ZMURyaMoTCvoCQZYo6d6Oqu24b.jpg",
@@ -718,6 +757,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       cemcoisas: {
         name: "100 Coisas (2018)",
+        year: 2018,
         synopsis: "Completamente apegados a seus bens materiais, os melhores amigos Toni (Matthias Schweighöfer) e Paul (Florian David Fitz) decidem fazer uma experiência: os dois abrirão mão de todas as suas posses durante 100 dias. E durante cada dia, eles vão recebendo de volta os seus pertences um a um, mas no meio do caminho eles percebem que existem coisas muito mais importantes na vida.",
         poster: "https://image.tmdb.org/t/p/w500/9PWSRATzT9Bu27BhqsIqMp7LcqS.jpg",
         background: "https://image.tmdb.org/t/p/original/fqb1odEjdxDrwicf6DZVCKZvrAr.jpg",
@@ -727,6 +767,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       cemcoisasparafazerantesdevirarumzumbi: {
         name: "100 Coisas para Fazer Antes de Virar Zumbi (2023)",
+        year: 2023,
         synopsis: "Intimidado pelo chefe, ele era só mais um funcionário explorado. Mas tudo o que esse homem precisava para finalmente se sentir vivo era um ataque de zumbis!",
         poster: "https://image.tmdb.org/t/p/w500/lwyleO7PqNNkX66stvANWP01p9I.jpg",
         background: "https://image.tmdb.org/t/p/original/gU5aNeCqRuSbXTT3XA6udn6UyDc.jpg",
@@ -736,6 +777,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       cemdiasparaonatal: {
         name: "100 Dias para o Natal (2021)",
+        year: 2021,
         synopsis: "Uma boy band do momento procura por um hit natalino e se depara com uma música escrita pelo baixista de uma banda de metal. Tudo dá errado quando a banda de metal também quer a música, já que ela foi escrita originalmente para a sobrinha do baixista que está hospitalizada.",
         poster: "https://media.themoviedb.org/t/p/w500/imU6zKtkhcH49Ph4Etx7Np2w7nv.jpg",
         background: "https://image.tmdb.org/t/p/original/h0QfGN4PjovosbfsvEn3Tujf56z.jpg",
@@ -745,6 +787,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       cemmedos: {
         name: "100 Medos (2022)",
+        year: 2022,
         synopsis: "Inspirado no livro de mesmo nome, é a história de Sole, jovem que tenta superar todos os seus grandes medos após a morte da melhor amiga. Dirigido por Andrea Jublin e estrelado por Federica Torchetti, Lorenzo Richelmy, Cristiano Caccamo, Celeste Savino, Anna Ferruzzo e Massimiliano Gallo",
         poster: "https://image.tmdb.org/t/p/w500/6RTZ5w0ZSal4pvy8vE4gZOPyhk9.jpg",
         background: "https://image.tmdb.org/t/p/original/e4kwUR5ULdC9BZ71OWcByUUdb3M.jpg",
@@ -754,465 +797,517 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       cemmetros: {
         name: "100 Metros (2016)",
+        year: 2016,
         synopsis: "Um homem diagnosticado com esclerose múltipla questiona as limitações de seu corpo e, com a ajuda do sogro, treina para uma prova de Ironman.",
         poster: "https://image.tmdb.org/t/p/w500/xONHMx9skbDotapUuRMOj9huXTq.jpg",
         background: "https://image.tmdb.org/t/p/original/7tQggY0wIFFGntJ4s4ozi0RFROS.jpg",
         categories: ["Comédia","Drama"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=100MTRS"] }
+        seasons: { 1: ["fb111af46"] }
         },
       historiascruzadas: {
         name: "100 Streets: Histórias Cruzadas (2016)",
+        year: 2016,
         synopsis: "Em Londres, várias pessoas vivem seus problemas. Entre elas está um jovem delinquente e um taxista que atropela uma ciclista. Há também o casal Max e Emily em crise por causa das traições de ambos os lados.",
         poster: "https://image.tmdb.org/t/p/w500/8jE2xL8sOo8brT6v5jJ6iFg8qfs.jpg",
         background: "https://image.tmdb.org/t/p/original/qulaFkn5A5HZ2KMRbMj7N8DsuzU.jpg",
         categories: ["Drama"],
         language: ["Legendado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=100STRTS"] }
+        seasons: { 1: ["6acfeb759"] }
         },
       cemcoco: {
         name: "100% Coco (2017)",
+        year: 2017,
         synopsis: "Uma filme de uma adolescente de 13 anos começa seu próprio vlog de moda chamado Style Tiger. À medida que o vlog se torna um grande sucesso, ela logo tem a chance de perseguir seus sonhos em Paris.",
         poster: "https://image.tmdb.org/t/p/w500/qOULNNkz56MT2t3CLzGFwazgRf0.jpg",
         background: "https://image.tmdb.org/t/p/original/uPNH1wCpVb7aAMXgjrCu864gfaA.jpg",
         categories: ["Família","Comédia"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=100COCO"] }
+        seasons: { 1: ["7ef56d5d2"] }
         },
       cemcoconovayork: {
         name: "100% Coco Nova York (2019)",
+        year: 2019,
         synopsis: "Coco vence um concurso de verão e vai a Nova York atrás de incríveis aventuras no mundo da moda.",
         poster: "https://image.tmdb.org/t/p/w500/gL7OnX1YrqUNNGITUWPSzXhgb3E.jpg",
         background: "https://image.tmdb.org/t/p/original/19QIjhGRqwuBUda7UD0H9mpEQXC.jpg",
         categories: ["Comédia","Família"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=100COCONVYRK"] }
+        seasons: { 1: ["60b8e398b"] }
         },
       dezmilaosdepois: {
         name: "10000 Anos Depois (2015)",
+        year: 2015,
         synopsis: "Centenas de milhares de anos após o colapso da civilização, o mundo é um deserto “pós-tech” e é habitado por tribos humanóides. A paz estabelecida entre eles é ameaçada pelo retorno de Wushen, um fantasma que muda a forma da tecnologia moderna, ameaçando escravizar a população mundial. Zhuma, uma menina de dez anos de idade é a heroína da história, acompanhada por Zhanggong, seu cachorro leão-como o mastín tibetano e seu avô. Escolhida e ajudada por uma deusa etérea, ela deve reunir aliados das tribos sobreviventes para combater Wushen e impedi-lo de ganhar o controle sobre um poder muito antigo.",
         poster: "https://image.tmdb.org/t/p/w500/stSbszQGhLcYV8GyTg0tdazE4ye.jpg",
         background: "https://image.tmdb.org/t/p/original/k3wsZV39KGqGvKS1l1dLiHKUP6Z.jpg",
         categories: ["Anime"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=1000ANSDPS"] }
+        seasons: { 1: ["b4e7cefa5"] }
         },
       centoeumdalmatas: {
         name: "101 Dálmatas (1961)",
+        year: 1961,
         synopsis: "Conta a história de uma família de cachorrinhos da raça dálmata que é raptada por uma terrível mulher chamada Cruella De Vil, que quer transformar os cãezinhos em um casaco de peles. Fascinada por peles, essa mulher tem um sonho e para realiza-lo ela depende de uma 'amiga' sua, Anita, que tem uma quinzena de filhotes dálmatas.",
         poster: "https://image.tmdb.org/t/p/w500/yvNjHSpg6uhwmrMXdJczMRsBKQn.jpg",
         background: "https://image.tmdb.org/t/p/original/3SQyHDQ88igb7xqv6YbfrtLUUsF.jpg",
         categories: ["Animação"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=101DMLTS1"] }
+        seasons: { 1: ["98eb211a8"] }
         },
       centoeumdalmatasdois: {
         name: "101 Dálmatas II: A Aventura de Patch em Londres (2003)",
+        year: 2003,
         synopsis: "Antes de se mudar para a nova casa, numa fazenda, Patch, um dos filhotes de dálmatas, foge para Londres. A terrível Cruela DeVil quer pegar novamente os cãezinhos, para transformá-los em casaco de peles.",
         poster: "https://image.tmdb.org/t/p/w500/bsyBBR0B5N4qI6zlHfydukzlNi9.jpg",
         background: "https://image.tmdb.org/t/p/original/k9tMAeSgaFASNedoxvyzMnTcilV.jpg",
         categories: ["Animação"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=101DMLTS2"] }
+        seasons: { 1: ["49c95e97f"] }
         },
       dezpordezocativeiro: {
         name: "10x10: O Cativeiro (2018)",
+        year: 2018,
         synopsis: "Cathy (Kelly Reilly) é atacada, sequestrada e trancada em um quarto à prova de som. A intenção do captor (Luke Evans) não é pedir resgate, mas sim descobrir um segredo sombrio do passado desta mulher.",
         poster: "https://image.tmdb.org/t/p/w500/egMETBYual2JtfFGigXTA0tGkME.jpg",
         background: "https://image.tmdb.org/t/p/original/vzPgGL12NWVwcujoMQ7DTKXEBep.jpg",
         categories: ["Drama","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=10X10OCTVRO"] }
+        seasons: { 1: ["a20f057be"] }
         },
       dezpordezocativeiroleg: {
         name: "10x10: O Cativeiro (2018) (LEG)",
+        year: 2018,
         synopsis: "Cathy (Kelly Reilly) é atacada, sequestrada e trancada em um quarto à prova de som. A intenção do captor (Luke Evans) não é pedir resgate, mas sim descobrir um segredo sombrio do passado desta mulher.",
         poster: "https://image.tmdb.org/t/p/w500/oY7vrVKIB5EWRL7mpbQ4zsY6UUW.jpg",
         background: "https://image.tmdb.org/t/p/original/yhO42CRpPexo4bT1iwUWN4jbn7N.jpg",
         categories: ["Drama","Mistério"],
         language: ["Legendado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=10x10LEG"] }
+        seasons: { 1: ["ad9f4f4e3"] }
         },
       onzeonzeonze: {
         name: "11-11-11 (2011)",
+        year: 2011,
         synopsis: "Joseph Crone (Timothy Gibbs) é um famoso escritor que se muda para Barcelona após a trágica morte de sua esposa e filho. Lá ele encontra o irmão Samuel (Michael Landes) e o pai, Richard (Denis Rafter), que está à beira da morte. Repentinamente Joseph passa a ser atormentado por constantes aparições dos números 11-11, sempre em acontecimentos inexplicáveis. Ele passa a investigar seu significado e logo descobre que se refere a uma data, 11/11/11, na qual um portal se abrirá e uma perigosa força sobrenatural será libertada.",
         poster: "https://image.tmdb.org/t/p/w500/t6Wd9gY6e1yJVVXRtgICFqwieyu.jpg",
         background: "https://image.tmdb.org/t/p/original/mZSYlqjDGrCsH9pjMbkS2sD55mk.jpg",
         categories: ["Terror"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=11-11-11"] }
+        seasons: { 1: ["0b65dbb69"] }
         },
       centoedezoitodias: {
         name: "118 Dias (2014)",
+        year: 2014,
         synopsis: "Maziar Bahari é um jornalista iraniano que trabalha para a revista americana Newsweek e vive em Londres, ao lado da esposa grávida. Ele é enviado para cobrir as eleições presidenciais no Irã em 2009, onde o atual presidente Mahmoud Ahmadinejad corre o risco de não se reeleger. Após uma vitória folgada de Ahmadinejad, rumores de que a eleição teria sido fraudada provocam diversas manifestações populares, algumas repelidas com violência pela polícia local. Bahari consegue filmar um destes ataques e veicula o material para ser divulgado mundo afora, o que o transforma em alvo do governo iraniano. Preso por tempo indeterminado, ele passa a ser torturado para que confesse que estava agindo em nome de uma conspiração ocidental para derrubar o presidente iraniano",
         poster: "https://image.tmdb.org/t/p/w500/oy7e5zrQPk2CCaAiHfsluifYlvK.jpg",
         background: "https://image.tmdb.org/t/p/original/dohX75Ie64QZUm5jEkpxHeDo9qM.jpg",
         categories: ["Drama"],
         language: ["Dulado"],
-        seasons: { 1: ["RCFServer1&subfolder=ondemand&vid=118DAS"] }
+        seasons: { 1: ["cf726e28c"] }
         },
       centoedezoitodiasleg: {
         name: "118 Dias (2014) (LEG)",
+        year: 2014,
         synopsis: "Maziar Bahari é um jornalista iraniano que trabalha para a revista americana Newsweek e vive em Londres, ao lado da esposa grávida. Ele é enviado para cobrir as eleições presidenciais no Irã em 2009, onde o atual presidente Mahmoud Ahmadinejad corre o risco de não se reeleger. Após uma vitória folgada de Ahmadinejad, rumores de que a eleição teria sido fraudada provocam diversas manifestações populares, algumas repelidas com violência pela polícia local. Bahari consegue filmar um destes ataques e veicula o material para ser divulgado mundo afora, o que o transforma em alvo do governo iraniano. Preso por tempo indeterminado, ele passa a ser torturado para que confesse que estava agindo em nome de uma conspiração ocidental para derrubar o presidente iraniano",
         poster: "https://image.tmdb.org/t/p/w500/oy7e5zrQPk2CCaAiHfsluifYlvK.jpg",
         background: "https://image.tmdb.org/t/p/original/dohX75Ie64QZUm5jEkpxHeDo9qM.jpg",
         categories: ["Drama"],
         language: ["Legendado"],
-        seasons: { 1: ["RCFServer1&subfolder=ondemand&vid=118DASLEG"] }
+        seasons: { 1: ["e86af7f7e"] }
         },
       dozeanosdeescravidao: {
         name: "12 Anos de Escravidão (2013)",
+        year: 2013,
         synopsis: "1841, Solomon Northup é um escravo liberto, que vive em paz ao lado da esposa e filhos. Um dia, após aceitar um trabalho que o leva a outra cidade, ele é sequestrado e acorrentado. Vendido como se fosse um escravo, Solomon precisa superar humilhações físicas e emocionais para sobreviver. Ao longo de doze anos ele passa por dois senhores, Ford e Edwin Epps, que, cada um à sua maneira, exploram seus serviços.",
         poster: "https://image.tmdb.org/t/p/w500/qhAW6IAIBCj9Z1pGzf3EISHjYNS.jpg",
         background: "https://image.tmdb.org/t/p/original/4Bb1kMIfrT2tYRZ9M6Jhqy6gkeF.jpg",
         categories: ["Drama","História"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=12ANSDESCRVDAO"] }
+        seasons: { 1: ["6996c69ae"] }
         },
       dozediasdenatal: {
         name: "12 Dias de Natal (2020)",
+        year: 2020,
         synopsis: "Em busca de uma promoção, dois designers de jogos precisam trabalhar juntos para criar um aplicativo com sugestões de encontros românticos para casais com o tema 12 dias de Natal.",
         poster: "https://image.tmdb.org/t/p/w500/hvIWv3ifI30wzP6e4NCsfQFq1xq.jpg",
         background: "https://image.tmdb.org/t/p/original/oKqFPM54ZalHtom1xwpmAPLjXGD.jpg",
         categories: ["Família","Romance"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=12DSDNTL"] }
+        seasons: { 1: ["a40d8001f"] }
         },
       dozefeetdeep: {
         name: "12 Feet Deep (2018)",
+        year: 2018,
         synopsis: "Duas irmãs são esquecidas e ficam presas numa piscina olímpica de mais de 50m de comprimento, embaixo da lona de fibra de vidro. As duas se veem à mercê de uma faxineira noturna com segundas intenções.",
         poster: "https://image.tmdb.org/t/p/w500/3B4MLYYr5WTjQiJMbA8fCFF8M4O.jpg",
         background: "https://image.tmdb.org/t/p/original/AhwEkJY1RRna8M0dcSAhR9aCeF4.jpg",
         categories: ["Ação","Mistério"],
         language: ["Legendado"],
-        seasons: { 1: ["RCFServer1&subfolder=ondemand&vid=12FETDEPLEG"] }
+        seasons: { 1: ["59540014e"] }
         },
       dozeherois: {
         name: "12 Heróis (2018)",
+        year: 2018,
         synopsis: "Após os atentados de 11 de setembro de 2001, o capitão Mitch Nelson (Chris Hemsworth) decide abandonar o posto de escritório recém-conquistado para retomar à ação. Ao lado de seu batalhão das Forças Especiais dos Estados Unidos, ele assume a responsabilidade de formar a primeira equipe a operar no Afeganistão após os ataques ao World Trade Center. Baseado em fatos reais.",
         poster: "https://image.tmdb.org/t/p/w500/mBgAJeIx1d5kxU8nR748o9qnAUK.jpg",
         background: "https://image.tmdb.org/t/p/original/pcOeMkwouwDuIIBvgFyKO4VhqK.jpg",
         categories: ["Guerra","Drama","Ação","História"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=12HERS"] }
+        seasons: { 1: ["1fbe9d6dc"] }
         },
       dozehomemseumasentenca: {
         name: "12 Homens e uma Sentença (1957)",
+        year: 1957,
         synopsis: "Um jovem porto-riquenho é acusado do brutal crime de ter matado o próprio pai. Quando ele vai a julgamento, doze jurados se reúnem para decidir a sentença, levando em conta que o réu deve ser considerado inocente até que se prove o contrário. Onze dos jurados têm plena certeza de que ele é culpado, e votam pela condenação, mas um jurado acha que é melhor investigar mais para que a sentença seja correta. Para isso ele terá que enfrentar diferentes interpretações dos fatos, e a má vontade dos outros jurados, que só querem ir logo para suas casas.",
         poster: "https://image.tmdb.org/t/p/w500/q8RGf4SbVCObCySZ4PIGsn5wFm6.jpg",
         background: "https://image.tmdb.org/t/p/original/tj6iPnz18hGfr0LKqWmG6Cp3niO.jpg",
         categories: ["Drama","Clássicos"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=12HMNSEUMSTNC"] }
+        seasons: { 1: ["3bf50aa4e"] }
         },
       dozehoras: {
         name: "12 Horas (2012)",
+        year: 2012,
         synopsis: "Jill é uma jovem que escapou de um serial killer há dois anos e que agora acredita que o mesmo sujeito raptou sua irmã mais nova. Ela terá que lutar contra a desconfiança das pessoas que não acreditam que tenha sido sequestrada em primeiro lugar.",
         poster: "https://image.tmdb.org/t/p/w500/fESXNmZBy1jlKI4IZazK9JYWMxP.jpg",
         background: "https://image.tmdb.org/t/p/original/nx0xf9ocWJmKUWWfuWMkUtUyHjh.jpg",
         categories: ["Drama","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=12HRS"] }
+        seasons: { 1: ["f71d05502"] }
         },
       dozehorasparaofimdomundo: {
         name: "12 Horas Para o Fim do Mundo (2022)",
+        year: 2022,
         synopsis: "Um pai que trabalha em uma estação espacial precisa salvar sua filha de 15 anos após uma devastadora chuva de meteoros atingir a Terra. Usando apenas telefones e câmeras via satélite, ele embarca numa jornada emocionante para resgatá-la.",
         poster: "https://image.tmdb.org/t/p/w500/gurQloozD4oBjjCBhqm3KPjxWxL.jpg",
         background: "https://image.tmdb.org/t/p/original/y4eT4VDavpwuqEP7w1A2iOJUPah.jpg",
         categories: ["Ficção Científica","Drama","Aventura","Família"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=12HRSPROFMDMNDO"] }
+        seasons: { 1: ["1258f9988"] }
         },
       dozehorasparasobreviveroanodaeleicao: {
         name: "12 Horas para Sobreviver: O Ano da Eleição (2016)",
+        year: 2016,
         synopsis: "Faz dois anos desde que Barnes se conteve de praticar um imperdoável ato de vingança na Noite do Crime, as 12 horas sem lei. Esse ano, o ritual será na véspera de uma acirrada eleição presidencial, com o país dividido entre os que são pró e contra a Noite do Crime. Como chefe de segurança da senadora Charlie Roan, a missão de Leo é protegê-la durante sua polêmica e contestada campanha para presidente. Mas quando uma traição os obriga a ir para as ruas de Washington, bem na noite em que não existe ajuda, eles precisam sobreviver ou serem ambos sacrificados por seus pecados contra o estado.",
         poster: "https://image.tmdb.org/t/p/w500/41NT5TCXWnlg2vxtVZz8uFlhHca.jpg",
         background: "https://image.tmdb.org/t/p/original/a7V3ZXCDAk3P7GjpgfN0IInjh0r.jpg",
         categories: ["Ação","Terror","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=UMNTDCRM3"] }
+        seasons: { 1: ["31d6fbbf3"] }
         },
       dozeorfaospoderosos: {
         name: "12 Órfãos Poderosos (2021)",
+        year: 2021,
         synopsis: "Assombrado pelo seu misterioso passado, um dedicado treinador de futebol de liceu lidera uma esquelética equipa de órfãos para o campeonato estatal durante a Grande Depressão e inspira ao longo do caminho uma nação destroçada.",
         poster: "https://image.tmdb.org/t/p/w500/3N0nM4ouA500Xp5uSMpVazLNF0c.jpg",
         background: "https://image.tmdb.org/t/p/original/eg6cyUItUFSBi8ohc9sjehqpJi2.jpg",
         categories: ["História","Drama","Ação"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=12ORFSPDRS"] }
+        seasons: { 1: ["0d6c990bd"] }
         },
       dozepresentesdenatal: {
         name: "12 Presentes de Natal (2015)",
+        year: 2015,
         synopsis: "Anna, uma pintora desempregada, é contratada para ajudar Marc , um executivo, com suas compras de Natal. Ao trabalharem juntos, ambos descobrem inesperadamente o verdadeiro valor das coisas e o sucesso. Para além do amor, claro,",
         poster: "https://image.tmdb.org/t/p/w500/i8IFun1rfdrQ3QXvJolU19TRTCG.jpg",
         background: "https://image.tmdb.org/t/p/original/rwUorXcUSTLo0CJo48JEenhzjRR.jpg",
         categories: ["Família","Comédia","Romance"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=12PRSNTSDNTL"] }
+        seasons: { 1: ["d65cf1512"] }
         },
       dozerounds: {
         name: "12 Rounds (2009)",
+        year: 2009,
         synopsis: "Danny Fisher (John Cena) é um detetive da polícia de Nova Orleans que consegue impedir a fuga de Miles Jackson (Aidan Gillen), um assaltante que acaba de realizar um assalto de milhões de dólares. Só que a namorada de Miles morre, acidentalmente. Após fugir da prisão, Miles passa a elaborar sua vingança contra Fisher. Para tanto cria um verdadeiro quebra-cabeças, composto de 12 passos, onde o detetive precisa cumprir tarefas quase impossíveis.",
         poster: "https://image.tmdb.org/t/p/w500/7k7qhrO57sVoBLrNo5HYoTp24sT.jpg",
         background: "https://image.tmdb.org/t/p/original/c2EpOiIhpMtGCnG6HyHgbpyryPd.jpg",
         categories: ["Ação","Mistério","Crime"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=12RNDS1"] }
+        seasons: { 1: ["69d792f46"] }
         },
       dozeroundsdoisreloaded: {
         name: "12 Rounds 2: Reloaded (2013)",
+        year: 2013,
         synopsis: "O paramédico Nick Malloy (Orton) é arremessado num jogo mortal de gato e rato quando recebe um telefonema aterrorizante de um psicopata vingativo (Brian Markinson) ligado a seu passado. O maníaco ameaça iniciar uma onda de assassinatos a menos que Nick consiga completar uma série de 12 desafios sem envolver os tiras nem perder um único prazo. Sem tempo a perder -- e com a vida de sua própria esposa em perigo -- Nick precisa juntar as pistas e caçar o assassino antes que seja tarde demais!",
         poster: "https://image.tmdb.org/t/p/w500/btThjvVC4lOqE95F9iVK118kpj2.jpg",
         background: "https://image.tmdb.org/t/p/original/uLFfEoBQGFYUUakNFHowddAArzV.jpg",
         categories: ["Ação","Aventura"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=12RNDS2"] }
+        seasons: { 1: ["8af76cfb3"] }
         },
       dozeroundstrescacadamortal: {
         name: "12 Rounds 3: Caçada Mortal (2015)",
+        year: 2015,
         synopsis: "Shaw, um detetive que volta a ativa após a morte de seu parceiro. Quando ele descobre evidencias ligando seus ex-companheiros de polícia à um assassinato, eles acabam prendendo Shaw por um homicídio que ele não cometeu. Aprisionado em seu próprio distrito, Shaw irá fazer qualquer coisa para expor os policiais corruptos e limpar seu nome. Com doze balas e apenas um tiro para a redenção, nada ficará no caminho de Shaw neste thriller cheio de ação.",
         poster: "https://image.tmdb.org/t/p/w500/ztuunn8RppaemRgEFxF50ogEAIE.jpg",
         background: "https://image.tmdb.org/t/p/original/xgZMrOPgZcy8FXFOSULoZYM6Ktd.jpg",
         categories: ["Ação","Mistério","Crime"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=12RNDS3"] }
+        seasons: { 1: ["294f2ebb5"] }
         },
       dozevesperasdenatal: {
         name: "12 Vésperas de Natal (2022)",
+        year: 2022,
         synopsis: "O bem-sucedido homem de negócios Brian Conway ganha um presentão do Papai Noel após sofrer um acidente de carro bem na véspera do Natal: 12 chances de reviver o mesmo dia e consertar sua relação com seus entes queridos.",
         poster: "https://image.tmdb.org/t/p/w500/a4H5tXCqSs40GLjpmIxJn42Gwcb.jpg",
         background: "https://image.tmdb.org/t/p/original/vQrFlOLzuD0MeXiDfwsdO9GYhBl.jpg",
         categories: ["Comédia","Fantasia"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=12VSPRSDNTL"] }
+        seasons: { 1: ["3012e7171"] }
         },
       centoevintesetehoras: {
         name: "127 Horas (2010)",
+        year: 2010,
         synopsis: "Ao explorar um cânion remoto em Utah, o alpinista e aventureiro Aron Ralston fica preso em uma fenda quando uma pedra cai. Nos cinco dias seguintes, Ralston examina sua vida e considera suas opções, as quais o levam a uma situação angustiante. Aron precisa tomar uma atitude para que possa se libertar e tentar voltar para a civilização.",
         poster: "https://image.tmdb.org/t/p/w500/1HoqPAq2HMUMwI0u4mpcBN4v9WJ.jpg",
         background: "https://image.tmdb.org/t/p/original/jOMKO9xVRcazlw5UDf0JfEbUuuO.jpg",
         categories: ["Aventura","Drama","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=127HRS"] }
+        seasons: { 1: ["84d4930e0"] }
         },
       trezeassassinos: {
         name: "13 Assassinos (2010)",
+        year: 2010,
         synopsis: "Um grupo de samurais ociosos é recrutado para provocar a queda de um senhor tirânico e impedi-lo de subir ao trono e mergulhar o país em um futuro devastado pela guerra.",
         poster: "https://image.tmdb.org/t/p/w500/2UYKck3qdMuLEmBGanWqwP6bDyj.jpg",
         background: "https://image.tmdb.org/t/p/original/A3Jl4Vu2Xx4J9hWWKX1xO6NOeV4.jpg",
         categories: ["Aventura","Drama","Ação"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=13ASASNS"] }
+        seasons: { 1: ["80e4f9cf3"] }
         },
       trezediasqueabalaramomundo: {
         name: "13 Dias Que Abalaram o Mundo (2000)",
+        year: 2000,
         synopsis: "Durante treze extraordinários dias em outubro de 1962, o mundo esteve à beira de uma verdadeira catástrofe. Todo o planeta aguardava com ansiedade o desfecho do confronto político-militar entre Estados Unidos e União Soviética em razão da instalação de mísseis antiaéreos soviéticos em Cuba. O confronto foi tão sério que quase provocou uma guerra nuclear entre as duas potências, o que poderia ter destruído toda a humanidade. O alarmante desenvolvimento dos eventos ocorridos durante esses treze dias envolveu um número enorme de políticos, militares e gente influente que temiam uma invasão russa através do estabelecimento da base militar em Cuba. A ação se passa quase que em sua totalidade dentro da Casa Branca, onde discussões acaloradas e intermináveis sobre como encaminhar a questão do armamento de Cuba com o então poderoso governo da União Soviética consumiam os dias dos políticos e, principalmente, do presidente e seus dois fiéis confidentes e amigos.",
         poster: "https://image.tmdb.org/t/p/w500/sZFsobB9BAPWXA07bwag7wwHfvG.jpg",
         background: "https://image.tmdb.org/t/p/original/pR3v192B20nFtsHY1jZQS4AkN0a.jpg",
         categories: ["História","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer1&subfolder=ondemand&vid=13DIASQABLRMOMNDO"] }
+        seasons: { 1: ["3a117bf7c"] }
         },
       trezefantasmassessenta: {
         name: "13 Fantasmas (1960)",
+        year: 1960,
         synopsis: "Ao morrer, o recluso Dr. Zorba deixou uma mansão assustadora para seu sobrinho, Cyrus Zorba (Donald Woods), que atravessa uma grave crise financeira. Com a sua família Cyrus se muda a mansão. Eles também herdam uma coleção de 12 fantasmas, que só podem ser vistos através de óculos especiais. Os membros da família colocam então suas vidas em risco, para descobrir em qual local da casa o Dr. Zorba escondeu sua fortuna, mas parece que algo ou alguém quer evitar que Cyrus e sua família não consigam realizar este objetivo.",
         poster: "https://image.tmdb.org/t/p/w500/ceIV57vHegPXVnm56UhRg3RleAf.jpg",
         background: "https://image.tmdb.org/t/p/original/6AttKqN5x2aSUEAh39h8MojcTBe.jpg",
         categories: ["Terror","Clássicos"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=13FNTSMAS1960"] }
+        seasons: { 1: ["fc45b8dbb"] }
         },
       trezefantasmasdoismileum: {
         name: "13 Fantasmas (2001)",
+        year: 2001,
         synopsis: "Após sua esposa morrer em um incêndio, Arthur e seus dois filhos ficaram sem nada além de um ao outro. Isto é, até Arthur herdar uma casa de vidro e aço de seu tio misterioso. Porém eles logo descobrem que há algo horrível preso atrás das paredes cristalinas da casa. Para deixar a casa com vida, eles devem resolver um quebra-cabeça que contém a chave para sua salvação iminente ou a destruição.",
         poster: "https://image.tmdb.org/t/p/w500/rVcigGnXNtYQoBAhTWGAS9o03jc.jpg",
         background: "https://image.tmdb.org/t/p/original/mUffUjlJ007XAzdogdZqhaqSp4O.jpg",
         categories: ["Terror","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=13FNTSMAS"] }
+        seasons: { 1: ["9f3e182aa"] }
         },
       trezehorasossoldadosdebenghazi: {
         name: "13 Horas: Os Soldados Secretos de Benghazi (2016)",
+        year: 2016,
         synopsis: "Seis membros de um grupo de elite da Marinha americana defendem o Consulado dos Estados Unidos em Bengazi, Líbia, alvo de um ataque terrorista que causou a morte do embaixador J. Christopher Stevens em 2012.",
         poster: "https://image.tmdb.org/t/p/w500/ybNmJk4ABEjV7qeZyg586NXRy60.jpg",
         background: "https://image.tmdb.org/t/p/original/oDEYaiOj9scY28cO4XqlHLD5s0a.jpg",
         categories: ["Guerra","Ação","História","Drama","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=13HRSOSLDSCRTS"] }
+        seasons: { 1: ["ab440e272"] }
         },
       trezeminutos: {
         name: "13 Minutos (2015)",
+        year: 2015,
         synopsis: "Baseada em fatos reais, esta história decorre em 1939, em vésperas da 2ª Guerra Mundial, quando Hitler sobrevive à explosão de uma bomba durante um evento comemorativo de seu partido. Entre a saída de Hitler da comemoração e a explosão que o mataria, decorreram 13 minutos. O plano foi engendrado por Georg Elser, carpinteiro e cidadão comum indignado perante a perda de liberdade e os abusos cometidos pelo regime. Considerado traidor da pátria, Elser foi imediatamente preso, mas só executado em 1945, por ordem direta de Hitler, quando a Alemanha já estava a perder a guerra.",
         poster: "https://image.tmdb.org/t/p/w500/lVVrVSQNeiisXVFLsfDLjMCz8Vm.jpg",
         background: "https://image.tmdb.org/t/p/original/zpFFDwv7RsWwQIRBHzUW7WGmycC.jpg",
         categories: ["História","Drama"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=13MINTS"] }
+        seasons: { 1: ["5960ef049"] }
         },
       trezeminutosdetormenta: {
         name: "13 Minutos de Tormenta (2021)",
+        year: 2021,
         synopsis: "Quando um novo dia começa na pequena cidade americana de Minninnewah, os residentes começam o dia tão comum quanto o seguinte. A Mãe Natureza, no entanto, tem outros planos para eles. Os habitantes têm apenas 13 minutos para buscar abrigo antes que o maior tornado já tenha devastado a cidade, deixando-os lutando para proteger seus entes queridos e lutando por suas vidas. Deixadas para lidar com as consequências, quatro famílias devem superar suas diferenças e encontrar forças umas nas outras para sobreviver.",
         poster: "https://image.tmdb.org/t/p/w500/c0Y2aNGSPlF7y926n2uHvPfo5TF.jpg",
         background: "https://image.tmdb.org/t/p/original/6oVyb2vnpXbc3fD47Hepe0HJ9uw.jpg",
         categories: ["Ação","Drama","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=13MINTDTRMNTA"] }
+        seasons: { 1: ["7e4fd9150"] }
         },
       trezesentimentos: {
         name: "13 Sentimentos (2024)",
+        year: 2024,
         synopsis: "“Como o final feliz de um filme perfeito”. É assim que João descreve o fim de seu relacionamento de 10 anos com Hugo. Apesar da separação, eles permanecem amigos bem próximos. No entanto, voltar ao universo dos encontros românticos, usando aplicativos, traz um turbilhão de emoções, mostrando que a vida real não pode ser controlada como um roteiro de filme.",
         poster: "https://image.tmdb.org/t/p/w500/dpZgJHBTG7GRr6BpmIhrKfq8BpP.jpg",
         background: "https://image.tmdb.org/t/p/original/lREwJEc3rT30jbaFlJ87QSG6KXK.jpg",
         categories: ["Romance","Comédia","Drama","Nacional","Lançamento (2024)"],
         language: ["Idioma Original"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=13SNTMENTS"] }
+        seasons: { 1: ["2df030fc9"] }
         },
       trezeojogador: {
         name: "13: O Jogador (2010)",
+        year: 2010,
         synopsis: "Um homem que precisa de dinheiro participa de um jogo em que ricos sádicos apostam em quem sobreviverá durante um torneio de roleta russa.",
         poster: "https://image.tmdb.org/t/p/w500/2sn3dMJYxhxCJ6cMCXAtBUjAeg1.jpg",
         background: "https://image.tmdb.org/t/p/original/hkUXAhF2oYDGiWeEVpCVQA8cE2W.jpg",
         categories: ["Drama","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=13OJGDR"] }
+        seasons: { 1: ["0641ef5e6"] }
         },
       trezeomusical: {
         name: "13: O Musical (2022)",
+        year: 2022,
         synopsis: "Após o divórcio dos pais, um pré-adolescente deixa Nova York e se muda para Indiana, onde decide organizar um grande Bar Mitzvah.",
         poster: "https://image.tmdb.org/t/p/w500/3ndpRWh8iOvckVtHptIsD4OtayN.jpg",
         background: "https://image.tmdb.org/t/p/original/bE1AJOGtcvjegirI5Np6sTUO0gz.jpg",
         categories: ["Família","Drama","Comédia","Música"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=13OMSCL"] }
+        seasons: { 1: ["06eabe140"] }
         },
       trezeopavilhaodamorte: {
         name: "13: O Pavilhão da Morte (2021)",
+        year: 2021,
         synopsis: "Depois da morte de seu irmão, Mick Kovacs viaja para os Estados Unidos em busca de justiça. Acusado falsamente por uma tentativa de homicídio, ele é enviado ao famoso pavilhão 13 da prisão Pleasant Hill. Depois de descobrir a verdade por trás da morte de seu irmão, Mike começará uma rebelião, ao mesmo tempo em que procura uma maneira de escapar do pavilhão da morte.",
         poster: "https://image.tmdb.org/t/p/w500/nDuz1NzV5NxoASF8Y7XezTqPSUG.jpg",
         background: "https://image.tmdb.org/t/p/original/cuT07a09IXsgvwuwDiYA9YtdcOh.jpg",
         categories: ["Ação"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=13OPVLHDMRTE"] }
+        seasons: { 1: ["f0fe8697f"] }
         },
       trezezerotrezapattamentodomal: {
         name: "1303: Apartamento do Mal (2012)",
+        year: 2012,
         synopsis: "Uma história de fantasmas que tranforma a relação de amor/ódio entre mãe e filha em um horripilante conto de terror.",
         poster: "https://image.tmdb.org/t/p/w500/n3MlYZPW6erXCyDf2EHf269qUnu.jpg",
         background: "https://image.tmdb.org/t/p/original/53Gmnw4IEcsLiYEw7GXh8wi1xyU.jpg",
         categories: ["Terror"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=1303APRTMTDML"] }
+        seasons: { 1: ["e00dfdcae"] }
         },
       trezeandar: {
         name: "13º Andar (1999)",
+        year: 1999,
         synopsis: "Um homem acorda e descobre uma camisa ensanguentada em casa. Seu chefe foi assassinado na noite anterior, e ele não consegue se lembrar de nada. Esta ficção científica explora a possibilidade sinistra e assustadora de universos simulados por computadores, onde as pessoas apenas acreditam que são reais.",
         poster: "https://image.tmdb.org/t/p/w500/2Wv6a0yNxTl7NH1f0FbPYC2kZvg.jpg",
         background: "https://image.tmdb.org/t/p/original/nJ0jz1J3zNja31UEMeklhgFeMw5.jpg",
         categories: ["Ação","Ficção Científica","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=13ANDR1999"] }
+        seasons: { 1: ["5b0c2fe0f"] }
         },
       trezedistritoquatorze: {
         name: "13º Distrito (2014)",
+        year: 2014,
         synopsis: "A área de Brick Mansions é extremamente violenta e abandonada pela polícia local, que foi corrompida pelo crime organizado. Todo dia é uma batalha para o honesto detetive Damien Collier, que pretende vingar o assassinato do seu pai. Ele recebe a missão de entrar na perigosa região e localizar uma bomba que pode destruir a cidade de Detroit inteira. Para tanto, Damien conta com a ajuda do jovem Lino, que precisa tirar a namorada das mãos de um traficante.",
         poster: "https://image.tmdb.org/t/p/w500/fJwAFbjWXdbu0nl8wZPYn1VZkNj.jpg",
         background: "https://image.tmdb.org/t/p/original/eT990B07JBhgomU5nLI2WS1WLTw.jpg",
         categories: ["Ação","Crime","Drama"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=13DSTRO"] }
+        seasons: { 1: ["e9aeb8ca7"] }
         },
       quatorzecartasdeamor: {
         name: "14 Cartas de Amor (2022)",
+        year: 2022,
         synopsis: "Depois que cartas de amor anônimas aparecem na caixa de correio de Kallie Sharp, a jovem resolve dar uma chance para o amor e procurar seu admirador secreto.",
         poster: "https://image.tmdb.org/t/p/w500/6JnnqQJdCoysMCumqfVKDQ0G7Yj.jpg",
         background: "https://image.tmdb.org/t/p/original/vQTDTk9bGv1RoUUv1X6ahHtqMIl.jpg",
         categories: ["Romance"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=14CRTSDAMR"] }
+        seasons: { 1: ["31094233b"] }
         },
       quatorzedias: {
         name: "14 Dias (2021)",
+        year: 2021,
         synopsis: "Depois de uma vida inteira juntos, o casamento de Marta e Lorenzo está em profunda crise. Quando um período de isolamento os obriga a passar quinze dias juntos, o casal enfrenta pela primeira vez seu amor despedaçado.",
         poster: "https://image.tmdb.org/t/p/w500/jDpaomwyWNtujfhqjGJMzAq0s1u.jpg",
         background: "https://image.tmdb.org/t/p/original/m5H7uqZ0eJOGefr4ERE8hVWYzOP.jpg",
         categories: ["Drama","Romance"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=14DIAS"] }
+        seasons: { 1: ["a35d790b4"] }
         },
       quatorzediasdozenoites: {
         name: "14 Dias, 12 Noites (2019)",
+        year: 2019,
         synopsis: "Isabelle Brodeur embarca em uma viagem ao Vietnã, o local de nascimento de sua filha adotiva. Ao longo desta linda jornada, Isabelle descobre o país de sua filha através dos olhos da mulher que a trouxe para esta palavra.",
         poster: "https://image.tmdb.org/t/p/w500/uEZvNgiOPOO1S2vsnJ1mABr2SQj.jpg",
         background: "https://image.tmdb.org/t/p/original/c7fPWtsF3V85JnPZX5jjpfu3zv1.jpg",
         categories: ["Drama"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer5&subfolder=ondemand&vid=12DS12NTS"] }
+        seasons: { 1: ["234afc56e"] }
         },
       quatorzemontanhaoitomilmetrosesetemeses: {
         name: "14 Montanhas, 8 Mil Metros e 7 Meses (2021)",
+        year: 2021,
         synopsis: "Nimsdai Purja, um destemido montanhista nepalês, embarca numa jornada aparentemente impossível: conquistar, em sete meses, todos os 14 picos de 8.000 metros do mundo.",
         poster: "https://image.tmdb.org/t/p/w500/8YS9oRn9rcAyBhYELFbGKk1TpFs.jpg",
         background: "https://image.tmdb.org/t/p/original/lRCAcwJeh93YHO3ghFBDf0Pj3w3.jpg",
         categories: ["Documentário"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=14MNTRS8MLMTRSE7MSES"] }
+        seasons: { 1: ["e980b38f7"] }
         },
       quatorzezerooito: {
         name: "1408 (2007)",
+        year: 2007,
         synopsis: "Mike é um famoso escritor de livros sobre lugares mal-assombrados. Ele resolve explorar o quarto 1408 do hotel Dolphin, local em que ninguém coloca os pés há muito tempo. Sem dar atenção às advertências do gerente, ele descobre o verdadeiro significado do terror quando passa uma noite no misterioso recinto.",
         poster: "https://image.tmdb.org/t/p/w500/nBwGQFymu3EhnBnhNSN1GX7zsZL.jpg",
         background: "https://image.tmdb.org/t/p/original/e6GXJOyRSFsGOwGHnG1TmLuqN9N.jpg",
         categories: ["Terror","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=1408"] }
+        seasons: { 1: ["05eadcb8a"] }
         },
       quatorzenoventaedoisaconquistadoparaiso: {
         name: "1492: A Conquista do Paraíso (1992)",
+        year: 1992,
         synopsis: "Vinte anos da vida de Cristóvão Colombo, desde quando se convenceu de que o mundo era redondo, passando pelo empenho em conseguir apoio financeiro da Coroa Espanhola para sua expedição, o descobrimento em si da América, o desastroso comportamento que os europeus tiveram com os habitantes do Novo Mundo e a luta de Colombo para colonizar um continente que ele descobriu por acaso, além de sua decadência na velhice.",
         poster: "https://image.tmdb.org/t/p/w500/vLQMpD6eAvs0DOGZdgpTYHTP4Mu.jpg",
         background: "https://image.tmdb.org/t/p/original/qIgplWrPzo2dpgDDqZKUYRQUOCP.jpg",
         categories: ["Ação","Aventura","Drama","História"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer3&subfolder=ondemand&vid=1492ACNQSTDPRSO"] }
+        seasons: { 1: ["294b20b2f"] }
         },
       quinzeanosemsilencio: {
         name: "15 Anos em Silêncio (2024)",
+        year: 2024,
         synopsis: "Após passar 15 anos presa injustamente, Jenny, uma ex-pianista, reencontra o homem que destruiu sua vida. Agora, ela se vê dividida entre buscar vingança ou aproveitar a chance de um novo começo.",
         poster: "https://image.tmdb.org/t/p/w500/cLS2Jo2hEJjV2mkyzpYpR8EEAOY.jpg",
         background: "https://image.tmdb.org/t/p/original/4e9Ux8rQB5YZV2VyKn4xf66lVyR.jpg",
         categories: ["Drama","Música","Lançamento (2024)"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer2&subfolder=ondemand&vid=15ANSDSLNCIO"] }
+        seasons: { 1: ["68eabf03a"] }
         },
       quinzeassassinatos: {
         name: "15 Assassinatos (2020)",
+        year: 2020,
         synopsis: "Depois de cometer uma série de múltiplos assassinatos, um neurologista visita um assassino encarcerado, vivendo no exílio. Ela estuda ele e seu cérebro e descobre o horror que se esconde por trás de seus impulsos violentos.",
         poster: "https://image.tmdb.org/t/p/w500/oGVKI6IrutfugzkztOIyExNigIs.jpg",
         background: "https://image.tmdb.org/t/p/original/gVKI1QdY6rMm0qXP95O8GPAnDmO.jpg",
         categories: ["Crime","Drama","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer2&subfolder=ondemand&vid=15ASASNTS"] }
+        seasons: { 1: ["02b9485ed"] }
         },
       quinzeminutos: {
         name: "15 Minutos (2001)",
+        year: 2001,
         synopsis: "Emil e Oleg são dois estrangeiros vindos da Europa Oriental que chegam aos Estados Unidos para pegar um dinheiro que tinham deixado com um amigo. Quando descobrem que ele gastou tudo, Emil o mata e Oleg filma tudo. Então, eles têm uma ideia: fazer de Emil o astro de um filme dirigido por Oleg no qual terá de assassinar uma importante pessoa da cidade. E o alvo é justamente Eddie Fleming, o policial mais famoso da cidade.",
         poster: "https://image.tmdb.org/t/p/w500/7NpTxlHcMz5dV9LEBrCcDTegruq.jpg",
         background: "https://image.tmdb.org/t/p/original/obvkv7jwDN3YKOJHgsIsF2xRvxC.jpg",
         categories: ["Ação","Crime","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer4&subfolder=ondemand&vid=15MNTS"] }
+        seasons: { 1: ["4189f26e2"] }
         },
       quinzeminutosdeguerra: {
         name: "15 Minutos de Guerra (2019)",
+        year: 2019,
         synopsis: "Baseado nos eventos reais ocorridos em Djibouti no ano de 1976, quando terroristas somalianos sequestraram um ônibus escolar com 21 crianças francesas e uma professora americana, tentando levá-los a um território inabitado, localizado entre a colônia francesa e a Somália. O capitão francês André Gerval é chamado para liderar um time de atiradores de elite com o objetivo de preparar uma operação de resgate. Com a diplomacia falhando e o tempo se esgotando, Gerval e seu time são os únicos capazes de salvar as crianças e a professora.",
         poster: "https://image.tmdb.org/t/p/w500/iwXNed7a2TERq4D7AUY3wltGrqw.jpg",
         background: "https://image.tmdb.org/t/p/original/opxFKqXAMPVAwljD6wnW40DtC9t.jpg",
         categories: ["Guerra","Ação","Drama","História"],
         language: ["Dublado"],
-        seasons: { 1: ["RCFServer2&subfolder=ondemand&vid=15MNTSDGRA"] }
+        seasons: { 1: ["6ba8b921b"] }
         },
       quinzedezessetetremparaparis: {
         name: "15h17: Trem Para Paris (2018)",
+        year: 2018,
         synopsis: "Quando um terrorista do Estado Islâmico invade o vagão de um trem a caminho de Paris, três soldados americanos - Anthony Sadler, Alex Skarlatos e Specen Stone - se esforçam para imobilizar o extremista, armado com um fuzil AK-47, e evitar uma enorme tragédia.",
         poster: "https://image.tmdb.org/t/p/w500/bLfcN4pTbG78sxS4rQGciJCoNAb.jpg",
         background: "https://image.tmdb.org/t/p/original/jiZUmdp8tQOFdZVAtRk1pwZk7Tl.jpg",
@@ -1222,6 +1317,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezesseisdesejos: {
         name: "16 Desejos (2010)",
+        year: 2010,
         synopsis: "A história de Abby Jensen, uma garota que está ansiosa para completar 16 anos e mantém uma lista secreta de desejos desde que era uma garotinha. Quando o Grande Dia realmente chega, ocorrem profundos desastres, deixando Abby pensar que seu aniversário está arruinado. Mas quando uma misteriosa caixa de velas de aniversário mágicas chega para mudar as coisas, os 16 Desejos de Abby começam a se tornar realidade. Seu dia fica melhor e melhor ... até que ela faz um desejo que ameaça mudar tudo.",
         poster: "https://image.tmdb.org/t/p/w500/cl8nemnK7RZ9U9wxOTEGnzKiU4t.jpg",
         background: "https://image.tmdb.org/t/p/original/lX27o3ccY11wAfOlQGGIDzCd6pO.jpg",
@@ -1231,6 +1327,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezesseisextremos: {
         name: "16 Extremos (2016)",
+        year: 2016,
         synopsis: "Quando investigava um difícil caso de homicídio com múltiplos suspeitos, o policial Deepak perde sua perna direita em um acidente e é obrigado a se aposentar. Agora, cinco anos mais tarde, um colega pede a ele que conte ao seu filho as experiências que teve, na tentativa de dissuadi-lo da ideia de também ser policial. Atendendo ao pedido, Deepak passa então a relembrar todos os eventos que culminaram naquela chuvosa e fatídica noite.",
         poster: "https://image.tmdb.org/t/p/w500/fsDP6SGepEGpaWiMTg65RGInbUe.jpg",
         background: "https://image.tmdb.org/t/p/original/8hGLg4AU0lzb9w8ceP1sCjJ3dmg.jpg",
@@ -1240,6 +1337,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezesseisquadras: {
         name: "16 Quadras (2006)",
+        year: 2006,
         synopsis: "Tudo que o policial Jack Mosley deseja é ir para casa e tomar um drinque, mas antes ele precisa escoltar Eddie Bunker por 16 quadras até chegar ao tribunal. Eddie é um presidiário que deseja apenas depor no tribunal, ganhar sua liberdade e abrir uma padaria. Só que ele irá depor contra policiais corruptos que querem matá-lo. Correndo contra o tempo, Jack e Eddie precisam evitar a ameaça dos policiais corruptos e chegar a salvo no tribunal.",
         poster: "https://image.tmdb.org/t/p/w500/tbWd6N4ORhDJxlMVO4vxRNEZtib.jpg",
         background: "https://image.tmdb.org/t/p/original/nuLKWrO7AJscJJMwqe9LKfRovSZ.jpg",
@@ -1249,6 +1347,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezesseteoutravez: {
         name: "17 Outra Vez (2009)",
+        year: 2009,
         synopsis: "Se de alguma maneira você tivesse a chance, você reviveria sua adolescência? O quase quarentão Mike O'Donnell, sim. Depois de um misterioso momento mágico, Mike recebe a sua chance. Repentinamente, ele está de volta à escola, onde é a estrela da equipe de basquete, popular e colega de classe de seus próprios filhos adolescentes... o que dá a Mike a chance de se transformar de pai não tão bom no amigo descolado.",
         poster: "https://image.tmdb.org/t/p/w500/1nYYLgmwm4yK29ircaEGKXwXNj3.jpg",
         background: "https://image.tmdb.org/t/p/original/8urrLPW6HFaIuRhJ1G3iQ7usEo7.jpg",
@@ -1258,6 +1357,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezoitoeaindavirgem: {
         name: "18 Anos e Ainda Virgem (2009)",
+        year: 2009,
         synopsis: "Uma jovem encontra situações hilárias quando resolve perder a virgindade na última noite antes da formatura. Mas esta aventura não será tão fácil assim…",
         poster: "https://image.tmdb.org/t/p/w500/irlblSuzjlfclfjYIQuzsRCVeY9.jpg",
         background: "https://image.tmdb.org/t/p/original/3GGsCkL39rmVwK9ptrHI3bEsSXK.jpg",
@@ -1267,6 +1367,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezenoveonzearevolucao: {
         name: "1911: A Revolução (2011)",
+        year: 2011,
         synopsis: "Um drama histórico baseado na fundação da República da China, quando forças nacionalistas liderados por Sun Yat-sen derrubou a dinastia Qing.",
         poster: "https://image.tmdb.org/t/p/w500/rqppYmxtnQfs8yFKjtpWXjbWLzT.jpg",
         background: "https://image.tmdb.org/t/p/original/2RgsodpRG1kbSjv9q2g7flIShOY.jpg",
@@ -1276,6 +1377,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezenovedezesete: {
         name: "1917 (2019)",
+        year: 2019,
         synopsis: "Os cabos Schofield e Blake são jovens soldados britânicos durante a Primeira Guerra Mundial. Quando eles são encarregados de uma missão aparentemente impossível, os dois precisam atravessar território inimigo, lutando contra o tempo, para entregar uma mensagem que pode salvar cerca de 1600 colegas de batalhão.",
         poster: "https://image.tmdb.org/t/p/w500/m6VVgmwNdOWvLo8nlheLPQU5wr7.jpg",
         background: "https://image.tmdb.org/t/p/original/2lBOQK06tltt8SQaswgb8d657Mv.jpg",
@@ -1285,6 +1387,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezenovedezoitoabatalhadekruty: {
         name: "1918: A Batalha de Kruty (2018)",
+        year: 2018,
         synopsis: "Enquanto um exército bolchevique de cerca de 4.000 homens, comandado pelo general Muravyov, avança em direção a Kiev, com o objetivo de capturar a cidade, uma pequena unidade ucraniana de 400 soldados está resistindo perto da estação ferroviária de Kruty. O conflito entre as forças opostas, e desiguais, fica cada vez mais violento, com uma brutalidade terrível. Os jovens, como soldados espartanos, se sacrificam na luta contra os agressores.",
         poster: "https://image.tmdb.org/t/p/w500/2N0eKs4OD4zM9dpdECZFVK6havp.jpg",
         background: "https://image.tmdb.org/t/p/original/uuWZ66bSta2v4A9XQUIqGtkwEV6.jpg",
@@ -1294,6 +1397,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezenovevinteedois: {
         name: "1922 (2017)",
+        year: 2017,
         synopsis: "Um fazendeiro confessa o assassinato da esposa. No entanto, esse é só o começo desta trama macabra inspirada em um livro de Stephen King.",
         poster: "https://image.tmdb.org/t/p/w500/q4FQOiSRhTLWulHl5Vpg37FMArH.jpg",
         background: "https://image.tmdb.org/t/p/original/3uwyXMZN93PRkShUxvLrufwVAc2.jpg",
@@ -1303,6 +1407,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       dezenovequarentaeumumaguerramuitolouca: {
         name: "1941: Uma Guerra Muito Louca (1979)",
+        year: 1979,
         synopsis: "Após o ataque japonês à Pearl Harbor, os residentes da Califórnia entram em pânico com medo de serem o próximo alvo. Entre eles estão Wild Bill Kelso, um piloto louco da Guarda Nacional; o Sargento Frank Tree, um patriota, comandante do grupo de tanque; Ward Douglas, um civil com vontade de ajudar a guerra americana a qualquer esforço e custo e o Major General Joseph W. Stilwell, que tenta duramente manter a sanidade no meio do caos.",
         poster: "https://image.tmdb.org/t/p/w500/52Bn5yC6IHQuVxPUza3Q6RZCZTu.jpg",
         background: "https://image.tmdb.org/t/p/original/cNdRHssrYxkGomM2TUsSSkxvf3Q.jpg",
@@ -1312,231 +1417,7 @@ body { background: #fff; color: #000; padding: 1rem; }
         },
       novo: {
         name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: [""],
-        seasons: { 1: [""] }
-        },
-      novo: {
-        name: "",
+        year: 1800,
         synopsis: "",
         poster: "",
         background: "",
@@ -1545,13 +1426,11 @@ body { background: #fff; color: #000; padding: 1rem; }
         seasons: { 1: [""] }
         
 
-
-
       }
     };
 
 
-    const seriesTabs = document.getElementById("seriesTabs");
+   const seriesTabs = document.getElementById("seriesTabs");
 const serieInfo = document.getElementById("serieInfo");
 const serieTitle = document.getElementById("serieTitle");
 const serieSynopsis = document.getElementById("serieSynopsis");
@@ -1578,17 +1457,27 @@ function populateCategories(){
   });
 }
 
+// Função única para construir as tabs, com ordenação por ano
 function buildTabs(filteredKeys=null){
   seriesTabs.innerHTML = "";
-  const keys = filteredKeys||Object.keys(seriesData);
+  let keys = filteredKeys || Object.keys(seriesData);
+
+  // ORDENAR POR ANO MAIS RECENTE PRIMEIRO
+  keys.sort((a,b) => (seriesData[b].year||0) - (seriesData[a].year||0));
+
   keys.forEach(key=>{
     const s = seriesData[key];
     const li = document.createElement("li");
     li.className="nav-item";
     const btn = document.createElement("button");
     btn.className="nav-link p-0 border-0 bg-transparent text-center series-tab";
-    btn.dataset.target=key;
-    btn.innerHTML = `<div class="card border-0" style="width: 80px;"><img src="${s.poster}" class="card-img-top rounded" style="height:120px;object-fit:cover;" alt="${s.name}"><div class="card-body p-1"><p class="card-text small text-truncate mb-0">${s.name}</p></div></div>`;
+    btn.dataset.target = key;
+    btn.innerHTML = `<div class="card border-0" style="width: 80px;">
+      <img src="${s.poster}" class="card-img-top rounded" style="height:120px;object-fit:cover;" alt="${s.name}">
+      <div class="card-body p-1">
+        <p class="card-text small text-truncate mb-0">${s.name}</p>
+      </div>
+    </div>`;
     li.appendChild(btn);
     seriesTabs.appendChild(li);
   });
@@ -1600,25 +1489,25 @@ function showSeasons(key, tabBtn){
   serieSynopsis.innerHTML = "";
   const synopsisText = document.createElement("span");
   synopsisText.className = "synopsis-text";
-  synopsisText.textContent = s.synopsis.length > 80 ? s.synopsis.slice(0,80) + "..." : s.synopsis;
+  synopsisText.textContent = s.synopsis.length>80 ? s.synopsis.slice(0,80)+"..." : s.synopsis;
   serieSynopsis.appendChild(synopsisText);
 
   const lerMaisBtn = document.createElement("span");
   lerMaisBtn.textContent = " ler mais";
-  lerMaisBtn.style.color = "#007bff";
-  lerMaisBtn.style.cursor = "pointer";
-  lerMaisBtn.style.textDecoration = "underline";
-  lerMaisBtn.style.display = "inline-block";
-  lerMaisBtn.style.marginTop = "5px";
+  lerMaisBtn.style.color="#007bff";
+  lerMaisBtn.style.cursor="pointer";
+  lerMaisBtn.style.textDecoration="underline";
+  lerMaisBtn.style.display="inline-block";
+  lerMaisBtn.style.marginTop="5px";
   serieSynopsis.appendChild(lerMaisBtn);
 
-  let expanded = false;
-  lerMaisBtn.addEventListener("click", function() {
+  let expanded=false;
+  lerMaisBtn.addEventListener("click", ()=>{
     if(!expanded){
       synopsisText.textContent = s.synopsis;
       lerMaisBtn.textContent = " ler menos";
     } else {
-      synopsisText.textContent = s.synopsis.length > 80 ? s.synopsis.slice(0,80) + "..." : s.synopsis;
+      synopsisText.textContent = s.synopsis.length>80 ? s.synopsis.slice(0,80)+"..." : s.synopsis;
       lerMaisBtn.textContent = " ler mais";
     }
     expanded = !expanded;
@@ -1632,16 +1521,15 @@ function showSeasons(key, tabBtn){
   const li = tabBtn.closest("li");
   li.insertAdjacentElement("afterend", serieInfo);
 
-  // Botão Assistir Agora
-const assistirBtn = document.getElementById("assistirBtn");
-assistirBtn.onclick = () => {
-  const s = seriesData[currentSeries];       // série atualmente selecionada
-  const vid = s.seasons[1][0];               // primeiro episódio da primeira temporada
-  modalPlayer.src = `https://redecanais.ee/embed/${vid}`;
-  modalTitle.textContent = s.name;
-  const playerModal = new bootstrap.Modal(document.getElementById("playerModal"));
-  playerModal.show();
-};
+  const assistirBtn = document.getElementById("assistirBtn");
+  assistirBtn.onclick = () => {
+    const s = seriesData[currentSeries];
+    const vid = s.seasons[1][0];
+    modalPlayer.src = `https://redecanais.ee/embed/${vid}`;
+    modalTitle.textContent = s.name;
+    const playerModal = new bootstrap.Modal(document.getElementById("playerModal"));
+    playerModal.show();
+  };
 
   document.body.style.backgroundImage = `url('${s.background}')`;
   document.body.style.backgroundSize = 'cover';
@@ -1656,7 +1544,7 @@ function updateUIOnTabToggle(){
     seriesSearch.style.display='none';
     categoryFilter.style.display='none';
     document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='none');
-  }else{
+  } else {
     backButton.style.display='none';
     seriesSearch.style.display='block';
     categoryFilter.style.display='block';
@@ -1673,7 +1561,7 @@ seriesTabs.addEventListener("click",(e)=>{
     serieInfo.style.display="none";
     btn.classList.remove("active");
     document.body.style.backgroundImage="";
-  }else{
+  } else {
     currentSeries=target;
     document.querySelectorAll("button.series-tab").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
@@ -1703,23 +1591,13 @@ categoryFilter.addEventListener("change",()=>{
 
 document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ modalPlayer.src=""; });
 
-// === Web Video Cast - compartilhar link via Intent ===
-castOpen.addEventListener("click", (e) => {
+// Web Video Cast
+castOpen.addEventListener("click", (e)=>{
   e.preventDefault();
-
-  const url = modalPlayer.src; // pega o link do player
-  if (!url) {
-    alert("Nenhum vídeo carregado.");
-    return;
-  }
-
-  // Remove https:// do início
-  const cleanUrl = url.replace(/^https?:\/\//, '');
-  
-  // Cria o intent para abrir no Web Video Cast
+  const url = modalPlayer.src;
+  if(!url){ alert("Nenhum vídeo carregado."); return; }
+  const cleanUrl = url.replace(/^https?:\/\//,'');
   const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
-
-  // Tenta abrir o aplicativo diretamente
   window.location.href = intentLink;
 });
 
@@ -1729,18 +1607,18 @@ buildTabs();
 // Bloqueio inspeção
 function mostrarAlerta() {
   const tela = document.getElementById("bloqueio");
-  tela.style.display = "block";
-  setTimeout(() => { location.reload(); }, 1000);
+  if(tela) tela.style.display="block";
+  setTimeout(()=>{ location.reload(); }, 1000);
 }
-document.querySelectorAll('a').forEach(link => { link.setAttribute('target', '_self'); });
-document.addEventListener('keydown', function(e) {
+document.querySelectorAll('a').forEach(link => link.setAttribute('target','_self'));
+document.addEventListener('keydown', function(e){
   const tecla = e.key.toLowerCase();
-  if (e.key === "F12" || (e.ctrlKey && tecla === 'u') || (e.ctrlKey && tecla === 's') || (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))) {
+  if(e.key==="F12" || (e.ctrlKey && tecla==='u') || (e.ctrlKey && tecla==='s') || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(tecla))){
     e.preventDefault();
     mostrarAlerta();
   }
 });
-window.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+window.addEventListener('contextmenu', function(e){ e.preventDefault(); });
 </script>
 <!-- Tela de Alerta -->
   <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
