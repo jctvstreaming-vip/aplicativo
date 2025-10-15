@@ -790,7 +790,7 @@ document.body.addEventListener("click",(e)=>{
   if(e.target.classList.contains("open-player")){
     const vid = e.target.dataset.vid;
     const title = e.target.dataset.title;
-    const secureSrc = `https://redecanais.ee/embed/${vid}`;
+    const secureSrc = `https://vip.jctvstreaming-vip.workers.dev/${vid}`;
     modalPlayer.src = secureSrc;
     modalTitle.textContent = title;
     new bootstrap.Modal(document.getElementById("playerModal")).show();
