@@ -13,12 +13,25 @@ body { background: #fff; color: #000; padding: 1rem; }
 .series-tab img { width: 100%; height: 100%; border-radius: 5px; flex-shrink: 0; }
 .series-tab .card { width: 100px; }
 .card-body p.card-text { white-space: normal !important; word-break: break-word; overflow-wrap: break-word; font-size: 0.75rem; text-align: center; max-height: 6em; line-height: 1.2; }
-#serieInfo { margin-bottom: 1rem; }
+#serieInfo {
+    display: none;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.25); /* fundo transparente */
+    border-radius: 12px;
+    margin: 1rem auto;
+    max-width: 1200px;
+    backdrop-filter: blur(10px); /* deixa borrado */
+    -webkit-backdrop-filter: blur(10px);
+    color: #000; /* texto preto forte */
+}
 .serie-details { display: flex; gap: 1rem; align-items: flex-start; }
 .serie-details img { width: 100px; height: auto; border-radius: 5px; }
 .serie-details div { flex: 1; }
-#serieInfo h4 { font-size: 1.1rem; }
-#serieInfo p { font-size: 0.95rem; }
+#serieInfo h4,
+#serieInfo p {
+    color: #000; /* garante que todos os textos fiquem bem pretos */
+    font-weight: 600; /* um pouco mais forte que normal */
+}
 #backButton {
   display: none;
   position: fixed;
@@ -80,7 +93,7 @@ footer.footer img { height: 30px; width: auto; }
 
 <ul class="nav nav-tabs d-flex flex-wrap gap-3 mb-3 border-0" id="seriesTabs"></ul>
 
-<div id="serieInfo" class="card p-3 bg-light" style="display:none;">
+<div id="serieInfo" class="card p-3" style="display:none; background: rgba(255, 255, 255, 0.25);">
   <div class="serie-details">
     <img id="seriePoster" src="" alt="Poster da Série">
     <div>
@@ -103,20 +116,17 @@ footer.footer img { height: 30px; width: auto; }
   </div>
 </div>
 
+<!-- Modal Player -->
 <div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content bg-white text-dark">
       <div class="modal-header border-0">
         <h5 id="modalTitle" class="modal-title"></h5>
         <div class="d-flex gap-2 align-items-center">
-          <div class="dropdown">
-            <button id="castDropdown" type="button" class="btn btn-warning btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">📺 Espelhar</button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#" id="castCopy"></a></li>
-              <li><a class="dropdown-item d-flex align-items-center" href="#" id="castOpen">
-              <img src="https://x.gd/gflG1" alt="Web Video Cast" style="width: 18px; height: 18px; margin-right: 8px;">Web Video Cast</a></li>
-            </ul>
-          </div>
+          <!-- Botão Espelhar direto -->
+          <button id="castButton" type="button" class="btn btn-warning btn-sm">
+            📺 Espelhar
+          </button>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
       </div>
@@ -595,165 +605,165 @@ footer.footer img { height: 30px; width: auto; }
         language: ["Dublado"],
         seasons: { 1: [""] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
+      "Super Mario Bros. O Filme (2023)": {
+        name: "Super Mario Bros. O Filme (2023)",
+        year: 2023,
+        synopsis: "Transportados do Brooklyn para o Reino Cogumelo num passe de mágica, dois corajosos encanadores conhecem uma princesa e combatem um tirano que cospe fogo.",
+        poster: "https://image.tmdb.org/t/p/w500/ktU3MIeZtuEVRlMftgp0HMX2WR7.jpg",
+        background: "https://image.tmdb.org/t/p/original/9n2tJBplPbgR2ca05hS5CKXwP2c.jpg",
+        categories: ["Animação","Lançamento (2023)"],
         language: ["Dublado"],
-        seasons: { 1: [""] }
+        seasons: { 1: ["67d6f6657"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: ["Dublado"],
-        seasons: { 1: [""] }
+      "Super Mario Bros. O Filme (2023)LEG": {
+        name: "Super Mario Bros. O Filme (2023)",
+        year: 2023,
+        synopsis: "Transportados do Brooklyn para o Reino Cogumelo num passe de mágica, dois corajosos encanadores conhecem uma princesa e combatem um tirano que cospe fogo.",
+        poster: "https://image.tmdb.org/t/p/w500/ktU3MIeZtuEVRlMftgp0HMX2WR7.jpg",
+        background: "https://image.tmdb.org/t/p/original/9n2tJBplPbgR2ca05hS5CKXwP2c.jpg",
+        categories: ["Animação","Lançamento (2023)"],
+        language: ["Legendado"],
+        seasons: { 1: ["599af1e87"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
+      "Super Mario Bros. (1993)": {
+        name: "Super Mario Bros. (1993)",
+        year: 1993,
+        synopsis: "Há muito tempo, a Terra era dominada pelos dinossauros e ninguém os incomodava. A vida era boa em um lugar que, após 65 milhões de anos, passou a se chamar Brooklyn. Então algo inesperado aconteceu: Um meteoro gigante atingiu a Terra e os dinossauros foram exterminados. Entretanto, o impacto criou uma dimensão paralela, onde alguns dinossauros sobreviveram e se tornaram uma espécie inteligente e agressiva. Brooklyn, 20 anos atrás. Na porta de um convento é deixado um ovo, que é recolhido pelas freiras e dele nasce uma criança. Brooklyn, dias atuais. Os encanadores Mario Mario (Bob Hoskins) e Luigi Mario (John Leguizamo) se vêem em uma aventura fantástica para salvar a Princesa Daisy (Samantha Mathis) em um escondido mundo, Dinohattan, onde os habitantes evoluíram dos dinossauros. A dupla enfrenta desafios mortais do Rei Koopa (Dennis Hopper) e batalham contra répteis enormes para impedir um terrível plano, que busca invadir nosso mundo.",
+        poster: "https://image.tmdb.org/t/p/w500/yt5bbMfKpg1nRr4k5edxs7tPK2m.jpg",
+        background: "https://image.tmdb.org/t/p/original/7pU5ZCY0Pe8uIVDL5JAVGoUEQx9.jpg",
+        categories: ["Aventura","Fantasia","Comédia","Família"],
         language: ["Dublado"],
-        seasons: { 1: [""] }
+        seasons: { 1: ["70ad19bd9"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: ["Dublado"],
-        seasons: { 1: [""] }
+      "Super Mario Bros: A Grande Missão para Salvar a Princesa Peach! (1986)": {
+        name: "Super Mario Bros: A Grande Missão para Salvar a Princesa Peach! (1986)",
+        year: 1986,
+        synopsis: "O Mario Bros. é sugado para o jogo Famicom e agora deve resgatar a Princesa Peach do rei Bowser Koopa.",
+        poster: "https://image.tmdb.org/t/p/w500/talxEvJIZ3nl4cLmzHUiylJZ8x1.jpg",
+        background: "https://image.tmdb.org/t/p/original/7PzpnGL4W0oy1NAd0toIZeuDt0G.jpg",
+        categories: ["Animação"],
+        language: ["Legendado"],
+        seasons: { 1: ["32c7616d6"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
+      "Mansão Mal-Assombrada (2023)": {
+        name: "Mansão Mal-Assombrada (2023)",
+        year: 2023,
+        synopsis: "Uma mãe solteira chamada Gabbie contrata um guia turístico, um médium, um padre e um historiador para ajudar a exorcizar sua mansão recém-comprada; depois de descobrir que é habitado por fantasmas.",
+        poster: "https://image.tmdb.org/t/p/w500/3puybXuYPlZPRplIVSrExZnWibb.jpg",
+        background: "https://image.tmdb.org/t/p/original/mzlZAMjE2yk2sW3f9HTeBM3B3jw.jpg",
+        categories: ["Comédia","Drama","Fantasia","Lançamento (2023)"],
         language: ["Dublado"],
-        seasons: { 1: [""] }
+        seasons: { 1: ["bff1b28fb"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
+      "Mansão Mal-Assombrada (2003)": {
+        name: "Mansão Mal-Assombrada (2003)",
+        year: 2003,
+        synopsis: "A confusão começa quando Jim Evers, um agente imobiliário viciado em trabalho, interrompe uma viagem de família para tentar fechar um negócio em uma mansão. Chegando lá, Jim descobre não só que a casa é mal-assombrada, mas também que tem poucas horas para quebrar uma terrível maldição!",
+        poster: "https://image.tmdb.org/t/p/w500/lcrrqT4Rq0N7wuyNKelESbpFNPT.jpg",
+        background: "https://image.tmdb.org/t/p/original/bz7bdPMzBQcWTsyiT7LrLm0S4rL.jpg",
+        categories: ["Fantasia","Comédia","Família","Mistério"],
         language: ["Dublado"],
-        seasons: { 1: [""] }
+        seasons: { 1: ["e83a13236"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
+      "O Rei dos Assassinos (2023)": {
+        name: "O Rei dos Assassinos (2023)",
+        year: 2023,
+        synopsis: "Os maiores assassinos do mundo são contratados simultaneamente para matar Jorge Drakos, auto-declarado como Rei dos Assassinos, porém eles descobrem estão presos em uma competição para ver quem é o verdadeiro Rei dos Assassinos.",
+        poster: "https://image.tmdb.org/t/p/w500/tHA2wltMBWuaTzOzSf7P2bzhmIy.jpg",
+        background: "https://image.tmdb.org/t/p/original/hwm4mITZpjb2YVChlf9PbTC2nuK.jpg",
+        categories: ["Ação","Lançamento (2023)"],
         language: ["Dublado"],
-        seasons: { 1: [""] }
+        seasons: { 1: ["11ee81a64"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
+      "Megatubarão 2 (2023)": {
+        name: "Megatubarão 2 (2023)",
+        year: 2023,
+        synopsis: "Um mergulho exploratório nas profundezas do oceano de uma ousada equipe de pesquisa se transforma em caos quando uma operação de mineração malévola ameaça sua missão e os força a uma batalha de alto risco pela sobrevivência.",
+        poster: "https://image.tmdb.org/t/p/w500/x3uhIodq56mlGBwpDTZ52trGb35.jpg",
+        background: "https://image.tmdb.org/t/p/original/5mzr6JZbrqnqD8rCEvPhuCE5Fw2.jpg",
+        categories: ["Ação","Ficção Científica","Terror","Lançamento (2023)"],
         language: ["Dublado"],
-        seasons: { 1: [""] }
+        seasons: { 1: ["de7d1fcef"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: ["Dublado"],
-        seasons: { 1: [""] }
+      "Megatubarão 2 (2023) (LEG)": {
+        name: "Megatubarão 2 (2023)",
+        year: 2023,
+        synopsis: "Um mergulho exploratório nas profundezas do oceano de uma ousada equipe de pesquisa se transforma em caos quando uma operação de mineração malévola ameaça sua missão e os força a uma batalha de alto risco pela sobrevivência.",
+        poster: "https://image.tmdb.org/t/p/w500/x3uhIodq56mlGBwpDTZ52trGb35.jpg",
+        background: "https://image.tmdb.org/t/p/original/5mzr6JZbrqnqD8rCEvPhuCE5Fw2.jpg",
+        categories: ["Ação","Ficção Científica","Terror","Lançamento (2023)"],
+        language: ["Legendado"],
+        seasons: { 1: ["c280fee2f"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
+      megatubaraodezoito: {
+        name: "Megatubarão (2018)",
+        year: 2018,
+        synopsis: "Na fossa mais profunda do Oceano Pacífico, a tripulação de um submarino fica presa dentro do local após ser atacada por uma criatura pré-histórica que se achava estar extinta, um tubarão de mais de 20 metros de comprimento, o Megalodon. Para salvá-los, um oceanógrafo chinês contrata Jonas Taylor, um mergulhador especializado em resgates em água profundas que já encontrou com a criatura anteriormente.",
+        poster: "https://image.tmdb.org/t/p/w500/nidLgS7SNKI7HwD2wwgf07jYJZR.jpg",
+        background: "https://image.tmdb.org/t/p/original/ibKeXahq4JD63z6uWQphqoJLvNw.jpg",
+        categories: ["Ação","Ficção Científica","Terror"],
         language: ["Dublado"],
-        seasons: { 1: [""] }
+        seasons: { 1: ["562c72619"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: ["Dublado"],
-        seasons: { 1: [""] }
+      megatubaraodezoitoleg: {
+        name: "Megatubarão (2018)",
+        year: 2018,
+        synopsis: "Na fossa mais profunda do Oceano Pacífico, a tripulação de um submarino fica presa dentro do local após ser atacada por uma criatura pré-histórica que se achava estar extinta, um tubarão de mais de 20 metros de comprimento, o Megalodon. Para salvá-los, um oceanógrafo chinês contrata Jonas Taylor, um mergulhador especializado em resgates em água profundas que já encontrou com a criatura anteriormente.",
+        poster: "https://image.tmdb.org/t/p/w500/nidLgS7SNKI7HwD2wwgf07jYJZR.jpg",
+        background: "https://image.tmdb.org/t/p/original/ibKeXahq4JD63z6uWQphqoJLvNw.jpg",
+        categories: ["Ação","Ficção Científica","Terror"],
+        language: ["Legendado"],
+        seasons: { 1: ["628dd99fa"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
+      astartarugasninjascaosmutaantevintetres: {
+        name: "As Tartarugas Ninja: Caos Mutante (2023)",
+        year: 2023,
+        synopsis: "Depois de anos sendo protegidos do mundo humano, os irmãos tartarugas saem para ganhar os corações dos nova yorkinos e serem aceitos como adolescentes normais através de seus atos heroicos. Sua nova amiga, April O’Neil, vai ajudá-los a derrotar um misterioso sindicado do crime, mas eles logo se veem em maus lençóis quando um exército de mutantes vai atrás deles.",
+        poster: "https://image.tmdb.org/t/p/w500/gwrFZLMPox82lsPT8MHpAYmFjw9.jpg",
+        background: "https://image.tmdb.org/t/p/original/2Cpg8hUn60PK9CW9d5SWf605Ah8.jpg",
+        categories: ["Animação","Lançamento (2023)"],
         language: ["Dublado"],
-        seasons: { 1: [""] }
+        seasons: { 1: ["83b096e6b"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
+      besouroazulvintetres: {
+        name: "Besouro Azul (2023)",
+        year: 2023,
+        synopsis: "Jaime Reyes, um adolescente de origem mexicana que encontra um artefato alienígena que lhe dá um exoesqueleto mecanizado e poderes, tornando-o no Besouro Azul.",
+        poster: "https://image.tmdb.org/t/p/w500/kedGlsobpMXsKKHXhogp7gPSqG7.jpg",
+        background: "https://image.tmdb.org/t/p/original/3H9NA1KWEQN0ItL3Wl3SFZYP6yV.jpg",
+        categories: ["Ação","Ficção Científica","Aventura","DC Comics","Lançamento (2023)"],
         language: ["Dublado"],
-        seasons: { 1: [""] }
+        seasons: { 1: ["5fa6509ea"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: ["Dublado"],
-        seasons: { 1: [""] }
+     besouroazulvintetresleg: {
+        name: "Besouro Azul (2023)",
+        year: 2023,
+        synopsis: "Jaime Reyes, um adolescente de origem mexicana que encontra um artefato alienígena que lhe dá um exoesqueleto mecanizado e poderes, tornando-o no Besouro Azul.",
+        poster: "https://image.tmdb.org/t/p/w500/kedGlsobpMXsKKHXhogp7gPSqG7.jpg",
+        background: "https://image.tmdb.org/t/p/original/3H9NA1KWEQN0ItL3Wl3SFZYP6yV.jpg",
+        categories: ["Ação","Ficção Científica","Aventura","DC Comics","Lançamento (2023)"],
+        language: ["Legendado"],
+        seasons: { 1: ["47b83d5c6"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
+      draculaaultimaviagemdodemetervintetres: {
+        name: "Drácula: A Última Viagem do Deméter (2023)",
+        year: 2023,
+        synopsis: "A tripulação do navio mercante Demeter tenta sobreviver à viagem oceânica de Carpathia a Londres enquanto são perseguidos todas as noites por uma presença impiedosa a bordo do navio.",
+        poster: "https://image.tmdb.org/t/p/w500/bojgIXdqn5VbvO8EtQVsLXrepSb.jpg",
+        background: "https://image.tmdb.org/t/p/original/dKC5qWi6S8SKkSzrP6LxTk0cb98.jpg",
+        categories: ["Terror","Lançamento (2023)"],
         language: ["Dublado"],
-        seasons: { 1: [""] }
+        seasons: { 1: ["3bec75e74"] }
         },
-      novo: {
-        name: "",
-        year: 1800,
-        synopsis: "",
-        poster: "",
-        background: "",
-        categories: [""],
-        language: ["Dublado"],
-        seasons: { 1: [""] }
+      draculaaultimaviagemdodemetervintetresleg: {
+        name: "Drácula: A Última Viagem do Deméter (2023)",
+        year: 2023,
+        synopsis: "A tripulação do navio mercante Demeter tenta sobreviver à viagem oceânica de Carpathia a Londres enquanto são perseguidos todas as noites por uma presença impiedosa a bordo do navio.",
+        poster: "https://image.tmdb.org/t/p/w500/bojgIXdqn5VbvO8EtQVsLXrepSb.jpg",
+        background: "https://image.tmdb.org/t/p/original/dKC5qWi6S8SKkSzrP6LxTk0cb98.jpg",
+        categories: ["Terror","Lançamento (2023)"],
+        language: ["Legendado"],
+        seasons: { 1: ["2e09646cc"] }
         },
       xxxtresreativadodezesete: {
         name: "xXx: Reativado (2017)",
@@ -4075,12 +4085,13 @@ categoryFilter.addEventListener("change",()=>{
 
 document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ modalPlayer.src=""; });
 
-// Web Video Cast
-castOpen.addEventListener("click", (e)=>{
+// === Web Video Cast direto ===
+const castButton = document.getElementById("castButton");
+castButton.addEventListener("click", (e) => {
   e.preventDefault();
-  const url = modalPlayer.src;
-  if(!url){ alert("Nenhum vídeo carregado."); return; }
-  const cleanUrl = url.replace(/^https?:\/\//,'');
+  const url = document.getElementById("modalPlayer").src;
+  if (!url) { alert("Nenhum vídeo carregado."); return; }
+  const cleanUrl = url.replace(/^https?:\/\//, '');
   const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
   window.location.href = intentLink;
 });
