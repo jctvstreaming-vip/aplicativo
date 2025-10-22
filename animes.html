@@ -631,15 +631,17 @@ const seriesSearch = document.getElementById("seriesSearch");
 const categoryFilter = document.getElementById("categoryFilter");
 const modalPlayer = document.getElementById("modalPlayer");
 const modalTitle = document.getElementById("modalTitle");
-const backButton = document.getElementById('backButton');
+const backButton = document.getElementById("backButton");
 const castOpen = document.getElementById("castOpen");
 const castCopy = document.getElementById("castCopy");
 
 let currentSeries = null;
-function populateCategories(){
+
+// === Popula Categorias ===
+function populateCategories() {
   const allCategories = new Set();
   Object.values(seriesData).forEach(s => s.categories.forEach(c => allCategories.add(c)));
-  [...allCategories].sort().forEach(cat=>{
+  [...allCategories].sort().forEach(cat => {
     const option = document.createElement("option");
     option.value = cat;
     option.textContent = cat;
@@ -647,38 +649,46 @@ function populateCategories(){
   });
 }
 
-function buildTabs(filteredKeys=null){
+// === Monta as abas ===
+function buildTabs(filteredKeys = null) {
   seriesTabs.innerHTML = "";
   let keys = filteredKeys || Object.keys(seriesData);
 
-  // Ordena pelo ano mais recente (atributo 'year'), se não houver, coloca 0
   keys.sort((a, b) => {
     const yearA = seriesData[a].year || 0;
     const yearB = seriesData[b].year || 0;
-    return yearB - yearA; // mais novas primeiro
+    return yearB - yearA;
   });
 
-  keys.forEach(key=>{
+  keys.forEach(key => {
     const s = seriesData[key];
     const li = document.createElement("li");
-    li.className="nav-item";
+    li.className = "nav-item";
     const btn = document.createElement("button");
-    btn.className="nav-link p-0 border-0 bg-transparent text-center series-tab";
-    btn.dataset.target=key;
-    btn.innerHTML = `<div class="card border-0" style="width: 80px;"><img src="${s.poster}" class="card-img-top rounded" style="height:120px;object-fit:cover;" alt="${s.name}"><div class="card-body p-1"><p class="card-text small text-truncate mb-0">${s.name}</p></div></div>`;
+    btn.className = "nav-link p-0 border-0 bg-transparent text-center series-tab";
+    btn.dataset.target = key;
+    btn.innerHTML = `
+      <div class="card border-0" style="width: 80px;">
+        <img src="${s.poster}" class="card-img-top rounded" style="height:120px;object-fit:cover;" alt="${s.name}">
+        <div class="card-body p-1">
+          <p class="card-text small text-truncate mb-0">${s.name}</p>
+        </div>
+      </div>`;
     li.appendChild(btn);
     seriesTabs.appendChild(li);
   });
 }
 
-function showSeasons(key, tabBtn){
+// === Exibe temporadas e episódios ===
+function showSeasons(key, tabBtn) {
   const s = seriesData[key];
   serieTitle.textContent = s.name;
   serieSynopsis.innerHTML = "";
 
   const synopsisText = document.createElement("span");
   synopsisText.className = "synopsis-text";
-  synopsisText.textContent = s.synopsis.length > 80 ? s.synopsis.slice(0,80) + "..." : s.synopsis;
+  synopsisText.textContent =
+    s.synopsis.length > 80 ? s.synopsis.slice(0, 80) + "..." : s.synopsis;
   serieSynopsis.appendChild(synopsisText);
 
   const lerMaisBtn = document.createElement("span");
@@ -691,13 +701,13 @@ function showSeasons(key, tabBtn){
   serieSynopsis.appendChild(lerMaisBtn);
 
   let expanded = false;
-
-  lerMaisBtn.addEventListener("click", function() {
-    if(!expanded){
+  lerMaisBtn.addEventListener("click", function () {
+    if (!expanded) {
       synopsisText.textContent = s.synopsis;
       lerMaisBtn.textContent = " ler menos";
     } else {
-      synopsisText.textContent = s.synopsis.length > 80 ? s.synopsis.slice(0,80) + "..." : s.synopsis;
+      synopsisText.textContent =
+        s.synopsis.length > 80 ? s.synopsis.slice(0, 80) + "..." : s.synopsis;
       lerMaisBtn.textContent = " ler mais";
     }
     expanded = !expanded;
@@ -707,114 +717,139 @@ function showSeasons(key, tabBtn){
   serieCategories.textContent = s.categories.join(", ");
   serieGênero.textContent = s.genero.join(", ");
   serieLanguage.textContent = s.language.join(", ");
-  serieInfo.style.display="block";
+  serieInfo.style.display = "block";
 
   const li = tabBtn.closest("li");
   li.insertAdjacentElement("afterend", serieInfo);
 
-  seasonEpisodesContainer.innerHTML="";
-  let seasonId=0;
-  for(const [seasonNum, episodes] of Object.entries(s.seasons)){
+  seasonEpisodesContainer.innerHTML = "";
+  let seasonId = 0;
+  for (const [seasonNum, episodes] of Object.entries(s.seasons)) {
     seasonId++;
     const container = document.createElement("div");
-    container.className="accordion mb-2";
-    container.id=`accordionSeason${seasonId}`;
+    container.className = "accordion mb-2";
+    container.id = `accordionSeason${seasonId}`;
     const item = document.createElement("div");
-    item.className="accordion-item";
+    item.className = "accordion-item";
     const headerId = `heading${seasonId}`;
     const collapseId = `collapse${seasonId}`;
-    item.innerHTML=`
+    item.innerHTML = `
       <h2 class="accordion-header" id="${headerId}">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">Temporada ${seasonNum}</button>
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+          Temporada ${seasonNum}
+        </button>
       </h2>
-      <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}" data-bs-parent="#accordionSeason${seasonId}">
+      <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}"
+        data-bs-parent="#accordionSeason${seasonId}">
         <div class="accordion-body d-flex flex-wrap gap-2">
-          ${episodes.map((vid,idx)=>`<button class="btn btn-outline-primary open-player" data-vid="${vid}" data-title="${s.name} - Temporada ${seasonNum} - Episódio ${idx+1}">Episódio ${idx+1}</button>`).join("")}
+          ${episodes
+            .map(
+              (vid, idx) =>
+                `<button class="btn btn-outline-primary open-player" data-vid="${vid}" data-title="${s.name} - Temporada ${seasonNum} - Episódio ${idx + 1}">Episódio ${idx + 1}</button>`
+            )
+            .join("")}
         </div>
-      </div>
-    `;
+      </div>`;
     container.appendChild(item);
     seasonEpisodesContainer.appendChild(container);
   }
 
   document.body.style.backgroundImage = `url('${s.background}')`;
-  document.body.style.backgroundSize = 'cover';
-  document.body.style.backgroundPosition = 'center';
-  document.body.style.backgroundRepeat = 'no-repeat';
-  document.body.style.backgroundAttachment = 'fixed';
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+  document.body.style.backgroundAttachment = "fixed";
 }
 
-function updateUIOnTabToggle(){
-  if(currentSeries){
-    backButton.style.display='block';
-    seriesSearch.style.display='none';
-    categoryFilter.style.display='none';
-    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='none');
-  }else{
-    backButton.style.display='none';
-    seriesSearch.style.display='block';
-    categoryFilter.style.display='block';
-    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='inline-block');
+// === Alterna exibição ===
+function updateUIOnTabToggle() {
+  if (currentSeries) {
+    backButton.style.display = "block";
+    seriesSearch.style.display = "none";
+    categoryFilter.style.display = "none";
+    document.querySelectorAll("#seriesTabs > li").forEach(li => (li.style.display = "none"));
+  } else {
+    backButton.style.display = "none";
+    seriesSearch.style.display = "block";
+    categoryFilter.style.display = "block";
+    document.querySelectorAll("#seriesTabs > li").forEach(li => (li.style.display = "inline-block"));
   }
 }
 
-seriesTabs.addEventListener("click",(e)=>{
+seriesTabs.addEventListener("click", e => {
   const btn = e.target.closest("button.series-tab");
-  if(!btn) return;
+  if (!btn) return;
   const target = btn.dataset.target;
-  if(currentSeries===target){
-    currentSeries=null;
-    serieInfo.style.display="none";
+  if (currentSeries === target) {
+    currentSeries = null;
+    serieInfo.style.display = "none";
     btn.classList.remove("active");
-    document.body.style.backgroundImage="";
-  }else{
-    currentSeries=target;
-    document.querySelectorAll("button.series-tab").forEach(b=>b.classList.remove("active"));
+    document.body.style.backgroundImage = "";
+  } else {
+    currentSeries = target;
+    document.querySelectorAll("button.series-tab").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    showSeasons(target,btn);
+    showSeasons(target, btn);
   }
   updateUIOnTabToggle();
 });
 
-backButton.addEventListener("click",()=>{
-  currentSeries=null;
-  serieInfo.style.display="none";
-  document.querySelectorAll("button.series-tab").forEach(b=>b.classList.remove("active"));
+backButton.addEventListener("click", () => {
+  currentSeries = null;
+  serieInfo.style.display = "none";
+  document.querySelectorAll("button.series-tab").forEach(b => b.classList.remove("active"));
   updateUIOnTabToggle();
-  document.body.style.backgroundImage="";
+  document.body.style.backgroundImage = "";
 });
 
-seriesSearch.addEventListener("input",()=>{
+seriesSearch.addEventListener("input", () => {
   const q = seriesSearch.value.toLowerCase();
-  buildTabs(Object.keys(seriesData).filter(k=>seriesData[k].name.toLowerCase().includes(q)));
+  buildTabs(Object.keys(seriesData).filter(k => seriesData[k].name.toLowerCase().includes(q)));
 });
 
-categoryFilter.addEventListener("change",()=>{
+categoryFilter.addEventListener("change", () => {
   const cat = categoryFilter.value;
-  if(!cat){ buildTabs(); return; }
-  buildTabs(Object.keys(seriesData).filter(k=>seriesData[k].categories.includes(cat)));
+  if (!cat) {
+    buildTabs();
+    return;
+  }
+  buildTabs(Object.keys(seriesData).filter(k => seriesData[k].categories.includes(cat)));
 });
 
-document.body.addEventListener("click",(e)=>{
-  if(e.target.classList.contains("open-player")){
+// === Abre vídeo no iframe diretamente ===
+document.body.addEventListener("click", e => {
+  if (e.target.classList.contains("open-player")) {
     const vid = e.target.dataset.vid;
     const title = e.target.dataset.title;
-    const secureSrc = `https://vip.jctvstreaming-vip.workers.dev/${vid}`;
-    modalPlayer.src = secureSrc;
+    let src = "";
+
+    if (/^(https?:\/\/)/i.test(vid)) {
+      src = vid; // Link completo abre direto
+    } else {
+      src = `https://vip.jctvstreaming-vip.workers.dev/${vid}`; // Mantém compatibilidade
+    }
+
+    modalPlayer.src = src;
     modalTitle.textContent = title;
     new bootstrap.Modal(document.getElementById("playerModal")).show();
   }
 });
 
-document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ modalPlayer.src=""; });
+document.getElementById("playerModal").addEventListener("hidden.bs.modal", () => {
+  modalPlayer.src = "";
+});
 
 // === Web Video Cast direto ===
 const castButton = document.getElementById("castButton");
-castButton.addEventListener("click", (e) => {
+castButton.addEventListener("click", e => {
   e.preventDefault();
   const url = document.getElementById("modalPlayer").src;
-  if (!url) { alert("Nenhum vídeo carregado."); return; }
-  const cleanUrl = url.replace(/^https?:\/\//, '');
+  if (!url) {
+    alert("Nenhum vídeo carregado.");
+    return;
+  }
+  const cleanUrl = url.replace(/^https?:\/\//, "");
   const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
   window.location.href = intentLink;
 });

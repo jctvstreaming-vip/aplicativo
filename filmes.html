@@ -85,7 +85,7 @@ footer.footer img { height: 30px; width: auto; }
 <button id="backButton" class="btn btn-primary btn-lg">Voltar</button>
 
 <div id="centralSearch">
-  <input type="search" id="seriesSearch" class="form-control" placeholder="Pesquisar Filme...">
+  <input type="search" id="seriesSearch" class="form-control" placeholder="Pesquisar...">
   <select id="categoryFilter" class="form-select">
     <option value="">Todas as Categorias</option>
   </select>
@@ -4584,7 +4584,8 @@ footer.footer img { height: 30px; width: auto; }
     };
 
 
-   const seriesTabs = document.getElementById("seriesTabs");
+   // === Elementos ===
+const seriesTabs = document.getElementById("seriesTabs");
 const serieInfo = document.getElementById("serieInfo");
 const serieTitle = document.getElementById("serieTitle");
 const serieSynopsis = document.getElementById("serieSynopsis");
@@ -4600,6 +4601,7 @@ const castOpen = document.getElementById("castOpen");
 const castCopy = document.getElementById("castCopy");
 let currentSeries = null;
 
+// === Popula categorias ===
 function populateCategories(){
   const allCategories = new Set();
   Object.values(seriesData).forEach(s => s.categories.forEach(c => allCategories.add(c)));
@@ -4611,12 +4613,11 @@ function populateCategories(){
   });
 }
 
-// Função única para construir as tabs, com ordenação por ano
+// === Monta as abas com ordenação por ano ===
 function buildTabs(filteredKeys=null){
   seriesTabs.innerHTML = "";
   let keys = filteredKeys || Object.keys(seriesData);
 
-  // ORDENAR POR ANO MAIS RECENTE PRIMEIRO
   keys.sort((a,b) => (seriesData[b].year||0) - (seriesData[a].year||0));
 
   keys.forEach(key=>{
@@ -4626,42 +4627,45 @@ function buildTabs(filteredKeys=null){
     const btn = document.createElement("button");
     btn.className="nav-link p-0 border-0 bg-transparent text-center series-tab";
     btn.dataset.target = key;
-    btn.innerHTML = `<div class="card border-0" style="width: 80px;">
-      <img src="${s.poster}" class="card-img-top rounded" style="height:120px;object-fit:cover;" alt="${s.name}">
-      <div class="card-body p-1">
-        <p class="card-text small text-truncate mb-0">${s.name}</p>
-      </div>
-    </div>`;
+    btn.innerHTML = `
+      <div class="card border-0" style="width: 80px;">
+        <img src="${s.poster}" class="card-img-top rounded" style="height:120px;object-fit:cover;" alt="${s.name}">
+        <div class="card-body p-1">
+          <p class="card-text small text-truncate mb-0">${s.name}</p>
+        </div>
+      </div>`;
     li.appendChild(btn);
     seriesTabs.appendChild(li);
   });
 }
 
+// === Exibe informações da série e botão Assistir ===
 function showSeasons(key, tabBtn){
   const s = seriesData[key];
   serieTitle.textContent = s.name;
   serieSynopsis.innerHTML = "";
+
   const synopsisText = document.createElement("span");
   synopsisText.className = "synopsis-text";
-  synopsisText.textContent = s.synopsis.length>80 ? s.synopsis.slice(0,80)+"..." : s.synopsis;
+  synopsisText.textContent = s.synopsis.length > 80 ? s.synopsis.slice(0,80) + "..." : s.synopsis;
   serieSynopsis.appendChild(synopsisText);
 
   const lerMaisBtn = document.createElement("span");
   lerMaisBtn.textContent = " ler mais";
-  lerMaisBtn.style.color="#007bff";
-  lerMaisBtn.style.cursor="pointer";
-  lerMaisBtn.style.textDecoration="underline";
-  lerMaisBtn.style.display="inline-block";
-  lerMaisBtn.style.marginTop="5px";
+  lerMaisBtn.style.color = "#007bff";
+  lerMaisBtn.style.cursor = "pointer";
+  lerMaisBtn.style.textDecoration = "underline";
+  lerMaisBtn.style.display = "inline-block";
+  lerMaisBtn.style.marginTop = "5px";
   serieSynopsis.appendChild(lerMaisBtn);
 
-  let expanded=false;
-  lerMaisBtn.addEventListener("click", ()=>{
+  let expanded = false;
+  lerMaisBtn.addEventListener("click", () => {
     if(!expanded){
       synopsisText.textContent = s.synopsis;
       lerMaisBtn.textContent = " ler menos";
     } else {
-      synopsisText.textContent = s.synopsis.length>80 ? s.synopsis.slice(0,80)+"..." : s.synopsis;
+      synopsisText.textContent = s.synopsis.length > 80 ? s.synopsis.slice(0,80) + "..." : s.synopsis;
       lerMaisBtn.textContent = " ler mais";
     }
     expanded = !expanded;
@@ -4670,21 +4674,20 @@ function showSeasons(key, tabBtn){
   seriePoster.src = s.poster;
   serieCategories.textContent = s.categories.join(", ");
   serieLanguage.textContent = s.language.join(", ");
-  serieInfo.style.display="block";
+  serieInfo.style.display = "block";
 
   const li = tabBtn.closest("li");
   li.insertAdjacentElement("afterend", serieInfo);
 
+  // === Botão "Assistir" ===
   const assistirBtn = document.getElementById("assistirBtn");
   assistirBtn.onclick = () => {
     const s = seriesData[currentSeries];
     const vid = s.seasons[1][0];
-    modalPlayer.src = `https://vip.jctvstreaming-vip.workers.dev/${vid}`;
-    modalTitle.textContent = s.name;
-    const playerModal = new bootstrap.Modal(document.getElementById("playerModal"));
-    playerModal.show();
+    openInModal(vid, s.name);
   };
 
+  // === Fundo dinâmico ===
   document.body.style.backgroundImage = `url('${s.background}')`;
   document.body.style.backgroundSize = 'cover';
   document.body.style.backgroundPosition = 'center';
@@ -4692,6 +4695,7 @@ function showSeasons(key, tabBtn){
   document.body.style.backgroundAttachment = 'fixed';
 }
 
+// === Alterna interface ===
 function updateUIOnTabToggle(){
   if(currentSeries){
     backButton.style.display='block';
@@ -4706,6 +4710,7 @@ function updateUIOnTabToggle(){
   }
 }
 
+// === Evento: clique nas tabs ===
 seriesTabs.addEventListener("click",(e)=>{
   const btn = e.target.closest("button.series-tab");
   if(!btn) return;
@@ -4724,6 +4729,7 @@ seriesTabs.addEventListener("click",(e)=>{
   updateUIOnTabToggle();
 });
 
+// === Botão Voltar ===
 backButton.addEventListener("click",()=>{
   currentSeries=null;
   serieInfo.style.display="none";
@@ -4732,18 +4738,40 @@ backButton.addEventListener("click",()=>{
   document.body.style.backgroundImage="";
 });
 
+// === Busca ===
 seriesSearch.addEventListener("input",()=>{
   const q = seriesSearch.value.toLowerCase();
   buildTabs(Object.keys(seriesData).filter(k=>seriesData[k].name.toLowerCase().includes(q)));
 });
 
+// === Filtro de categoria ===
 categoryFilter.addEventListener("change",()=>{
   const cat = categoryFilter.value;
   if(!cat){ buildTabs(); return; }
   buildTabs(Object.keys(seriesData).filter(k=>seriesData[k].categories.includes(cat)));
 });
 
-document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ modalPlayer.src=""; });
+// === Função principal: abrir vídeo direto no iframe ===
+function openInModal(vid, title) {
+  let src = "";
+
+  // Se for link completo (http, https, embed, m3u8, mp4, mpd)
+  if (/^(https?:\/\/)/i.test(vid)) {
+    src = vid;
+  } else {
+    // Caso seja apenas um ID simples
+    src = `https://vip.jctvstreaming-vip.workers.dev/${vid}`;
+  }
+
+  modalPlayer.src = src;
+  modalTitle.textContent = title;
+  new bootstrap.Modal(document.getElementById("playerModal")).show();
+}
+
+// === Limpa player ao fechar modal ===
+document.getElementById("playerModal").addEventListener("hidden.bs.modal",()=>{ 
+  modalPlayer.src = ""; 
+});
 
 // === Web Video Cast direto ===
 const castButton = document.getElementById("castButton");
@@ -4759,7 +4787,7 @@ castButton.addEventListener("click", (e) => {
 populateCategories();
 buildTabs();
 
-// Bloqueio inspeção
+// === Bloqueio de inspeção ===
 function mostrarAlerta() {
   const tela = document.getElementById("bloqueio");
   if(tela) tela.style.display="block";
