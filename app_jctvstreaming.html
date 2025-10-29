@@ -1,163 +1,598 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="robots" content="noindex,nofollow">
-<meta name="referrer" content="no-referrer">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>JC TV STREAMING</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <style>
-  body { background: #fff; color: #000; margin: 0; padding: 0; overflow-x: hidden; }
-  html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; } 
-  #player, #app-content { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
-  #particles-js { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; background:#fff; }
-  .content { position: relative; z-index:1; text-align:center; padding-top:80px; padding-bottom:40px; }
-  .logo { max-width: 80px; margin-bottom:20px; border-radius:12px; box-shadow:0 0 30px rgba(184,134,11,0.6); transition: transform 0.3s ease; }
-  .logo:hover { transform: scale(1.05); }
-  .headline { font-size:2rem; font-weight:bold; color:#b8860b; text-shadow:0 0 10px rgba(255,204,0,0.6); }
-  .subtext { font-size:1.2rem; color:black; margin-top:20px; text-shadow:0 0 4px rgba(0,0,0,0.2); }
-  .iframePlayer { display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; background:#fff; }
-  #iframeVideo { width:100%; height:100%; border:none; }
-  #backButton { display:none; position:fixed; top:2px; left:0; z-index:1055; background-color:#FFC107; color:#000; border:none; padding:8px 10px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:12px; transition:0.3s ease; }
-  #backButton:hover { background-color:#007BFF; color:#fff; }
-  #backButton i { font-size:20px; }
-  .playerContent { text-align:center; padding:50px 20px 20px; }
-  .playerButtons { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:30px; }
-  .playerButtons button { display:flex; align-items:center; gap:8px; background:black; color:#fff; font-weight:bold; padding:10px 16px; border:none; border-radius:12px; transition:all 0.3s ease; cursor:pointer; backdrop-filter:blur(5px); box-shadow:0 4px 8px rgba(0,0,0,0.1); font-size:14px; }
-  .playerButtons button:hover { background:#FFC107; color:#000; transform:translateY(-2px); box-shadow:0 6px 12px rgba(0,0,0,0.2); }
-  footer.footer { position:fixed; bottom:0; left:0; width:100%; background:black; color:#fff; display:flex; justify-content:center; align-items:center; gap:10px; padding:10px 20px; font-size:1rem; z-index:1000; }
-  footer.footer img { height:30px; width:auto; }
+  html, body {
+    margin:0; padding:0; height:100%; width:100%; background:#000; font-family:Arial,sans-serif; overflow:hidden;
+    display:flex;
+  }
+  #channelList {
+    width:400px; /* aumentei de 220px para 300px */
+    background:rgba(20,20,20,0.9);
+    padding:10px;
+    overflow-y:auto;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    font-size: 1.2em; /* aumenta o nome do canal */
+  }
+  #channelList img {
+    width:70px; /* aumentei de 50px para 70px */
+    height:auto;
+    vertical-align:middle;
+    margin-right:5px;
+  }
+  #channelList button {
+    display:flex; 
+    align-items:center; 
+    justify-content:space-between; 
+    background:#222; 
+    color:#fff; 
+    border:none; 
+    padding:5px; 
+    cursor:pointer; 
+    border-radius:3px; 
+    text-align:left; 
+    gap:5px;
+  }
+  #channelList button span:first-child {
+    font-size: 1.2em; /* aumenta apenas o nome do canal */
+}
+  #channelList button:hover { background:#444; }
+  .watching {
+    color: #00ffff; /* ciano */
+    font-weight:bold;
+    font-size: 1em; /* aumenta o "assistindo" */
+  }
+  #playerWrapper {
+    flex:1;
+    position:relative;
+    background:#000;
+  }
+  #player { width:100%; height:100%; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clappr-subtitle-plugin@latest/dist/clappr-subtitle-plugin.min.js"></script>
 </head>
 <body>
 
-<div id="particles-js"></div>
+<div id="channelList"></div>
 
-<!-- Tela cheia (TV, Filmes, etc.) -->
-<div class="iframePlayer">
-  <button id="backButton" type="button"><i class="bi bi-house"></i></button>
-  <iframe id="iframeVideo" allowfullscreen></iframe>
-</div>
+<div id="playerWrapper">
+  <div id="player"></div>
 
-<!-- Modal do Chat Limpo -->
-<div class="modal fade" id="chatModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-md modal-dialog-centered">
-    <div class="modal-content bg-white text-dark p-2" style="border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.3);">
-      <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title">Chat ao Vivo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </div>
-      <div class="modal-body p-0" style="height:400px;">
-        <iframe id="iframeChat" src="" allowfullscreen style="width:100%; height:100%; border:none; border-radius:10px;"></iframe>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Conteúdo Principal -->
-<div class="container playerContent">
-  <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="JC TV STREAMING Logo" class="logo" />
-  <h1 class="headline">JC TV STREAMING</h1>
-  <p class="subtext">Entretenimento sem limites!</p>
-  <div class="playerButtons" id="serverButtons"></div>
-  <p class="subtext">Seja bem vindo ao maior servidor de conteúdos do país!</p>
-</div>
-
-<footer class="footer">
-  <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" width="50" />
-  <span>JC TV STREAMING © 2025</span>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-particlesJS("particles-js", {
-  particles: {
-    number:{value:100},
-    color:{value:"#b8860b"},
-    shape:{type:"circle"},
-    opacity:{value:0.4},
-    size:{value:3, random:true},
-    line_linked:{enable:true, distance:100, color:"#1e3c72", opacity:1, width:1},
-    move:{enable:true, speed:2, direction:"none", out_mode:"out"}
-  },
-  interactivity:{
-    events:{onhover:{enable:true, mode:"repulse"}, onclick:{enable:true, mode:"push"}},
-    modes:{repulse:{distance:120}, push:{particles_nb:4}}
-  },
-  retina_detect:true
-});
+  const channels = [
+{ name:"Arte1", logo:"https://www.mediafire.com/convkey/aa70/9s2kgymo4v7jl4l5g.jpg",
+ link:"https://hplay.tv:443/live/augetv/12396547488/6724.m3u8", type:"m3u8" },
 
-// Lista de links
-const links = [
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/550/550486.png" style="width:30px;height:30px;margin-right:1px;">TV AO VIVO`, url:"https://jctvstreaming-vip.github.io/aplicativo/tv.html" },
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/512/2459/2459778.png" style="width:30px;height:30px;margin-right:1px;">FILMES`, url:"https://jctvstreaming-vip.github.io/aplicativo/filmes.html" },
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/512/2980/2980219.png" style="width:30px;height:30px;margin-right:1px;">SÉRIES`, url:"https://jctvstreaming-vip.github.io/aplicativo/series.html" },
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/5190/5190335.png" style="width:30px;height:30px;margin-right:1px;">ANIMAÇÃO`, url:"https://jctvstreaming-vip.github.io/aplicativo/desenhos.html" },
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/1071/1071164.png" style="width:30px;height:30px;margin-right:1px;">ANIMES`, url:"https://jctvstreaming-vip.github.io/aplicativo/animes.html" },
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/5347/5347299.png" style="width:30px;height:30px;margin-right:1px;">DORAMAS`, url:"#"}
-];
+{ name:"Band", logo:"https://www.mediafire.com/convkey/7dcd/ors0qr3jqbwm2sh5g.jpg",
+ link:"https://hplay.tv:443/live/augetv/12396547488/131.m3u8", type:"m3u8" },
 
-const serverButtons = document.getElementById("serverButtons");
-const iframeWrapper = document.querySelector(".iframePlayer");
+{ name:"Cultura", logo:"https://www.mediafire.com/convkey/7cde/qs9sfyv4lvjrzsw5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_CULTURA_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
 
-// Criação de botões
-links.forEach(link => {
-  const btn = document.createElement("button");
-  btn.type="button";
-  btn.className="btn btn-sm";
-  btn.innerHTML = link.nome;
-  btn.onclick = ()=>{
-    document.getElementById("iframeVideo").src=link.url;
-    iframeWrapper.style.display="block";
-    document.getElementById("backButton").style.display="block";
-  };
-  serverButtons.appendChild(btn);
-});
+{ name:"Cultura Fast", logo:"https://www.mediafire.com/convkey/c821/szi91ocxfkd3qb15g.jpg",
+ link:"https://fpa-gateway.tvcultura.com.br:8181/memfs/606caef0-a290-413d-9f1f-8fcdb3a73831_output_0.m3u8", type:"m3u8" },
 
-// Botão Chat
-const chatButton = document.createElement("button");
-chatButton.type="button";
-chatButton.className="btn btn-sm";
-chatButton.innerHTML=`<img src="https://cdn-icons-png.flaticon.com/256/5347/5347299.png" style="width:30px;height:30px;margin-right:5px;">CHAT`;
-chatButton.onclick = ()=>{
-  document.getElementById("iframeChat").src="https://chat-jctvstreaming.chatango.com/embed?bg=ffffff&text=000000&t=1#";
-  const modal = new bootstrap.Modal(document.getElementById("chatModal"));
-  modal.show();
-};
-serverButtons.appendChild(chatButton);
+{ name:"Globo SP", logo:"https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg",
+ link:"https://hplay.tv:443/live/augetv/12396547488/7410.m3u8", type:"m3u8" },
 
-// Botão voltar
-document.getElementById("backButton").addEventListener("click", ()=>{
-  document.getElementById("iframeVideo").src="";
-  iframeWrapper.style.display="none";
-  document.getElementById("backButton").style.display="none";
-});
+{ name:"SBT", logo:"https://www.mediafire.com/convkey/ec97/n1ustsu38sqw0vj5g.jpg",
+ link:"https://hplay.tv:443/live/augetv/12396547488/38.m3u8", type:"m3u8" },
 
-// Proteções contra inspeção
-function mostrarAlerta(){
-  const tela=document.getElementById("bloqueio");
-  if(tela) tela.style.display="block";
-  setTimeout(()=>{location.reload();},1000);
-}
-document.addEventListener('keydown',function(e){
-  const tecla=e.key.toLowerCase();
-  if(e.key==="F12"||(e.ctrlKey&&['u','s'].includes(tecla))||(e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(tecla))){
-    e.preventDefault();
-    mostrarAlerta();
+{ name:"Record", logo:"https://www.mediafire.com/convkey/996b/3hk43pafo0b5zve5g.jpg",
+ link:"https://gerenciar.vivatele.com:443/live/viva_padrao/viva2384/13.m3u8", type:"m3u8" },
+
+{ name:"RedeTV! PR", logo:"https://www.mediafire.com/convkey/72bc/q2h6sp6no62q4j15g.jpg",
+ link:"https://tv01.zas.media:1936/redetvparana/redetvparana/playlist.m3u8", type:"m3u8" },
+
+{ name:"Band News", logo:"https://www.mediafire.com/convkey/2ef7/f9duyhtq2fvdja95g.jpg",
+ link:"https://hplay.tv:443/live/augetv/12396547488/1300.m3u8", type:"m3u8" },
+
+{ name:"CNN Brasil", logo:"https://www.mediafire.com/convkey/9cf0/ufwwfpli3cxsayv5g.jpg",
+ link:"https://fast-channels-t.b-cdn.net/9978b7063e297d844e4cfae48f53628a/cnn/aovivo_abr/playlist.m3u8", type:"m3u8" },
+
+{ name:"CNN Brasil Money", logo:"https://www.mediafire.com/convkey/3c55/79782iw447zo65s5g.jpg",
+ link:"https://fast-channels-t.b-cdn.net/9978b7063e297d84e1cd5f21af3a88b1/cnnmoney/aovivo_abr/playlist.m3u8", type:"m3u8" },
+
+{ name:"JP News", logo:"https://www.mediafire.com/convkey/c32e/z6n71wps9nuofum5g.jpg",
+ link:"https://hplay.tv:443/live/augetv/12396547488/42.m3u8", type:"m3u8" },
+
+{ name:"Record News", logo:"https://www.mediafire.com/convkey/4ea5/qlxfi1vsvu7m5m55g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d842c230b731e04e713/rnw/rn/rnw_rn.m3u8", type:"m3u8" },
+
+{ name:"Band Sports", logo:"https://www.mediafire.com/convkey/1e18/eblhu8culfgis5f5g.jpg",
+ link:"https://hplay.tv:443/live/augetv/12396547488/6733.m3u8", type:"m3u8" },
+
+
+
+{ name:"Adrenalina Pura", logo:"https://www.mediafire.com/convkey/466e/xjcbdknrq2t7fnh5g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d84f3640c45e2c30954/playlist.m3u8", type:"m3u8" },
+
+{ name:"Halloween Adrenalina Pura", logo:"https://www.mediafire.com/convkey/a06d/aqhvmyr6acpc0305g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d8447b82394cf641d02/playlist.m3u8", type:"m3u8" },
+
+{ name:"Agro Brasil tv", logo:"https://www.mediafire.com/convkey/b13e/uh3wi5n02zs3quf5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/AGROBRASIL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Agro Canal", logo:"https://www.mediafire.com/convkey/9681/s673k65kk4tu9so5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/AGRO_CANAL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Agro+", logo:"https://www.mediafire.com/convkey/5295/vcv6hm69ni4moit5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/AGROMAIS_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Al Jazeera English", logo:"https://www.mediafire.com/convkey/16d0/htj1ra92jujf1ed5g.jpg",
+ link:"https://live-hls-web-aje-fa.getaj.net/AJE/01.m3u8", type:"m3u8" },
+
+{ name:"Amazon Sat", logo:"https://www.mediafire.com/convkey/b789/cknda9zmdxtd3qq5g.jpg",
+ link:"https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8", type:"m3u8" },
+
+{ name:"Astral TV", logo:"https://www.mediafire.com/convkey/28ee/n9t81goz5pv60s05g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/TV_ASTRAL/index.m3u8", type:"m3u8" },
+
+{ name:"Blits TV", logo:"https://www.mediafire.com/convkey/0089/6kuyvmcqpmaodcr5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/BLITS_TV/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"BM&C News", logo:"https://www.mediafire.com/convkey/a44a/m4dskw8yegyidnk5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/BMCNEWS/index.m3u8", type:"m3u8" },
+
+{ name:"Boas Novas", logo:"https://www.mediafire.com/convkey/4276/7i3twb55s4gjhom5g.jpg",
+ link:"https://gerenciar.vivatele.com:443/live/viva_padrao/viva2384/14.m3u8", type:"m3u8" },
+
+{ name:"BrSuper TV", logo:"https://www.mediafire.com/convkey/463f/ru39fsx9f0ivlbe5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/RSC/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Canal do Boi", logo:"https://www.mediafire.com/convkey/bb88/yytyv6vjxlps05p5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/CANAL_DO_BOI/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Iconic", logo:"https://www.mediafire.com/convkey/4133/hp9h18ryg3sj5xt5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/ICONIC/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Canal Rural", logo:"https://www.mediafire.com/convkey/662d/8r84ld2v05uba2x5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/CANAL_RURAL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Canal Saúde", logo:"https://www.mediafire.com/convkey/d8cc/qkosfy28ktiuii65g.jpg",
+ link:"https://eitv7.cdn.broadpeak.io/account351-i1495/event/canalsaude/auto.m3u8", type:"m3u8" },
+
+{ name:"Canal Uol", logo:"https://www.mediafire.com/convkey/340b/vgez8dsnvk28prp5g.jpg",
+ link:"https://fast-channels-t.b-cdn.net/9978b7063e297d84a864283b276dcb9b/uolplay/aovivo_abr/playlist.m3u8", type:"m3u8" },
+
+{ name:"Canção Nova", logo:"https://www.mediafire.com/convkey/73e0/lqupkenvqv64wgn5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/CANCAO_NOVA_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Com Brasil TV", logo:"https://www.mediafire.com/convkey/db98/9u4tff594bf42me5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/COM_BRASIL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"diatv", logo:"https://www.mediafire.com/convkey/dfb0/fevhce1fxcbh0qh5g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d84f8e3e29087600654/playlist.m3u8", type:"m3u8" },
+
+{ name:"E!", logo:"https://www.mediafire.com/convkey/d59c/76hy39fcai41z955g.jpg",
+ link:"https://origin-07.nxplay.com.br/E_BRASIL/index.m3u8", type:"m3u8" },
+
+{ name:"Filmelier TV", logo:"https://www.mediafire.com/convkey/c6ec/nvjioj8h68t08we5g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d8465228d85771c5d52/playlist.m3u8", type:"m3u8" },
+
+{ name:"Filmelier TV Vida Real", logo:"https://www.mediafire.com/convkey/58b6/sxubj5t09si7if95g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d84519b9ca053ca4b6c/playlist.m3u8", type:"m3u8" },
+
+{ name:"Fit Dance", logo:"https://www.mediafire.com/convkey/4ea1/5ghw3cz20lgh2tx5g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d84509e298037ea6df9/playlist.m3u8", type:"m3u8" },
+
+{ name:"Fuel TV", logo:"https://www.mediafire.com/convkey/c3b8/ncd86dmly6rdqu65g.jpg",
+ link:"https://cdn-uw2-prod.tsv2.amagi.tv/linear/amg01074-fueltv-fueltvbr-samsungbr/playlist.m3u8", type:"m3u8" },
+
+{ name:"Futura", logo:"https://www.mediafire.com/convkey/2c40/i8539zyt2rc0pst5g.jpg",
+ link:"https://tv.unisc.br/hls/test.m3u8", type:"m3u8" },
+
+{ name:"GP TV", logo:"https://www.mediafire.com/convkey/bcd9/sl1u2021o1z5fhb5g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d8484543b659539b184/playlist.m3u8", type:"m3u8" },
+
+{ name:"Heartland", logo:"https://www.mediafire.com/convkey/2a33/bfecfoqydt5tj8b5g.jpg",
+ link:"https://fast-mediatailor-2.b-cdn.net/v1/master/4673a708cf7c9631b8fd96fb5c8416dc4ca6430a/heartland/master_pt.m3u8", type:"m3u8" },
+
+{ name:"Inspire", logo:"https://www.mediafire.com/convkey/51bc/0iylxlgdj0uvfh95g.jpg",
+ link:"https://streamer.sattvacabo.com.br/INSPIRE2/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Kids Mais", logo:"https://www.mediafire.com/convkey/37cf/pwjww29a6v3jgbt5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/KIDS_MAIS/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Kiss TV", logo:"https://www.mediafire.com/convkey/212e/mxhl9ka6hovu3o45g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/KISS_TV/index.m3u8", type:"m3u8" },
+
+{ name:"Leo e Lully", logo:"https://www.mediafire.com/convkey/7d47/lcx2jjns4k5q4oo5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/LEO_E_LULLY/index.m3u8", type:"m3u8" },
+
+{ name:"Loading", logo:"https://www.mediafire.com/convkey/be2e/cfwi359lgscc57r5g.jpg",
+ link:"https://stmv1.srvif.com/loadingtv/loadingtv/playlist.m3u8", type:"m3u8" },
+
+{ name:"Mais Família", logo:"https://www.mediafire.com/convkey/ddd1/ulx3edfi0iqpk1t5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/MAIS_FAMILIA/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Manual do Mundo", logo:"https://www.mediafire.com/convkey/86ec/vv58l07h4rsr6595g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d843cefcaf200eff9bb/manual_mundo/aovivo_abr/playlist.m3u8", type:"m3u8" },
+
+{ name:"Movie Sphere", logo:"https://www.mediafire.com/convkey/1c3d/lvm2zb3oucp91sj5g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d84ea0c2fc003fd0f75/playlist.m3u8", type:"m3u8" },
+
+{ name:"MLB Network", logo:"https://www.mediafire.com/convkey/b916/odyk5ka9u28y0je5g.jpg",
+ link:"https://d1yqxv6gx128ca.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-mmpgjr4zitcp0/playlist.m3u8", type:"m3u8" },
+
+{ name:"New Brasil", logo:"https://www.mediafire.com/convkey/473c/xpz8uv9r47vpmne5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/NEW_BRASIL/index.m3u8", type:"m3u8" },
+
+{ name:"NHK World Japan", logo:"https://www.mediafire.com/convkey/9b64/2wqxatqn0iqsd5w5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/NHK/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Novo Tempo", logo:"https://www.mediafire.com/convkey/dbaf/rvdxpsaly4claon5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_NOVO_TEMPO/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"NSC TV", logo:"https://www.mediafire.com/convkey/e05c/yxr96n6r2bwfsdm5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/PLAYOUT_02_NSC/index.m3u8", type:"m3u8" },
+
+{ name:"PFL", logo:"https://www.mediafire.com/convkey/c041/inql5qpiefi0kmc5g.jpg",
+ link:"https://d856dff4.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/U3BvcnRzVHJpYmFsLWdiX1BGTE1NQV9ITFM/playlist.m3u8", type:"m3u8" },
+
+{ name:"Play TV", logo:"https://www.mediafire.com/convkey/8f76/u2iwijzkx9kgm855g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/PLAY_TV_FAST/index.m3u8", type:"m3u8" },
+
+{ name:"Canal Q Tal?", logo:"https://www.mediafire.com/convkey/ac56/dx570eb7im42ueg5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/FILMPLUS_FAMILY/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Rbti", logo:"https://www.mediafire.com/convkey/6c5f/jxhdarfutoj1n1s5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/CENTRAL_DO_PLAY/index.m3u8", type:"m3u8" },
+
+{ name:"Rbti+", logo:"https://www.mediafire.com/convkey/5090/ulh00esz0dd3efl5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/RBTi_MAIS_TV/index.m3u8", type:"m3u8" },
+
+{ name:"Rede Brasil", logo:"https://www.mediafire.com/convkey/691c/evk20xbyszsuqw05g.jpg",
+ link:"https://streamer.sattvacabo.com.br/REDE_BRASIL_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Rede CNT", logo:"https://www.mediafire.com/convkey/887b/uxt7jiftfhchss45g.jpg",
+ link:"https://streamer.sattvacabo.com.br/CNT_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Rede Gênesis", logo:"https://www.mediafire.com/convkey/17ee/bsahdhz79dt7bpf5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/REDE_GENESIS/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Rede Gospel", logo:"https://www.mediafire.com/convkey/b96b/4v18vculua6cm755g.jpg",
+ link:"https://streamer.sattvacabo.com.br/REDE_GOSPEL_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Rede Minas", logo:"https://www.mediafire.com/convkey/00d0/9ecbaxf4ilbxt2i5g.jpg",
+ link:"https://8hzcavccys.zoeweb.tv/redeminas/ngrp:redeminas_all/playlist.m3u8", type:"m3u8" },
+
+{ name:"Rede Mosaico", logo:"https://www.mediafire.com/convkey/b6dc/5apnanebz7kw2jr5g.jpg",
+ link:"https://fast-channels-t.b-cdn.net/9978b7063e297d843bf98e85bf4e65ea/rede_mosaico/aovivo_abr/playlist.m3u8", type:"m3u8" },
+
+{ name:"Rede QDM", logo:"https://www.mediafire.com/convkey/c7ca/czwbqi7436kce6k5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/ULTRA/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Rede Recon", logo:"https://www.mediafire.com/convkey/7780/l91lai1vfm45zzt5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/REDE_RECON/index.m3u8", type:"m3u8" },
+
+{ name:"Rede Super", logo:"https://www.mediafire.com/convkey/5ee2/hvbkbz5445od3905g.jpg",
+ link:"https://streamer.sattvacabo.com.br/REDE_SUPER/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Rede UTV", logo:"https://www.mediafire.com/convkey/d7a4/l1nzebri1vl8ub35g.jpg",
+ link:"https://streamer.sattvacabo.com.br/REDE_UTV/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Rede Vida", logo:"https://www.mediafire.com/convkey/956b/4jjpecqogrd935o5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/REDE_VIDA_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Rit TV", logo:"https://www.mediafire.com/convkey/dfe9/ivr3w7z377mhpv15g.jpg",
+ link:"https://acesso.ecast.site:3648/live/ritlive.m3u8", type:"m3u8" },
+
+{ name:"Real Madrid TV", logo:"https://www.mediafire.com/convkey/8fce/pc5rjp6j3kg3n4z5g.jpg",
+ link:"https://rmtv.akamaized.net/hls/live/2043154/rmtv-en-web/bitrate_3.m3u8", type:"m3u8" },
+
+{ name:"Real Madrid TV 2", logo:"https://www.mediafire.com/convkey/8fce/pc5rjp6j3kg3n4z5g.jpg",
+ link:"https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/bitrate_3.m3u8", type:"m3u8" },
+
+{ name:"Red Bull TV", logo:"https://www.mediafire.com/convkey/a59f/7kj3gcxztxctsx15g.jpg",
+ link:"https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master_6660.m3u8", type:"m3u8" },
+
+{ name:"Rookie Blue", logo:"https://www.mediafire.com/convkey/0697/bj8egf90k023zxl5g.jpg",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d84ecc4e0638446cd16/rookieblue/aovivo_abr/playlist.m3u8", type:"m3u8" },
+
+{ name:"RTP Internacional", logo:"https://www.mediafire.com/convkey/794b/y2qp1uyr62wdoxi5g.jpg",
+ link:"https://streaming-live.rtp.pt/liverepeater/smil:rtpi.smil/chunklist_b1290000_slpt.m3u8", type:"m3u8" },
+
+{ name:"Runtime", logo:"https://www.mediafire.com/convkey/33dc/u62rt7rvozvgo2b5g.jpg",
+ link:"https://stream.ads.ottera.tv/playlist.m3u8?network_id=4864", type:"m3u8" },
+
+{ name:"Runtime Ação", logo:"https://www.mediafire.com/convkey/20df/arjcu5asd7s331p5g.jpg",
+ link:"https://stream.ads.ottera.tv/playlist.m3u8?network_id=2552", type:"m3u8" },
+
+{ name:"Runtime Cine Espanto", logo:"https://www.mediafire.com/convkey/d976/vvxnk7bvkutmjub5g.jpg",
+ link:"https://stream.ads.ottera.tv/playlist.m3u8?network_id=4865", type:"m3u8" },
+
+{ name:"Runtime Comédia", logo:"https://www.mediafire.com/convkey/ed8a/cdrinnapcaquh1j5g.jpg",
+ link:"https://stream.ads.ottera.tv/playlist.m3u8?network_id=2553", type:"m3u8" },
+
+{ name:"Runtime Crime", logo:"https://www.mediafire.com/convkey/5e94/abxnnwh73pboqow5g.jpg",
+ link:"https://stream.ads.ottera.tv/playlist.m3u8?network_id=4864", type:"m3u8" },
+
+{ name:"Runtime Romance", logo:"https://www.mediafire.com/convkey/cbcd/etzctpozdin767j5g.jpg",
+ link:"https://stream.ads.ottera.tv/playlist.m3u8?network_id=4866", type:"m3u8" },
+
+{ name:"Séries Classic", logo:"https://www.mediafire.com/convkey/4886/0gday2kjqtmjt7v5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/SERIE_CLASSIC/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Sesc TV", logo:"https://www.mediafire.com/convkey/4884/5e7gyk5jklp1r8z5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/SESC_TV/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Sony One Cinema", logo:"https://www.mediafire.com/convkey/a7eb/7p6b975pdd71dx95g.jpg",
+ link:"https://spt-sonyoneclassicas-1-br.samsung.wurl.tv/playlist.m3u8", type:"m3u8" },
+
+{ name:"Sony One Emoções", logo:"https://www.mediafire.com/convkey/b02f/hj1k3so3tc1atn55g.jpg",
+ link:"https://spt-sonyoneemocoes-1-br.samsung.wurl.tv/playlist.m3u8", type:"m3u8" },
+
+{ name:"Sony One Shark Tank", logo:"https://www.mediafire.com/convkey/d261/oz5zmeiahqa4z335g.jpg",
+ link:"https://spt-sonyonesharktankbrasil-1-br.samsung.wurl.tv/playlist.m3u8", type:"m3u8" },
+
+{ name:"SO Movies", logo:"https://www.mediafire.com/convkey/7a54/kulthqnwjv3nbnz5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/SOPLAY_MOVIES/index.m3u8", type:"m3u8" },
+
+{ name:"SO Policial", logo:"https://www.mediafire.com/convkey/cb17/6jxps66j97wz7bb5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/SOPLAY_POLICIAL/index.m3u8", type:"m3u8" },
+
+{ name:"SO Western", logo:"https://www.mediafire.com/convkey/6bbf/l9mhwcl3gkc3d0h5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/SOPLAY_WESTERN/index.m3u8", type:"m3u8" },
+
+{ name:"Trace Sport Stars", logo:"https://www.mediafire.com/convkey/c20b/cnqpkvcdx6ea89b5g.jpg",
+ link:"https://tracetv-tracesportstar-sportstribal.amagi.tv/hls/amagi_hls_data_tracetvAA-trace-sportstars-sportstribal/CDN/playlist.m3u8", type:"m3u8" },
+
+{ name:"Tennis+", logo:"https://www.mediafire.com/convkey/9315/57w86v5xolf69dc5g.jpg",
+ link:"https://amg01935-amg01935c1-amgplt0020.playout.now3.amagi.tv/playlist/amg01935-amg01935c1-amgplt0020/playlist.m3u8", type:"m3u8" },
+
+{ name:"Telesur", logo:"https://www.mediafire.com/convkey/cfa4/iocknofutf619fn5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TELESUR_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Terra Viva", logo:"https://www.mediafire.com/convkey/11c0/hi9xzukcczojpt55g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TERRA_VIVA_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Turma da Mônica", logo:"https://www.mediafire.com/convkey/3960/g3xvpe3zoe8ctb65g.jpg",
+ link:"https://fast-channels-t2.b-cdn.net/9978b7063e297d847eb6fee955a00db8/turmadamonica/aovivo_abr/playlist.m3u8", type:"m3u8" },
+
+{ name:"TV Aparecida", logo:"https://www.mediafire.com/convkey/bbc4/22w3uwky37jsh3j5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_APARECIDA_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"TV Brasil", logo:"https://www.mediafire.com/convkey/7926/qonq8haw3miy4f05g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_BRASIL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"TV Câmara", logo:"https://www.mediafire.com/convkey/d793/a9tg9veooe8diwc5g.jpg",
+ link:"https://stream3.camara.gov.br/tv1/manifest.m3u8", type:"m3u8" },
+
+{ name:"TV Escola", logo:"https://www.mediafire.com/convkey/2514/gukcgt6zllnh6a45g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_ESCOLA/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"TV Evangelizar", logo:"https://www.mediafire.com/convkey/8256/chyukjldyhgirvd5g.jpg",
+ link:"https://tvevangelizarmaringa.brasilstream.com.br/hls/tvevangelizarmaringa/index.m3u8", type:"m3u8" },
+
+{ name:"TV Gazeta", logo:"https://www.mediafire.com/convkey/39bb/qbh13mtejw5hq125g.jpg",
+ link:"https://streamer.sattvacabo.com.br/GAZETA_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"TV Justiça", logo:"https://www.mediafire.com/convkey/3bb5/0bmz8wy7k5v56x25g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_JUSTICA/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"TV Milagro Brasil", logo:"https://www.mediafire.com/convkey/8e55/gzmi76r226oe4p15g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_MILAGRO/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"TV Mon HD", logo:"https://www.mediafire.com/convkey/482f/zzb4yoe47478epv5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_MON/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"TV Mundo Maior", logo:"https://www.mediafire.com/convkey/1a30/ws2dgbk2jfd2pe65g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_MUNDO_MAIOR/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"TV NGT", logo:"https://www.mediafire.com/convkey/7fd6/2f7dcx1pohiuzvv5g.jpg",
+ link:"https://isaocorp.cloudecast.com/ngt/index.m3u8", type:"m3u8" },
+
+{ name:"TV Pai Eterno", logo:"https://www.mediafire.com/convkey/d0f3/7ec39g6ofb2qguw5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/PAI_ETERNO/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"TV Pampa", logo:"https://www.mediafire.com/convkey/415a/qtodycvjo8infil5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_PAMPA/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"TV Plenitude", logo:"https://www.mediafire.com/convkey/2904/vbwalbxb9dmtkfy5g.jpg",
+ link:"https://meupainel.top:1936/iaptd/iaptd/playlist.m3u8", type:"m3u8" },
+
+{ name:"TV Senado", logo:"https://www.mediafire.com/convkey/e159/kdomnk0l4lhyuy55g.jpg",
+ link:"https://streamer.sattvacabo.com.br/TV_SENADO/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Unique TV", logo:"https://www.mediafire.com/convkey/7775/zfm091f16ccq2k75g.jpg",
+ link:"https://pop.uniquetv.com.br/uniquetv/video.m3u8", type:"m3u8" },
+
+{ name:"Unique Supergeek", logo:"https://www.mediafire.com/convkey/1358/rdligj8rukm7tac5g.jpg",
+ link:"https://pop.uniquetv.com.br/supergeek/video.m3u8", type:"m3u8" },
+
+{ name:"Unique Sports 1", logo:"https://www.mediafire.com/convkey/9996/w81hkmy5wojf0ft5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/URBAN_SPORTS/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Urban Docs", logo:"https://www.mediafire.com/convkey/996c/8brofvn117bbnm35g.jpg",
+ link:"https://streamer.sattvacabo.com.br/URBAN_DOCS/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Urban Kids", logo:"https://www.mediafire.com/convkey/f0c0/ijkteis8gg5vshh5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/URBAN_KIDS/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Urban Retrô", logo:"https://www.mediafire.com/convkey/6542/nof52uayrr3p0gm5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/URBAN_RETRO/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Urban Travel", logo:"https://www.mediafire.com/convkey/8dd3/bf7wultnyugv18g5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/URBAN_TRAVEL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Vivax TV", logo:"https://www.mediafire.com/convkey/73ca/cg4fuo3kqejg4gy5g.jpg",
+ link:"https://origin-nxtv.b-cdn.net/VIVAX/index.m3u8", type:"m3u8" },
+
+{ name:"VRT Channel", logo:"https://www.mediafire.com/convkey/a8e4/o7zrevgocmtqsxz5g.jpg",
+ link:"https://streamer.sattvacabo.com.br/VRT_CHANNEL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf", type:"m3u8" },
+
+{ name:"Cine Sucessos", logo:"https://images.pluto.tv/channels/5f120e94a5714d00074576a1/featuredImage.jpg",
+ link:"https://02-1.jctvstreaming-vip.workers.dev/5f120e94a5714d00074576a1", type:"m3u8" },
+
+{ name:"Filmes Acão", logo:"https://images.pluto.tv/channels/5f120f41b7d403000783a6d6/featuredImage.jpg",
+ link:"https://02-1.jctvstreaming-vip.workers.dev/5f120f41b7d403000783a6d6", type:"m3u8" },
+
+{ name:"Cine Comédia", logo:"https://images.pluto.tv/channels/5f12101f0b12f00007844c7c/featuredImage.jpg",
+ link:"https://02-1.jctvstreaming-vip.workers.dev/5f12101f0b12f00007844c7c", type:"m3u8" },
+
+{ name:"Cine Comédia Romântica", logo:"https://images.pluto.tv/channels/62545ed3dab4380007582f7c/featuredImage.jpg",
+ link:"https://02-1.jctvstreaming-vip.workers.dev/62545ed3dab4380007582f7c", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+{ name:"", logo:"",
+ link:"", type:"m3u8" },
+
+
+
+
+
+{ name:"Classic Movie Westerns", logo:"https://images.pluto.tv/channels/61f33318210549000806a530/featuredImage.jpg",
+ link:"https://02-1.jctvstreaming-vip.workers.dev/61f33318210549000806a530", type:"m3u8" },
+
+  ];
+
+  const playerContainer = document.getElementById('player');
+  const channelList = document.getElementById('channelList');
+
+  let player = null;
+  let activeIndex = null;
+  const buttons = [];
+
+  channels.forEach((c,i)=>{
+    const btn = document.createElement('button');
+    btn.innerHTML = `<span><img src="${c.logo}" alt="${c.name}"> ${c.name}</span><span class="watching" style="display:none;">[Assistindo]</span>`;
+    btn.onclick = () => loadChannel(i);
+    channelList.appendChild(btn);
+    buttons.push(btn);
+  });
+
+  function createPlayer(source, mimeType) {
+    if (player) { player.destroy(); player = null; }
+    const testVTT = `
+WEBVTT
+
+00:00:00.000 --> 00:00:05.000
+Bem-vindo ao JC TV STREAMING!
+
+00:00:05.001 --> 00:00:10.000
+Aqui você pode assistir canais ao vivo em português.
+`;
+    player = new Clappr.Player({
+      source: source,
+      mimeType: mimeType,
+      parentId: '#player',
+      width:'100%',
+      height:'100%',
+      autoPlay:true,
+      mute:false,
+      disableErrorScreen:true,
+      plugins: [Clappr.SubtitlePlugin],
+      subtitlesEnabled: false, // legenda começa desligada
+      subtitleUrl: 'data:text/vtt;charset=utf-8,' + encodeURIComponent(testVTT)
+    });
+    player.listenTo(player, Clappr.Events.PLAYER_READY, ()=>{ player.setVolume(100); });
   }
-});
-window.addEventListener('contextmenu',function(e){e.preventDefault();});
-</script>
 
+  function loadChannel(index){
+    const ch = channels[index];
+    const mimeType = ch.type==="m3u8" ? "application/x-mpegURL" : "application/dash+xml";
+    createPlayer(ch.link, mimeType);
+    if(activeIndex !== null) buttons[activeIndex].querySelector('.watching').style.display = 'none';
+    buttons[index].querySelector('.watching').style.display = 'inline';
+    activeIndex = index;
+  }
+
+  loadChannel(0);
+
+  document.addEventListener('keydown', function(e) {
+    const key = e.key.toLowerCase();
+    if(e.key==="F12" || (e.ctrlKey && ['u','s'].includes(key)) || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(key))){
+      e.preventDefault();
+      alert("Ação não permitida!");
+    }
+  });
+  window.addEventListener('contextmenu', e=>e.preventDefault());
+</script>
 <!-- Tela de Alerta -->
 <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
   <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
   <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
 </div>
 
+<script>
+  // Mostrar o alerta e recarregar após 2 segundos
+  function mostrarAlerta() {
+    const tela = document.getElementById("bloqueio");
+    tela.style.display = "block";
+    setTimeout(() => {
+      location.reload();
+    }, 1000);
+  }
+
+  // Força todos os links a abrirem na mesma aba
+  document.querySelectorAll('a').forEach(link => {
+    link.setAttribute('target', '_self');
+  });
+
+  // Bloqueia ações de desenvolvedor (com alerta)
+  document.addEventListener('keydown', function(e) {
+    const tecla = e.key.toLowerCase();
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && tecla === 'u') ||
+      (e.ctrlKey && tecla === 's') ||
+      (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+    ) {
+      e.preventDefault();
+      mostrarAlerta();
+    }
+  });
+
+  // Bloqueia botão direito (sem alerta)
+  window.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+</script>
 </body>
 </html>
