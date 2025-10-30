@@ -10,7 +10,7 @@
     display:flex;
   }
   #channelList {
-    width:480px; /* aumentei de 220px para 300px */
+    width:400px;
     background:rgba(20,20,20,0.9);
     padding:10px;
     overflow-y:auto;
@@ -18,10 +18,10 @@
     display:flex;
     flex-direction:column;
     gap:5px;
-    font-size: 1.2em; /* aumenta o nome do canal */
+    font-size: 1.2em;
   }
   #channelList img {
-    width:80px; /* aumentei de 50px para 70px */
+    width:80px;
     height:auto;
     vertical-align:middle;
     margin-right:5px;
@@ -39,14 +39,11 @@
     text-align:left; 
     gap:5px;
   }
-  #channelList button span:first-child {
-    font-size: 1.2em; /* aumenta apenas o nome do canal */
-}
   #channelList button:hover { background:#444; }
   .watching {
-    color: #00ffff; /* ciano */
+    color: #00ffff;
     font-weight:bold;
-    font-size: 1.1em; /* aumenta o "assistindo" */
+    font-size: 1.1em;
   }
   #playerWrapper {
     flex:1;
@@ -54,6 +51,68 @@
     background:#000;
   }
   #player { width:100%; height:100%; }
+
+  #playerFooter {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 5px 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+  }
+
+  #playerFooter img {
+    height: 25px;
+    margin-right: 8px;
+  }
+
+  #playerFooter span {
+    color: #fff;
+    font-size: 15px;
+  }
+
+  #btnProgramacao {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 25;
+    padding: 10px 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+
+  #programacaoPanel {
+    position: absolute;
+    top: 0;
+    right: -350px;
+    width: 340px;
+    height: 100%;
+    background: #111;
+    color: #fff;
+    overflow-y: auto;
+    transition: right 0.3s ease;
+    z-index: 20;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  #programacaoPanel iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #000;
+  }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/clappr-subtitle-plugin@latest/dist/clappr-subtitle-plugin.min.js"></script>
@@ -65,8 +124,24 @@
 <div id="playerWrapper">
   <div id="player"></div>
 
+  <div id="embedContainer">
+    <iframe id="embedFrame" src="" frameborder="0" allowfullscreen style="width:100%; height:100%;"></iframe>
+  </div>
+
+  <footer id="playerFooter">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" />
+    <span>JC TV STREAMING</span>
+  </footer>
+
+  <button id="btnProgramacao">Programação</button>
+
+  <div id="programacaoPanel">
+    <iframe src=""></iframe>
+  </div>
+</div>
+
 <script>
-  const channels = [
+const channels = [
 { name:"Arte1", logo:"https://www.mediafire.com/convkey/aa70/9s2kgymo4v7jl4l5g.jpg",
  link:"https://hplay.tv:443/live/augetv/12396547488/6724.m3u8", type:"m3u8" },
 
@@ -707,8 +782,8 @@
 { name:"MTV Halloween", logo:"https://images.pluto.tv/channels/68485f62fcd2ec536bd11ac1/featuredImage.jpg",
  link:"https://02-1.jctvstreaming-vip.workers.dev/68485f62fcd2ec536bd11ac1", type:"m3u8" },
 
-{ name:"", logo:"",
- link:"", type:"m3u8" },
+{ name:"tv", logo:"",
+ link:"http://tvz.lat:80/live/699626664/255676407/137695.m3u8", type:"m3u8" },
 
 { name:"", logo:"",
  link:"", type:"m3u8" },
@@ -797,24 +872,251 @@
 
   ];
 
-  const playerContainer = document.getElementById('player');
-  const channelList = document.getElementById('channelList');
+// 🔗 Mapeamento de URLs de programação
+const programacaoUrls = {
+  "A&E": "https://mi.tv/br/canais/a-e",
+      "Adult Swim": "https://mi.tv/br/canais/trutv",
+      "AMC": "https://mi.tv/br/canais/amc-brasil",
+      "Animal Planet": "https://mi.tv/br/canais/animal-planet",
+      "Arte1": "https://mi.tv/br/canais/arte-1",
+      "AXN": "https://mi.tv/br/canais/axn",
+      "Band": "https://mi.tv/br/canais/band", 
+      "Band News": "https://mi.tv/br/canais/band-news",
+      "Band Sports": "https://mi.tv/br/canais/bandSports",
+      "BIS": "https://mi.tv/br/canais/bis",
+      "Canal Brasil": "https://mi.tv/br/canais/canal-brasil",
+      "Canção Nova": "https://mi.tv/br/canais/canc-o-nova",
+      "Cartoon Network": "https://mi.tv/br/canais/cartoon",
+      "Cartoonito": "https://mi.tv/br/canais/boomerang",
+      "Cinemax": "https://mi.tv/br/canais/cinemax",
+      "CNN Brasil": "https://mi.tv/br/canais/cnn-brasil",
+      "CNN Brasil Money": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Combate": "https://mi.tv/br/canais/combate-hd",
+      "Comedy Central": "https://mi.tv/br/canais/comedy-central",
+      "Curta!": "https://mi.tv/br/canais/curta",
+      "Discovery Channel": "https://mi.tv/br/canais/discovery-hd",
+      "Discovery Home & Health": "https://mi.tv/br/canais/discovery-home-health",
+      "Discovery Science": "https://mi.tv/br/canais/discovery-science",
+      "Discovery Theater": "https://mi.tv/br/canais/discovery-theater-hd",
+      "Discovery Turbo": "https://mi.tv/br/canais/discovery-turbo",
+      "Discovery World": "https://mi.tv/br/canais/discovery-world-hd",
+      "ESPN": "https://mi.tv/br/canais/espn",
+      "ESPN 2": "https://mi.tv/br/canais/espn-2",
+      "ESPN 3": "https://mi.tv/br/canais/espn-plus",
+      "ESPN 4": "https://mi.tv/br/canais/fox-sports",
+      "ESPN 5": "https://mi.tv/br/canais/fox-sports-2",
+      "ESPN 6": "https://mi.tv/br/canais/espn-extra",
+      "Fish TV": "https://mi.tv/br/canais/fishtv",
+      "Food Network": "https://mi.tv/br/canais/food-network",
+      "Globo News": "https://mi.tv/br/canais/globo-news-hd",
+      "Globo Nordeste": "https://mi.tv/br/canais/rede-globo-aracaju",
+      "Globo RJ": "https://mi.tv/br/canais/globo-rj",
+      "Globo SP": "https://mi.tv/br/canais/globo-sp",
+      "Globoplay Novelas": "https://mi.tv/br/canais/viva",
+      "Gloob": "https://mi.tv/br/canais/gloob", 
+      "Gloobinho": "https://mi.tv/br/canais/gloobinho", 
+      "GNT": "https://mi.tv/br/canais/gnt", 
+      "HBO": "https://mi.tv/br/canais/hbo", 
+      "HBO 2": "https://mi.tv/br/canais/hbo-2", 
+      "HBO Family": "https://mi.tv/br/canais/hbo-family-hd", 
+      "HBO Mundi": "https://mi.tv/br/canais/max-1", 
+      "HBO Plus": "https://mi.tv/br/canais/hbo-plus-brasil-hd", 
+      "HBO POP": "https://mi.tv/br/canais/max-up", 
+      "HBO Signature": "https://mi.tv/br/canais/hbo-signature", 
+      "HBO Xtreme": "https://mi.tv/br/canais/maxprime", 
+      "HGTV": "https://mi.tv/br/canais/hgtv", 
+      "History": "https://mi.tv/br/canais/history-channel", 
+      "History 2": "https://mi.tv/br/canais/h2", 
+      "Investigação Discovery": "https://mi.tv/br/canais/investigacao-discovery", 
+      "JP News": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "Lifetime": "https://mi.tv/br/canais/lifetime-brazil", 
+      "Megapix": "https://mi.tv/br/canais/megapix", 
+      "Modo Viagem": "https://mi.tv/br/canais/globosat", 
+      "MTV": "https://mi.tv/br/canais/mtv-brasil", 
+      "MTV 00s": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "MTV Live": "https://mi.tv/br/canais/mtv-live-hd", 
+      "Multishow": "https://mi.tv/br/canais/multishow", 
+      "Nick Jr.": "https://mi.tv/br/canais/nick-jr", 
+      "Nickelodeon": "https://mi.tv/br/canais/nickelodeon", 
+      "Nosso Futebol": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "Canal Off": "https://mi.tv/br/canais/off", 
+      "Paramount Network": "https://mi.tv/br/canais/paramount-channel", 
+      "Premiere Clubes": "https://mi.tv/br/canais/premiere-clubes", 
+      "Premiere 2": "https://mi.tv/br/canais/premiere-2", 
+      "Premiere 3": "https://mi.tv/br/canais/premiere-3", 
+      "Premiere 4": "https://mi.tv/br/canais/premiere-4", 
+      "Premiere 5": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "Premiere 6": "https://mi.tv/br/canais/premiere-6", 
+      "Premiere 7": "https://mi.tv/br/canais/premiere-7", 
+      "Premiere 8": "https://mi.tv/br/canais/premiere-8", 
+      "Prime Box Brazil": "https://mi.tv/br/canais/prime-box-brazil", 
+      "Record News": "https://mi.tv/br/canais/record-news-hd", 
+      "Record News": "https://mi.tv/br/canais/record-news-hd", 
+      "Record": "https://mi.tv/br/canais/record", 
+      "RedeTV!": "https://mi.tv/br/canais/rede-tv", 
+      "RedeTV!": "https://mi.tv/br/canais/rede-tv", 
+      "Sabor & Arte": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "SBT": "https://mi.tv/br/canais/sbt", 
+      "Sony Channel": "https://mi.tv/br/canais/sony", 
+      "Sony Movies": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "Space": "https://mi.tv/br/canais/space", 
+      "Sportv": "https://mi.tv/br/canais/sportv", 
+      "Sportv 2": "https://mi.tv/br/canais/sportv-2", 
+      "Sportv 3": "https://mi.tv/br/canais/sportv-3",
+      "SportyNet": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "SportyNet +1": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "SportyNet +2": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "SportyNet +3": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "Studio Universal": "https://mi.tv/br/canais/studio-universal", 
+      "Telecine Action": "https://mi.tv/br/canais/telecine-action", 
+      "Telecine Cult": "https://mi.tv/br/canais/telecine-cult", 
+      "Telecine Fun": "https://mi.tv/br/canais/telecine-fun", 
+      "Telecine Pipoca": "https://mi.tv/br/canais/telecine-pipoca", 
+      "Telecine Premium": "https://mi.tv/br/canais/telecine-premium", 
+      "Telecine Touch": "https://mi.tv/br/canais/telecine-touch", 
+      "Times Brasil CNBC": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "TLC": "https://mi.tv/br/canais/tlc", 
+      "TNT": "https://mi.tv/br/canais/tnt", 
+      "TNT Novelas": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "TNT Séries": "https://mi.tv/br/canais/tnt-series-hd", 
+      "Travel Box Brazil": "https://mi.tv/br/canais/travel-box-brazil", 
+      "TV Evangelizar": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "UFC Fight Pass": "https://jctvstreaming-vip.github.io/aplicativo/programação.html", 
+      "Universal TV": "https://mi.tv/br/canais/universal", 
+      "Universal TV": "https://mi.tv/br/canais/universal", 
+      "USA Network": "https://mi.tv/br/canais/syfy", 
+      "Warner TV": "https://mi.tv/br/canais/warner-channel",
+      "Adrenalina Pura": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Halloween Adrenalina Pura": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Agro Brasil tv": "https://mi.tv/br/canais/canal-agromix",
+      "Agro Canal": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Agro+": "https://mi.tv/br/canais/agromais-hd",
+      "Al Jazeera English": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Amazon Sat": "https://mi.tv/br/canais/amazon-sat",
+      "Astral TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Baby TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Blits TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "BM&C News": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Boas Novas": "https://mi.tv/br/canais/rede-boas-novas",
+      "BrSuper TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Canal do Boi": "https://mi.tv/br/canais/canal-do-boi",
+      "Iconic": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Canal Rural": "https://mi.tv/br/canais/canal-rural",
+      "Canal Saúde": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Canal Uol": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Canção Nova": "https://mi.tv/br/canais/canc-o-nova",
+      "Com Brasil TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "diatv": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "E!": "https://mi.tv/br/canais/e",
+      "Filmelier TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Filmelier TV Vida Real": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Fit Dance": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Fuel TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Futura": "https://mi.tv/br/canais/futura",
+      "GP TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Heartland": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Inspire": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "JP News": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Kids Mais": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Kiss TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Leo e Lully": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Loading": "https://mi.tv/br/canais/loading",
+      "Mais Família": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Manual do Mundo": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Movie Sphere": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "New Brasil": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "NHK World Japan": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Novo Tempo": "https://mi.tv/br/canais/tv-novo-tempo",
+      "NSC TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Play TV": "https://mi.tv/br/canais/play-tv",
+      "Canal Q Tal?": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Rbti": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Rbti+": "https://mi.tv/br/canais/rbti",
+      "Record News": "https://mi.tv/br/canais/record-news-hd",
+      "Rede Brasil": "https://mi.tv/br/canais/rede-brasil",
+      "Rede CNT": "https://mi.tv/br/canais/cnt",
+      "Rede Gênesis": "https://mi.tv/br/canais/rede-genesis",
+      "Rede Gospel": "https://mi.tv/br/canais/rede-gospel",
+      "Rede Minas": "https://mi.tv/br/canais/rede-minas",
+      "Rede Mosaico": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Rede QDM": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Rede Recon": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Rede Super": "https://mi.tv/br/canais/rede-super",
+      "Rede UTV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Rede Vida": "https://mi.tv/br/canais/rede-vida",
+      "RedeTV! PR": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Rit TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Real Madrid TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Real Madrid TV 2": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Rookie Blue": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Runtime": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Runtime Ação": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Runtime Cine Espanto": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Runtime Comédia": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Runtime Crime": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Runtime Romance": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "SBT": "https://mi.tv/br/canais/sbt",
+      "Séries Classic": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Sesc TV": "https://mi.tv/br/canais/sesctv",
+      "SO Movies": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "SO Policial": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "SO Western": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Telesur": "https://mi.tv/br/canais/telesur",
+      "Terra Viva": "https://mi.tv/br/canais/terra-viva",
+      "Turma da Mônica": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "TV Aparecida": "https://mi.tv/br/canais/tv-aparecida",
+      "TV Brasil": "https://mi.tv/br/canais/tv-brasil",
+      "TV Câmara": "https://mi.tv/br/canais/tv-camara",
+      "Cultura": "https://mi.tv/br/canais/cultura",
+      "Cultura Fast": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "TV Escola": "https://mi.tv/br/canais/tv-escola",
+      "TV Evangelizar": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "TV Gazeta": "https://mi.tv/br/canais/tv-gazeta",
+      "TV Justiça": "https://mi.tv/br/canais/tv-justica-1",
+      "TV Milagro Brasil": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "TV Mon HD": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "TV Mundo Maior": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "TV NGT": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "TV Pai Eterno": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "TV Pampa": "https://mi.tv/br/canais/tv-pampa-hd",
+      "TV Plenitude": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "TV Senado": "https://mi.tv/br/canais/tv-senado",
+      "Unique TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Unique Supergeek": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Unique Sports 1": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Urban Docs": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Urban Kids": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Urban Retrô": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Urban Travel": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Vivax TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "VRT Channel": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Fox Deports": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "MLB Network": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "PFL": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Red Bull TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Tennis+": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "Trace Sport Stars": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      "": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+      
+    };
 
-  let player = null;
-  let activeIndex = null;
-  const buttons = [];
+const playerContainer = document.getElementById('player');
+const channelList = document.getElementById('channelList');
+let player = null;
+let activeIndex = null;
+const buttons = [];
 
-  channels.forEach((c,i)=>{
-    const btn = document.createElement('button');
-    btn.innerHTML = `<span><img src="${c.logo}" alt="${c.name}"> ${c.name}</span><span class="watching" style="display:none;">[Assistindo]</span>`;
-    btn.onclick = () => loadChannel(i);
-    channelList.appendChild(btn);
-    buttons.push(btn);
-  });
+channels.forEach((c,i)=>{
+  const btn = document.createElement('button');
+  btn.innerHTML = `<span><img src="${c.logo}" alt="${c.name}"> ${c.name}</span><span class="watching" style="display:none;">[Assistindo]</span>`;
+  btn.onclick = () => loadChannel(i);
+  channelList.appendChild(btn);
+  buttons.push(btn);
+});
 
-  function createPlayer(source, mimeType) {
-    if (player) { player.destroy(); player = null; }
-    const testVTT = `
+function createPlayer(source, mimeType) {
+  if (player) { player.destroy(); player = null; }
+  const testVTT = `
 WEBVTT
 
 00:00:00.000 --> 00:00:05.000
@@ -823,41 +1125,65 @@ Bem-vindo ao JC TV STREAMING!
 00:00:05.001 --> 00:00:10.000
 Aqui você pode assistir canais ao vivo em português.
 `;
-    player = new Clappr.Player({
-      source: source,
-      mimeType: mimeType,
-      parentId: '#player',
-      width:'100%',
-      height:'100%',
-      autoPlay:true,
-      mute:false,
-      disableErrorScreen:true,
-      plugins: [Clappr.SubtitlePlugin],
-      subtitlesEnabled: false, // legenda começa desligada
-      subtitleUrl: 'data:text/vtt;charset=utf-8,' + encodeURIComponent(testVTT)
-    });
-    player.listenTo(player, Clappr.Events.PLAYER_READY, ()=>{ player.setVolume(100); });
-  }
-
-  function loadChannel(index){
-    const ch = channels[index];
-    const mimeType = ch.type==="m3u8" ? "application/x-mpegURL" : "application/dash+xml";
-    createPlayer(ch.link, mimeType);
-    if(activeIndex !== null) buttons[activeIndex].querySelector('.watching').style.display = 'none';
-    buttons[index].querySelector('.watching').style.display = 'inline';
-    activeIndex = index;
-  }
-
-  loadChannel(0);
-
-  document.addEventListener('keydown', function(e) {
-    const key = e.key.toLowerCase();
-    if(e.key==="F12" || (e.ctrlKey && ['u','s'].includes(key)) || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(key))){
-      e.preventDefault();
-      alert("Ação não permitida!");
-    }
+  player = new Clappr.Player({
+    source: source,
+    mimeType: mimeType,
+    parentId: '#player',
+    width:'100%',
+    height:'100%',
+    autoPlay:true,
+    mute:false,
+    disableErrorScreen:true,
+    plugins: [Clappr.SubtitlePlugin],
+    subtitlesEnabled: false,
+    subtitleUrl: 'data:text/vtt;charset=utf-8,' + encodeURIComponent(testVTT)
   });
-  window.addEventListener('contextmenu', e=>e.preventDefault());
+  player.listenTo(player, Clappr.Events.PLAYER_READY, ()=>{ player.setVolume(100); });
+}
+
+function loadChannel(index){
+  const ch = channels[index];
+  const mimeType = ch.type==="m3u8" ? "application/x-mpegURL" : "application/dash+xml";
+  createPlayer(ch.link, mimeType);
+  if(activeIndex !== null) buttons[activeIndex].querySelector('.watching').style.display = 'none';
+  buttons[index].querySelector('.watching').style.display = 'inline';
+  activeIndex = index;
+}
+
+loadChannel(0);
+
+// Proteção contra inspeção
+document.addEventListener('keydown', function(e) {
+  const key = e.key.toLowerCase();
+  if(e.key==="F12" || (e.ctrlKey && ['u','s'].includes(key)) || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(key))){
+    e.preventDefault();
+    alert("Ação não permitida!");
+  }
+});
+window.addEventListener('contextmenu', e=>e.preventDefault());
+
+// 🔘 Código atualizado do botão Programação
+const btnProgramacao = document.getElementById('btnProgramacao');
+const programacaoPanel = document.getElementById('programacaoPanel');
+const programacaoIframe = programacaoPanel.querySelector('iframe');
+let programacaoAberta = false;
+
+btnProgramacao.addEventListener('click', () => {
+  if (!programacaoAberta) {
+    // obtém canal atual
+    const canalAtual = channels[activeIndex]?.name;
+    const url = programacaoUrls[canalAtual] || "https://mi.tv/br/";
+    programacaoIframe.src = url;
+    programacaoPanel.style.right = '0';
+    programacaoAberta = true;
+    btnProgramacao.textContent = 'Fechar Programação';
+  } else {
+    programacaoPanel.style.right = '-350px';
+    programacaoIframe.src = '';
+    programacaoAberta = false;
+    btnProgramacao.textContent = 'Programação';
+  }
+});
 </script>
 </body>
 </html>
