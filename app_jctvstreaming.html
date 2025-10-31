@@ -918,7 +918,7 @@ const programacaoUrls = {
       "Universal TV": "https://mi.tv/br/canais/universal", 
       "USA Network": "https://mi.tv/br/canais/syfy", 
       "Warner TV": "https://mi.tv/br/canais/warner-channel",
-      "Adrenalina Pura": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+
       "Halloween Adrenalina Pura": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Agro Brasil tv": "https://mi.tv/br/canais/canal-agromix",
       "Agro Canal": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
@@ -948,7 +948,6 @@ const programacaoUrls = {
       "GP TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Heartland": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Inspire": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
-      "JP News": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Kids Mais": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Kiss TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Leo e Lully": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
@@ -1050,117 +1049,133 @@ channels.forEach((c, i) => {
 // Criar player Clappr
 function createPlayer(source, mimeType) {
   if (player) { player.destroy(); player = null; }
-  const testVTT = `WEBVTT
-00:00:00.000 --> 00:00:05.000
-Bem-vindo ao JC TV STREAMING!
-00:00:05.001 --> 00:00:10.000
-Aqui você pode assistir canais ao vivo em português.
-`;
   player = new Clappr.Player({
     source: source,
     mimeType: mimeType,
     parentId: '#player',
-    width:'100%',
-    height:'100%',
-    autoPlay:true,
-    mute:false,
-    disableErrorScreen:true,
-    plugins: [Clappr.SubtitlePlugin],
-    subtitlesEnabled: false,
-    subtitleUrl: 'data:text/vtt;charset=utf-8,' + encodeURIComponent(testVTT)
+    width: '100%',
+    height: '100%',
+    autoPlay: true,
+    mute: false,
+    disableErrorScreen: true
   });
-  player.listenTo(player, Clappr.Events.PLAYER_READY, ()=>{ player.setVolume(100); });
+  player.listenTo(player, Clappr.Events.PLAYER_READY, () => { player.setVolume(100); });
 }
 
-// Carregar canal selecionado
-function loadChannel(index){
+// Carregar canal
+function loadChannel(index) {
   const ch = channels[index];
-  const mimeType = ch.type==="m3u8" ? "application/x-mpegURL" : "application/dash+xml";
+  const mimeType = ch.type === "m3u8" ? "application/x-mpegURL" : "application/dash+xml";
   createPlayer(ch.link, mimeType);
-  if(activeIndex !== null) buttons[activeIndex].querySelector('.watching').style.display = 'none';
+  if (activeIndex !== null) buttons[activeIndex].querySelector('.watching').style.display = 'none';
   buttons[index].querySelector('.watching').style.display = 'inline';
   activeIndex = index;
 }
 
 loadChannel(0);
 
-// Função auxiliar datas PlutoTV
-function parsePlutoDate(str){
-  if(!str) return new Date();
-  const y = str.slice(0,4), m = str.slice(4,6), d = str.slice(6,8),
-        h = str.slice(8,10), min = str.slice(10,12), s = str.slice(12,14);
+// Função auxiliar de data XML
+function parseXMLDate(str) {
+  if (!str) return new Date();
+  const y = str.slice(0, 4), m = str.slice(4, 6), d = str.slice(6, 8),
+        h = str.slice(8, 10), min = str.slice(10, 12), s = str.slice(12, 14);
   const dt = new Date(`${y}-${m}-${d}T${h}:${min}:${s}Z`);
   return isNaN(dt) ? new Date() : dt;
 }
 
-// Buscar EPG PlutoTV
-async function buscarPlutoEPG(parcial){
+// --- BUSCA PLUTO ---
+async function buscarPlutoEPG(parcial) {
   const EPG_URLS = [
     "https://i.mjh.nz/PlutoTV/br.xml",
     "https://raw.githubusercontent.com/matthuisman/i.mjh.nz/master/PlutoTV/br.xml",
-    "https://corsproxy.io/?https://i.mjh.nz/PlutoTV/br.xml"
+    "https://corsproxy.io/?https://i.mjh.nz/PlutoTV/br.xml",
+    "https://raw.githubusercontent.com/rootcoder/epgtv/main/guide.xml",
+    "https://raw.github.com/matthuisman/i.mjh.nz/master/PlutoTV/us.xml",
+    "https://raw.github.com/matthuisman/i.mjh.nz/master/PlutoTV/ca.xml"
   ];
-  const normalize = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  const buscado = normalize(parcial.replace("Pluto TV","").trim());
+  return await buscarEPGGenerico(parcial, EPG_URLS);
+}
 
-  for(const url of EPG_URLS){
+// --- BUSCA MiTV ---
+async function buscarMiTVEPG(parcial) {
+  try {
+    const url = programacaoUrls[parcial];
+    if (!url) return null;
+    return { nome: parcial, url: url };
+  } catch (e) {
+    console.warn("Falha MiTV", e);
+    return null;
+  }
+}
+
+// --- BUSCA XML GENÉRICO ---
+async function buscarEPGGenerico(parcial, urls = [
+  "https://gist.githubusercontent.com/lagosiptv/6cc09a4e8c4396150c762e561b320e99/raw/9855a3fe937aec7862900acdf83404ae0bf153b7/EPG.XML",
+  "https://i.mjh.nz/PlutoTV/br.xml",
+  "https://raw.githubusercontent.com/matthuisman/i.mjh.nz/master/PlutoTV/br.xml",
+  "https://corsproxy.io/?https://i.mjh.nz/PlutoTV/br.xml",
+  "https://raw.githubusercontent.com/rootcoder/epgtv/main/guide.xml.gz",
+  "https://i.mjh.nz/SamsungTVPlus/br.xml",
+  "https://i.mjh.nz/Freevee/br.xml",
+  "https://i.mjh.nz/ParamountPlus/br.xml",
+  "https://i.mjh.nz/Stirr/br.xml",
+  "https://i.mjh.nz/LocalNow/br.xml"
+]) {
+  const normalize = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const buscado = normalize(parcial.trim());
+
+  for (const url of urls) {
     try {
       const resp = await fetch(url);
-      if(!resp.ok) continue;
+      if (!resp.ok) continue;
       const xmlText = await resp.text();
-      const xmlDoc = new DOMParser().parseFromString(xmlText,"text/xml");
+      const xmlDoc = new DOMParser().parseFromString(xmlText, "text/xml");
       const canais = [...xmlDoc.getElementsByTagName("channel")];
-      const resultados = canais.filter(c=>{
-        const nome = normalize(c.querySelector("display-name")?.textContent||"");
+      const resultados = canais.filter(c => {
+        const nome = normalize(c.querySelector("display-name")?.textContent || "");
         return nome.includes(buscado) || buscado.includes(nome);
       });
-      if(resultados.length === 0) continue;
+      if (resultados.length === 0) continue;
 
       const canal = resultados[0];
       const id = canal.getAttribute("id");
       const nome = canal.querySelector("display-name")?.textContent || parcial;
-      const programas = [...xmlDoc.getElementsByTagName("programme")].filter(p=>p.getAttribute("channel")===id).slice(0,10);
-      const lista = programas.map(p=>({
-        inicio: parsePlutoDate(p.getAttribute("start")),
-        fim: parsePlutoDate(p.getAttribute("stop")),
-        titulo: p.querySelector("title")?.textContent||"Sem título",
-        desc: p.querySelector("desc")?.textContent||""
+      const programas = [...xmlDoc.getElementsByTagName("programme")].filter(p => p.getAttribute("channel") === id).slice(0, 10);
+      const lista = programas.map(p => ({
+        inicio: parseXMLDate(p.getAttribute("start")),
+        fim: parseXMLDate(p.getAttribute("stop")),
+        titulo: p.querySelector("title")?.textContent || "Sem título",
+        desc: p.querySelector("desc")?.textContent || ""
       }));
       return { nome, id, programas: lista };
-    } catch(e){ console.warn("Falha PlutoTV", e); }
+    } catch (e) {
+      console.warn("Falha XML genérico", e);
+    }
   }
   return null;
 }
 
-// Buscar EPG MiTV
-async function buscarMiTVEPG(parcial){
-  try {
-    const url = programacaoUrls[parcial];
-    if(!url) return null;
-    return { nome: parcial, url: url };
-  } catch(e){ console.warn("Falha MiTV", e); return null; }
-}
-
-// Botão Programação
+// --- BOTÃO PROGRAMAÇÃO ---
 const btnProgramacao = document.getElementById('btnProgramacao');
 const programacaoPanel = document.getElementById('programacaoPanel');
 const programacaoIframe = programacaoPanel.querySelector('iframe');
 let programacaoAberta = false;
 
-btnProgramacao.addEventListener('click', async ()=>{
-  const canalAtual = channels[activeIndex]?.name||"";
+btnProgramacao.addEventListener('click', async () => {
+  const canal = channels[activeIndex];
+  if (!canal) return;
+
   programacaoPanel.style.right = programacaoAberta ? "-450px" : "0";
-  btnProgramacao.textContent = programacaoAberta ? "Programação" : "Fechar Programação";
+  btnProgramacao.textContent = programacaoAberta ? "Programação" : "Fechar";
   programacaoAberta = !programacaoAberta;
 
-  if(!programacaoAberta){
+  if (!programacaoAberta) {
     programacaoIframe.src = "";
     programacaoIframe.srcdoc = "";
     return;
   }
 
-  // --- DETECÇÃO AUTOMÁTICA AJUSTADA ---
-  const canal = channels[activeIndex];
+  // Detectar tipo
   const src = canal.source ? canal.source.toLowerCase().trim() : "";
   const nome = canal.name.toLowerCase();
   const link = canal.link.toLowerCase();
@@ -1168,19 +1183,19 @@ btnProgramacao.addEventListener('click', async ()=>{
 
   if (src === "pluto" || nome.includes("pluto") || link.includes("pluto.tv")) {
     dados = await buscarPlutoEPG(canal.name);
-  } else {
+  } else if (programacaoUrls[canal.name]) {
     dados = await buscarMiTVEPG(canal.name);
+  } else {
+    dados = await buscarEPGGenerico(canal.name);
   }
 
-  // --- EXIBE PROGRAMAÇÃO ---
+  // Exibir
   const agora = new Date();
-
-  if(dados){
-    if(dados.programas){
-      // --- PlutoTV ---
+  if (dados) {
+    if (dados.programas) {
       let html = `<style>
         body{font-family:sans-serif;color:white;background:#111;margin:0;padding:10px;}
-        h2{text-align:center;margin-bottom:10px;}
+        h2{text-align:center;margin:20px 0;font-size:1em;color:#0ff;}
         .programa{border-bottom:1px solid #333;padding:6px 0;}
         .hora{color:#0ff;font-size:0.9em;}
         .hora.no-ar{color:#0f0;font-weight:bold;}
@@ -1188,53 +1203,28 @@ btnProgramacao.addEventListener('click', async ()=>{
         .desc{font-size:0.85em;color:#ccc;}
       </style><h2>📺 ${dados.nome}</h2>`;
 
-      html += dados.programas.map(p=>{
+      html += dados.programas.map(p => {
         const noAr = agora >= p.inicio && agora <= p.fim;
         const hora = noAr ? "No ar" :
-          `${p.inicio.getHours().toString().padStart(2,'0')}:${p.inicio.getMinutes().toString().padStart(2,'0')} - ${p.fim.getHours().toString().padStart(2,'0')}:${p.fim.getMinutes().toString().padStart(2,'0')}`;
-        return `<div class="programa"><div class="hora ${noAr?'no-ar':''}">${hora}</div><div class="titulo">${p.titulo}</div><div class="desc">${p.desc}</div></div>`;
+          `${p.inicio.getHours().toString().padStart(2, '0')}:${p.inicio.getMinutes().toString().padStart(2, '0')} - ${p.fim.getHours().toString().padStart(2, '0')}:${p.fim.getMinutes().toString().padStart(2, '0')}`;
+        return `<div class="programa"><div class="hora ${noAr ? 'no-ar' : ''}">${hora}</div><div class="titulo">${p.titulo}</div><div class="desc">${p.desc}</div></div>`;
       }).join("");
-
       programacaoIframe.srcdoc = html;
 
-    } else if(dados.url){
-      // --- MiTV (iframe em tela cheia na lateral) ---
+    } else if (dados.url) {
       const html = `<style>
-        html,body{
-          margin:0;
-          padding:0;
-          height:100%;
-          width:100%;
-          background:#111;
-          color:white;
-          font-family:sans-serif;
-          display:flex;
-          flex-direction:column;
-        }
-        h2{
-          text-align:center;
-          margin:30px 0;
-          font-size:1em;
-          color:#fff;
-        }
-        iframe{
-          flex:1;
-          width:100%;
-          height:100%;
-          border:none;
-          background:#111;
-        }
+        html,body{margin:0;padding:0;height:100%;width:100%;background:#111;color:white;font-family:sans-serif;display:flex;flex-direction:column;}
+        h2{text-align:center;margin:30px 0;font-size:1em;color:#0ff;}
+        iframe{flex:1;width:100%;height:100%;border:none;background:#111;}
       </style>
       <h2>📺 ${dados.nome}</h2>
       <iframe src="${dados.url}" allowfullscreen></iframe>`;
-
       programacaoIframe.srcdoc = html;
-
     } else {
-      programacaoIframe.srcdoc = `<h3 style="color:white;text-align:center;margin-top:20px">⚠️ Nenhuma programação disponível para ${canalAtual}</h3>`;
+      programacaoIframe.srcdoc = `<h3 style="color:white;text-align:center;margin-top:20px">⚠️ Nenhuma programação disponível para ${canal.name}</h3>`;
     }
   } else {
-    programacaoIframe.srcdoc = `<h3 style="color:white;text-align:center;margin-top:20px">⚠️ Nenhuma programação disponível para ${canalAtual}</h3>`;
+    programacaoIframe.srcdoc = `<h3 style="color:white;text-align:center;margin-top:20px">⚠️ Nenhuma programação disponível para ${canal.name}</h3>`;
   }
 });
 </script>
