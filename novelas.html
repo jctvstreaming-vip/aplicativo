@@ -786,11 +786,19 @@ playerModal.addEventListener('hidden.bs.modal', () => {
 // --- Web Video Cast ---
 castButton.addEventListener("click", (e) => {
   e.preventDefault();
-  if (!episodeQueue.length) return alert("Nenhum vídeo carregado.");
+
+  if (!episodeQueue.length) {
+    alert("Nenhum vídeo carregado.");
+    return;
+  }
+
   const title = modalTitle.textContent || "JC TV STREAMING";
   const realUrl = episodeQueue[currentEpisodeIndex].src;
-  const cleanUrl = realUrl.replace(/^https?:\/\//, '');
-  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
+
+  // Mantém o https://
+  const intentLink = `intent://${realUrl.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.instantbits.cast.webvideo;S.title=${encodeURIComponent(title)};end`;
+
+  // Redireciona para o app
   window.location.href = intentLink;
 });
 
