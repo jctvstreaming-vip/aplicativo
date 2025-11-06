@@ -791,7 +791,7 @@ castButton.addEventListener("click", (e) => {
   const realUrl = episodeQueue[currentEpisodeIndex].src;
   const cleanUrl = realUrl.replace(/^https?:\/\//, '');
   const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
-  window.location.href = intentUrl;
+  window.location.href = intentLink;
 });
 
 // ---------------- Inicialização
