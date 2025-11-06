@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,83 +8,59 @@
 <title>JC TV STREAMING</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 <style>
-body { background: #fff; color: #000; padding: 1rem; }
-/* Centraliza os cards da aba de séries */
-      #seriesTabs {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      padding: 1rem 0;
-      margin-top: 100px; /* espaço para a barra fixa */
-    }
-#seriesTabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; padding: 1rem 0; margin-top: 100px; }
+html, body {
+  overflow-y: auto; /* ✅ Permite rolagem vertical */
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+#seriesTabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; padding: 1rem 0; margin-top: 120px; }
 .series-tab { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background-color: #eee; border-radius: 0.5rem; max-width: 100%; white-space: normal; cursor: pointer; }
 .series-tab img { width: 100%; height: 100%; border-radius: 5px; flex-shrink: 0; }
 .series-tab .card { width: 100px; }
 .card-body p.card-text { white-space: normal !important; word-break: break-word; overflow-wrap: break-word; font-size: 0.75rem; text-align: center; max-height: 6em; line-height: 1.2; }
-#serieInfo {
-    display: none;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.25); /* fundo transparente */
-    border-radius: 12px;
-    margin: 1rem auto;
-    max-width: 1200px;
-    backdrop-filter: blur(10px); /* deixa borrado */
-    -webkit-backdrop-filter: blur(10px);
-    color: #000; /* texto preto forte */
-}
+#serieInfo { display: none; padding: 1rem; background: rgba(255, 255, 255, 0.25); border-radius: 12px; margin: 1rem auto; max-width: 1200px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #000; }
 .serie-details { display: flex; gap: 1rem; align-items: flex-start; }
 .serie-details img { width: 100px; height: auto; border-radius: 5px; }
 .serie-details div { flex: 1; }
-#serieInfo h4,
-#serieInfo p {
-    color: #000; /* garante que todos os textos fiquem bem pretos */
-    font-weight: 600; /* um pouco mais forte que normal */
+#serieInfo h4, #serieInfo p { color: #000; font-weight: 600; }
+#backButton { display: none; position: fixed; top: 2px; right: 0px; z-index: 1055; background-color: #FFC107; color: #000; border: none; padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.3s ease; }
+#backButton:hover { background-color: #007BFF; color: #fff; }
+footer.footer { position: fixed; bottom: 0; left: 0; width: 100%; background: black; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 10px 20px; font-size: 1rem; z-index: 1000; }
+footer.footer img { height: 30px; width: auto; }
+#centralSearch { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 200px; z-index: 1050; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+#serieSynopsis .synopsis-text { display: block; overflow: hidden; max-height: 3.6em; transition: max-height 0.3s ease; }
+#serieSynopsis .expanded { max-height: 1000px; }
+.modal-fullscreen { overflow: hidden; }
+.modal-body { overflow: hidden; display: flex; justify-content: center; align-items: center; }
+#modalVideo { object-fit: contain; width: 100%; height: 100%; }
+.modal-header-transparent { background: rgba(0, 0, 0, 0.4); position: absolute; top: 0; left: 0; width: 100%; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1rem; transition: opacity 0.3s ease; }
+#prevEpisodeBtn, #nextEpisodeBtn, #castButton { background-color: rgba(0, 0, 0, 0.6); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+#prevEpisodeBtn:hover, #nextEpisodeBtn:hover, #castButton:hover { background-color: rgba(255,255,255,0.2); color: #fff; }
+#readMoreBtn { display: inline-block; margin-top: 4px; cursor: pointer; color: #007BFF; font-weight: bold; background: none; border: none; padding: 0; }
+@media (max-width: 576px) { .serie-details { flex-direction: column; align-items: center; text-align: center; } .serie-details img { width: 80%; max-width: 150px; } #seasonEpisodesContainer .accordion-button { font-size: 0.9rem; } .series-tab .card { width: 70px; } .series-tab .card-body p.card-text { font-size: 0.65rem; } #modalVideo { height: 60vh; } }
+#modalTitle {
+  font-size: 0.95rem; /* tamanho menor */
+  font-weight: 600; /* opcional: mantém legibilidade */
+  line-height: 1.4;
+  text-align:  left; /* deixa bonito no lado esquerdo */
 }
-#backButton {
-  display: none;
-  position: fixed;
-  top: 2px;       /* afasta um pouco do topo */
-  right: 0px;      /* afasta um pouco da esquerda */
-  z-index: 1055;
-  background-color: #FFC107;
-  color: #000000;
-  border: none;
-  padding: 8px 10px;    /* menor que antes */
-  border-radius: 10px;   /* menor arredondamento */
+.list-group-item {
+  transition: all 0.3s ease;
   cursor: pointer;
-  font-weight: bold;     /* Texto em negrito */
-  font-size: 12px;      /* fonte menor */
-  transition: 0.3s ease;
 }
 
-#backButton:hover {
-  background-color: #007BFF;
-  color: #fff;           /* melhora contraste no hover */
+/* efeito ao passar o mouse */
+.list-group-item:hover {
+  background-color: rgba(0, 123, 255, 0.2);
+  transform: scale(1.02);
 }
- /* Footer */
-  footer.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: black;
-    color: #fff; /* cor diferente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    font-size: 1rem; /* maior */
-    z-index: 1000;
-  }
-  footer.footer img {
-    height: 30px;
-    width: auto;
-  }
-#centralSearch { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 200px; z-index: 1050; display: flex; flex-direction: column; gap: 8px; }
-#serieSynopsis .synopsis-text { display: block; overflow: hidden; }
+
+/* efeito para toque em celular (removível automaticamente após o toque) */
+.list-group-item.touch-hover {
+  background-color: rgba(0, 123, 255, 0.2);
+  transform: scale(1.02);
+}
 </style>
 </head>
 <body>
@@ -97,7 +75,7 @@ body { background: #fff; color: #000; padding: 1rem; }
 
 <ul class="nav nav-tabs d-flex flex-wrap gap-3 mb-3 border-0" id="seriesTabs"></ul>
 
-<div id="serieInfo" class="card p-3" style="display:none; background: rgba(255, 255, 255, 0.25);">
+<div id="serieInfo" class="card p-3">
   <div class="serie-details">
     <img id="seriePoster" src="" alt="Poster da Série">
     <div>
@@ -111,35 +89,21 @@ body { background: #fff; color: #000; padding: 1rem; }
   <div id="seasonEpisodesContainer" class="mt-4"></div>
 </div>
 
-<div class="col-12 mt-4">
-  <div class="playerButtons" id="serverButtons"></div>
-</div>
-
-<!-- Rodapé institucional após os canais -->
-<div class="col-12 mt-4">
-   <div class="playerButtons" id="serverButtons"></div>
-  <div style="margin-top: 40px; font-size: 0.85rem; color: #000; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
-    <p><br></p>
-    <p></p>
-  </div>
-</div>
-
-<!-- Modal Player -->
 <div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content bg-white text-dark">
-      <div class="modal-header border-0">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content bg-black text-white">
+      <div class="modal-header border-0 modal-header-transparent">
         <h5 id="modalTitle" class="modal-title"></h5>
-        <div class="d-flex gap-2 align-items-center">
-          <!-- Botão Espelhar direto -->
-          <button id="castButton" type="button" class="btn btn-warning btn-sm">
-            📺 Espelhar
-          </button>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        <div>
+          <button id="prevEpisodeBtn" class="btn btn-sm me-2">⏮️ </button>
+          <button id="nextEpisodeBtn" class="btn btn-sm me-2">⏭️ </button>
+          <button id="castButton" class="btn btn-sm me-2">📺 </button>
+          <button type="button" class="btn btn-sm btn-danger me-2" data-bs-dismiss="modal">X Fechar</button>
         </div>
       </div>
+
       <div class="modal-body p-0">
-        <iframe id="modalPlayer" width="100%" height="480" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+        <video id="modalVideo" width="100%" height="100%" controls autoplay style="background:black;"></video>
       </div>
     </div>
   </div>
@@ -150,52 +114,363 @@ body { background: #fff; color: #000; padding: 1rem; }
   <span>JC TV STREAMING © 2025</span>
 </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-  const seriesData = {        
-    hacksignum: {
-      name: "A Agência (2020)",
-      year: 2020,
-      synopsis: "Istambul é uma cidade repleta de estrelas e, para que estas estrelas se destaquem, há um exército de agentes trabalhando nos bastidores para encontrar o próximo papel importante. E no ponto mais alto está a Ego, a agência mais famosa da Turquia.",
-      poster: "https://image.tmdb.org/t/p/w500/AwzQGOfecxJhqRAA1cAWPglYR7G.jpg",
-      background: "https://image.tmdb.org/t/p/original/niAZi3VytEk6Nu4Zk0dXHonJFMQ.jpg", // imagem para fundo
-      categories: ["Letra A"],
-      genero: ["Drama, Comédia, Documentário"],
-      language: ["Dublado"],
-      seasons: {
-        1: ["a1650f53c","bd70dacd6","e6e5ce48b","805609c0f","1cc66dd11","251a3e73a","4097894e2","81e4872ae","74380be82","9485dbeba",
-            "c3c196b9b","34792e74d","4c8e2d88b","1b3287ea9","19b1b6a6d","f78bf95cf","6f8543e0e","529fc807d","094b4427e","56d93b931",
-            "c843e9d37","1ebf33143","80644eb41","0e725a6c5","c6d55acbc","e5bc8bfb7","f2385f00e","834389825","86d8b26aa","d7fbe58be",
-            "a3f83e9bd","c51823283","b6fa896c6","d614863aa","48d1a5d16","e67ba810f","69f652505","34f2272ff","d13f8b8bf","5cec50d9d",
-            "bc262abbe","2a2eaa2d1","561ca8cea","5e62f6571","eb7ffd228","5494199c1","ab7bb53ed","846e36d0c","d05969013","ac9b4d8b2",
-            "a8da949e4","7126b34b3","095a40579","33e5ba828","ffcbf3da9","b7e7b16af","8a91042c1","3a5aa5158","41198b146","8702197d1",
-            "368fc4580","25a75230f","dcd9890b8","18f4fd1fc","408418eee","b4da56f3e","5500edd62","30b271f96","51f24ba68","97ae54dce",
-            "90ec809cc","d282c34a2","b582d501f","3963c40c4","97a4aac9e","384e0a97b","bfc3bb7b3","ba3b9a530","431f7a339","b21c4925d",
-            "c4f78a032","284e411ff","a1894abd9","f4b03f4a4","ae4b8cd50","35f265a98","00d5bf7bd","6f884722e","ffe56bf36","832ebdc55",
-            "acebc5118","e53b896ee","f551b7836","e00a2e6a7","bc8d90190","83413a9f3","1e24e8423","893e8f7ea","e12e26290","658265f07",
-            "0839dc863","4bc540187","e75a6fc83","f0582b47e","bbedc2950","b45a6c5f7","be40e1755","9be8cb044","ff9ee8b6f","887b41145",
-            "e3b2f374f","537dc02ea","8331fe88c","b9a7b24a1","dcbc12214","4aaa095d9","bf5a36eaf","d3e56c40f","fdc0b4e42","c5687db6c",
-            "58b053235","19b2ec64c","aea4506a7","7f3110d4f","89eb39438","7e260dfe6","a6218aa42","e4707b5ac","973c760fa","7f67a2dca",
-            "c3bb83db3","a6be286bd","98c5674ab","ec18b3f5d","f64f52f7b","d398ec0bf","e5ae82bdd","fd3e1068a","22be1c2a1","207a6cec1",
-            "c5c041e91","b1b875969","47c2d75b6","0d85cfa5c","311cb63c3","43ae08aa8","473a120bf","e450ada43","dfacf48e5"]
-      }
-    },
-    hackliminality: {
-      name: ".hack//Liminality (2002)",
-      year: 2002,
-      synopsis: "Yuki Aihara era uma estudante que um dia foi ao cinema da escola e, enquanto assistia a um filme, as palavras O Mundo apareceram de repente na tela grande e, de repente, toda a cidade de Yokohama ficou sem energia devido a um corte de energia.",
-      poster: "https://m.media-amazon.com/images/M/MV5BYmRlMjUxMDctZjJkNi00MmVhLTlhODgtMzBmMmU4YjFiZjhiXkEyXkFqcGc@._V1_.jpg",
-      background: "https://image.tmdb.org/t/p/original/qKoB3nXkZ4x2uUj43b38RBwPPbR.jpg", // fundo
-      categories: ["Números e Símbolos", "Mistério"],
-      genero: ["Comédia"],
-      language: ["Legendado"],
-      seasons: {
-        1: ["4b1795b42","1248cc563","4203c81a6","be2772560"]
-      }
-    }
-  };
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-// === Elementos ===
+<script>
+// -------------------- Dados da série --------------------
+const seriesData = {
+    "Robin Hood (2025)": {
+    name: "Robin Hood (2025)",
+    date: "02/11/2025",
+    synopsis: "A jornada de Robert Locksley, de filho de guarda-florestal a fora-da-lei, começa. A rebelião começa em Sherwood, intrigas aumentam, e nasce uma lenda.",
+    poster: "https://image.tmdb.org/t/p/w500/aTBRFl6l1qPW34nuZ1FC3zRgfPE.jpg",
+    background: "https://image.tmdb.org/t/p/original/uoIOfRNmu47P2fET2KnrYHt3TH.jpg",
+    categories: ["Letra R"],
+    genero: ["Drama","Ação e Aventura"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/272418/1/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/272418/1/dub/2.mp4" }]
+    }
+    },
+    "A Crise dos Caras (2025)": {
+    name: "A Crise dos Caras (2025)",
+    date: "02/11/2025",
+    synopsis: "Quatro amigos quarentões fazem o que podem para encarar a masculinidade moderna, mas acabam metendo os pés pelas mãos.",
+    poster: "https://image.tmdb.org/t/p/w500/hOq7UDe4W9g3K3NFHDCvzJVPih8.jpg",
+    background: "https://image.tmdb.org/t/p/original/l1fYY1YpDHL0GsC5pz0IP9E6ivC.jpg",
+    categories: ["Letra A"],
+    genero: ["Comédia"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298699/1/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298699/1/dub/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298699/1/dub/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298699/1/dub/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298699/1/dub/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298699/1/dub/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298699/1/dub/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298699/1/dub/8.mp4" }]
+    }
+    },
+    "Pesadelos da Natureza (2025)": {
+    name: "Pesadelos da Natureza (2025)",
+    date: "30/07/2025",
+    synopsis: "Com histórias eletrizantes de sobrevivência, esta série documental captura todo o drama, o perigo e a beleza sombria da natureza pela perspectiva das presas.",
+    poster: "https://image.tmdb.org/t/p/w500/gXsUclx4vqMBFrkGzabiCzXN0MY.jpg",
+    background: "https://image.tmdb.org/t/p/original/sXLwuwDOAxklnnQFfa7OHCPgHDL.jpg",
+    categories: ["Letra P"],
+    genero: ["Documentário"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "Fugindo da Floresta", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298682/1/dub/1.mp4" },
+        { title: "A Cabana", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298682/1/dub/2.mp4" },
+        { title: "É Hora de Sair Daqui", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298682/1/dub/3.mp4" }],
+      2: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298682/2/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298682/2/dub/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/298682/2/dub/3.mp4" }]
+    }
+    },
+    "The Witcher (2019)": {
+    name: "The Witcher (2019)",
+    date: "20/12/2019",
+    synopsis: "O mutante Geralt de Rívia é um caçador de monstros que luta para encontrar seu lugar num mundo onde as pessoas muitas vezes são mais perversas que as criaturas selvagens.",
+    poster: "https://image.tmdb.org/t/p/w500/uJ1kQWTY1nElMcrrbHtDitbV85K.jpg",
+    background: "https://image.tmdb.org/t/p/original/stqplzRvsPnFWPv5CCGaH7NohN0.jpg",
+    categories: ["Letra T"],
+    genero: ["Ficção Científica e Fantasia","Drama","Ação e Aventura"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/1/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/1/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/1/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/1/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/1/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/1/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/1/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/1/8.mp4" }],
+      2: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/2/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/2/dub/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/2/dub/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/2/dub/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/2/dub/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/2/dub/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/2/dub/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/2/dub/8.mp4" }],
+      3: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/3/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/3/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/3/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/3/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/3/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/3/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/3/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/3/8.mp4" }],
+      4: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/4/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/4/dub/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/4/dub/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/4/dub/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/4/dub/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/4/dub/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/4/dub/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/71912/4/dub/8.mp4" }]
+    }
+    },
+    "9-1-1: Nashville (2025)": {
+    name: "9-1-1: Nashville (2025)",
+    date: "09/10/2025",
+    synopsis: "Bobby e sua equipe atendem uma emergência em uma festa de aniversário. A equipe entra em ação, depois que um de seus membros se envolve em um acidente.",
+    poster: "https://image.tmdb.org/t/p/w500/4Dl0LysUOEWOhitzAfrKFkBeefu.jpg",
+    background: "https://image.tmdb.org/t/p/original/eO4cbYrbYIwn6uFZgpvdfD9eY9o.jpg",
+    categories: ["Números e Símbolos"],
+    genero: ["Drama","Ação e Aventura"],
+    language: ["Legendado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/284838/1/leg/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/284838/1/leg/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/284838/1/leg/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/284838/1/leg/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/284838/1/leg/5.mp4" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    categories: ["Letra S"],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+    
+    
+
+
+
+
+
+
+    }
+    }  
+   };
+
+
+
+// ---------------- Elementos
 const seriesTabs = document.getElementById("seriesTabs");
 const serieInfo = document.getElementById("serieInfo");
 const serieTitle = document.getElementById("serieTitle");
@@ -207,132 +482,155 @@ const serieLanguage = document.getElementById("serieLanguage");
 const seasonEpisodesContainer = document.getElementById("seasonEpisodesContainer");
 const seriesSearch = document.getElementById("seriesSearch");
 const categoryFilter = document.getElementById("categoryFilter");
-const modalPlayer = document.getElementById("modalPlayer");
+const backButton = document.getElementById('backButton');
+const modalVideo = document.getElementById("modalVideo");
 const modalTitle = document.getElementById("modalTitle");
-const backButton = document.getElementById("backButton");
-const castOpen = document.getElementById("castOpen");
-const castCopy = document.getElementById("castCopy");
+const prevEpisodeBtn = document.getElementById("prevEpisodeBtn");
+const nextEpisodeBtn = document.getElementById("nextEpisodeBtn");
+const castButton = document.getElementById("castButton");
 
 let currentSeries = null;
+let episodeQueue = [];
+let currentEpisodeIndex = 0;
+let currentHls = null;
 
-// === Popula Categorias ===
-function populateCategories() {
+// ---------------- Categorias
+function populateCategories(){
   const allCategories = new Set();
   Object.values(seriesData).forEach(s => s.categories.forEach(c => allCategories.add(c)));
-  [...allCategories].sort().forEach(cat => {
+  [...allCategories].sort().forEach(cat=>{
     const option = document.createElement("option");
-    option.value = cat;
-    option.textContent = cat;
+    option.value = cat; option.textContent = cat;
     categoryFilter.appendChild(option);
   });
 }
 
-// === Monta as abas ===
+// ---------------- Monta abas (ordenando por date)
 function buildTabs(filteredKeys = null) {
   seriesTabs.innerHTML = "";
   let keys = filteredKeys || Object.keys(seriesData);
 
+  // Ordena por data (mais recente primeiro)
   keys.sort((a, b) => {
-    const yearA = seriesData[a].year || 0;
-    const yearB = seriesData[b].year || 0;
-    return yearB - yearA;
+    const dateA = seriesData[a].date
+      ? new Date(seriesData[a].date.split("/").reverse().join("-"))
+      : new Date(0);
+    const dateB = seriesData[b].date
+      ? new Date(seriesData[b].date.split("/").reverse().join("-"))
+      : new Date(0);
+    return dateB - dateA;
   });
 
   keys.forEach(key => {
     const s = seriesData[key];
     const li = document.createElement("li");
     li.className = "nav-item";
+
     const btn = document.createElement("button");
     btn.className = "nav-link p-0 border-0 bg-transparent text-center series-tab";
     btn.dataset.target = key;
+
     btn.innerHTML = `
       <div class="card border-0" style="width: 80px;">
         <img src="${s.poster}" class="card-img-top rounded" style="height:120px;object-fit:cover;" alt="${s.name}">
         <div class="card-body p-1">
           <p class="card-text small text-truncate mb-0">${s.name}</p>
         </div>
-      </div>`;
+      </div>
+    `;
+
     li.appendChild(btn);
     seriesTabs.appendChild(li);
   });
 }
 
-// === Exibe temporadas e episódios ===
+// -------------------- Mostra detalhes da série --------------------
 function showSeasons(key, tabBtn) {
   const s = seriesData[key];
   serieTitle.textContent = s.name;
-  serieSynopsis.innerHTML = "";
-
-  const synopsisText = document.createElement("span");
-  synopsisText.className = "synopsis-text";
-  synopsisText.textContent =
-    s.synopsis.length > 80 ? s.synopsis.slice(0, 80) + "..." : s.synopsis;
-  serieSynopsis.appendChild(synopsisText);
-
-  const lerMaisBtn = document.createElement("span");
-  lerMaisBtn.textContent = " ler mais";
-  lerMaisBtn.style.color = "#007bff";
-  lerMaisBtn.style.cursor = "pointer";
-  lerMaisBtn.style.textDecoration = "underline";
-  lerMaisBtn.style.display = "inline-block";
-  lerMaisBtn.style.marginTop = "5px";
-  serieSynopsis.appendChild(lerMaisBtn);
-
-  let expanded = false;
-  lerMaisBtn.addEventListener("click", function () {
-    if (!expanded) {
-      synopsisText.textContent = s.synopsis;
-      lerMaisBtn.textContent = " ler menos";
-    } else {
-      synopsisText.textContent =
-        s.synopsis.length > 80 ? s.synopsis.slice(0, 80) + "..." : s.synopsis;
-      lerMaisBtn.textContent = " ler mais";
-    }
-    expanded = !expanded;
-  });
-
   seriePoster.src = s.poster;
   serieCategories.textContent = s.categories.join(", ");
   serieGênero.textContent = s.genero.join(", ");
   serieLanguage.textContent = s.language.join(", ");
   serieInfo.style.display = "block";
 
+  // Sinopse com "ler mais/ler menos"
+  serieSynopsis.innerHTML = "";
+  const synopsisText = document.createElement("span");
+  synopsisText.className = "synopsis-text";
+  synopsisText.style.whiteSpace = "pre-wrap";
+  synopsisText.style.display = "inline";
+
+  const fullText = s.synopsis.trim();
+  const shortText = fullText.length > 100 ? fullText.slice(0, 100) + "..." : fullText;
+  let expanded = false;
+
+  synopsisText.textContent = shortText;
+  serieSynopsis.appendChild(synopsisText);
+
+  if (fullText.length > 50) {
+    const lerMaisBtn = document.createElement("span");
+    lerMaisBtn.textContent = " ler mais";
+    lerMaisBtn.style.color = "#007bff";
+    lerMaisBtn.style.cursor = "pointer";
+    lerMaisBtn.style.textDecoration = "underline";
+    lerMaisBtn.style.marginLeft = "5px";
+
+    serieSynopsis.appendChild(lerMaisBtn);
+
+    lerMaisBtn.addEventListener("click", () => {
+      expanded = !expanded;
+      if (expanded) { synopsisText.textContent = fullText; lerMaisBtn.textContent = " ler menos"; }
+      else { synopsisText.textContent = shortText; lerMaisBtn.textContent = " ler mais"; }
+    });
+  }
+
+  // Posiciona info logo abaixo da aba selecionada
   const li = tabBtn.closest("li");
   li.insertAdjacentElement("afterend", serieInfo);
 
+  // ---------------- Episódios ----------------
   seasonEpisodesContainer.innerHTML = "";
-  let seasonId = 0;
-  for (const [seasonNum, episodes] of Object.entries(s.seasons)) {
-    seasonId++;
-    const container = document.createElement("div");
-    container.className = "accordion mb-2";
-    container.id = `accordionSeason${seasonId}`;
-    const item = document.createElement("div");
-    item.className = "accordion-item";
-    const headerId = `heading${seasonId}`;
-    const collapseId = `collapse${seasonId}`;
-    item.innerHTML = `
-      <h2 class="accordion-header" id="${headerId}">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-          data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
-          Temporada ${seasonNum}
-        </button>
-      </h2>
-      <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}"
-        data-bs-parent="#accordionSeason${seasonId}">
-        <div class="accordion-body d-flex flex-wrap gap-2">
-          ${episodes
-            .map(
-              (vid, idx) =>
-                `<button class="btn btn-outline-primary open-player" data-vid="${vid}" data-title="${s.name} - Temporada ${seasonNum} - Episódio ${idx + 1}">Episódio ${idx + 1}</button>`
-            )
-            .join("")}
-        </div>
-      </div>`;
-    container.appendChild(item);
-    seasonEpisodesContainer.appendChild(container);
-  }
+let seasonId = 0;
 
+for (const [seasonNum, episodes] of Object.entries(s.seasons)) {
+  seasonId++;
+  const container = document.createElement("div");
+  container.className = "accordion mb-2";
+  container.id = `accordionSeason${seasonId}`;
+  const item = document.createElement("div");
+  item.className = "accordion-item";
+  const headerId = `heading${seasonId}`;
+  const collapseId = `collapse${seasonId}`;
+
+  item.innerHTML = `
+    <h2 class="accordion-header" id="${headerId}">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+        data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+        Temporada ${seasonNum}
+      </button>
+    </h2>
+    <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}"
+         data-bs-parent="#accordionSeason${seasonId}">
+      <ul class="list-group list-group-flush">
+        ${episodes
+          .map((ep, idx) => {
+            const epTitle = ep.title ? ` – ${ep.title}` : "";
+            return `<li class="list-group-item open-player"
+              data-vid="${ep.url}"
+              data-title="${s.name} – Temporada ${seasonNum} – Episódio ${idx + 1}${epTitle}">
+              Episódio ${idx + 1}${epTitle}
+            </li>`;
+          })
+          .join("")}
+      </ul>
+    </div>
+  `;
+  container.appendChild(item);
+  seasonEpisodesContainer.appendChild(container);
+}
+
+  // ---------------- Background ----------------
   document.body.style.backgroundImage = `url('${s.background}')`;
   document.body.style.backgroundSize = "cover";
   document.body.style.backgroundPosition = "center";
@@ -340,136 +638,166 @@ function showSeasons(key, tabBtn) {
   document.body.style.backgroundAttachment = "fixed";
 }
 
-// === Alterna exibição ===
-function updateUIOnTabToggle() {
-  if (currentSeries) {
-    backButton.style.display = "block";
-    seriesSearch.style.display = "none";
-    categoryFilter.style.display = "none";
-    document.querySelectorAll("#seriesTabs > li").forEach(li => (li.style.display = "none"));
-  } else {
-    backButton.style.display = "none";
-    seriesSearch.style.display = "block";
-    categoryFilter.style.display = "block";
-    document.querySelectorAll("#seriesTabs > li").forEach(li => (li.style.display = "inline-block"));
+// ---------------- Toggle UI
+function updateUIOnTabToggle(){
+  if(currentSeries){ 
+    backButton.style.display='block'; 
+    seriesSearch.style.display='none'; 
+    categoryFilter.style.display='none'; 
+    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='none'); 
+  }
+  else { 
+    backButton.style.display='none'; 
+    seriesSearch.style.display='block'; 
+    categoryFilter.style.display='block'; 
+    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='inline-block'); 
   }
 }
 
-seriesTabs.addEventListener("click", e => {
-  const btn = e.target.closest("button.series-tab");
-  if (!btn) return;
+document.addEventListener("click", (e) => {
+  const epItem = e.target.closest(".open-player");
+  if (!epItem) return;
+
+  // efeito toque
+  epItem.classList.add("touch-hover");
+  setTimeout(() => {
+    epItem.classList.remove("touch-hover");
+  }, 300); // duração igual à transição CSS
+
+  // carregar episódio normalmente
+  const seasonContainer = epItem.closest(".accordion-collapse");
+  const seasonEps = Array.from(seasonContainer.querySelectorAll(".open-player"));
+  episodeQueue = seasonEps.map(b => ({ src: b.dataset.vid, title: b.dataset.title }));
+  currentEpisodeIndex = seasonEps.indexOf(epItem);
+  playEpisode(currentEpisodeIndex);
+});
+
+document.addEventListener("click", (e)=>{
+  const epItem = e.target.closest(".open-player");
+  if(!epItem) return;
+
+  // Remover destaque anterior
+  document.querySelectorAll(".open-player.active-episode").forEach(el=>el.classList.remove("active-episode"));
+  epItem.classList.add("active-episode");
+
+  // Para efeito de toque em celular
+  document.querySelectorAll(".open-player.touch-hover").forEach(el=>el.classList.remove("touch-hover"));
+  epItem.classList.add("touch-hover");
+
+  epItem.scrollIntoView({behavior:"smooth", block:"center"});
+
+  // Carregar episódios
+  const seasonContainer = epItem.closest(".accordion-collapse");
+  const seasonEps = Array.from(seasonContainer.querySelectorAll(".open-player"));
+  episodeQueue = seasonEps.map(b => ({src:b.dataset.vid, title:b.dataset.title}));
+  currentEpisodeIndex = seasonEps.indexOf(epItem);
+  playEpisode(currentEpisodeIndex);
+});
+
+// ---------------- Eventos
+seriesTabs.addEventListener("click",(e)=>{
+  const btn = e.target.closest("button.series-tab"); if(!btn) return;
   const target = btn.dataset.target;
-  if (currentSeries === target) {
-    currentSeries = null;
-    serieInfo.style.display = "none";
-    btn.classList.remove("active");
-    document.body.style.backgroundImage = "";
-  } else {
-    currentSeries = target;
-    document.querySelectorAll("button.series-tab").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    showSeasons(target, btn);
-  }
+  if(currentSeries===target){ currentSeries=null; serieInfo.style.display="none"; document.body.style.backgroundImage=""; }
+  else{ currentSeries=target; document.querySelectorAll("#seriesTabs button").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); showSeasons(target,btn); }
   updateUIOnTabToggle();
 });
 
-backButton.addEventListener("click", () => {
-  currentSeries = null;
-  serieInfo.style.display = "none";
-  document.querySelectorAll("button.series-tab").forEach(b => b.classList.remove("active"));
-  updateUIOnTabToggle();
-  document.body.style.backgroundImage = "";
-});
+backButton.addEventListener("click", ()=>{ currentSeries=null; serieInfo.style.display="none"; document.body.style.backgroundImage=""; updateUIOnTabToggle(); });
 
-seriesSearch.addEventListener("input", () => {
-  const q = seriesSearch.value.toLowerCase();
-  buildTabs(Object.keys(seriesData).filter(k => seriesData[k].name.toLowerCase().includes(q)));
-});
-
-categoryFilter.addEventListener("change", () => {
+// ---------------- Filtros de busca + categoria
+function applyFilters() {
+  const q = (seriesSearch.value || "").toLowerCase().trim();
   const cat = categoryFilter.value;
-  if (!cat) {
-    buildTabs();
-    return;
-  }
-  buildTabs(Object.keys(seriesData).filter(k => seriesData[k].categories.includes(cat)));
+
+  const keys = Object.keys(seriesData).filter(key => {
+    const s = seriesData[key];
+
+    // filtro de texto (nome da série)
+    if (q && !s.name.toLowerCase().includes(q)) return false;
+
+    // filtro de categoria
+    if (cat && !(s.categories || []).some(c => c.toLowerCase() === cat.toLowerCase()))
+      return false;
+
+    return true;
+  });
+
+  buildTabs(keys);
+}
+
+seriesSearch.addEventListener("input", applyFilters);
+categoryFilter.addEventListener("change", applyFilters);
+// ---------------- Player
+document.addEventListener("click", (e) => {
+  const epItem = e.target.closest(".open-player");
+  if (!epItem) return;
+
+  // Encontra todos os episódios da mesma temporada
+  const seasonContainer = epItem.closest(".accordion-collapse"); 
+  const seasonEps = Array.from(seasonContainer.querySelectorAll(".open-player"));
+
+  episodeQueue = seasonEps.map(b => ({ src: b.dataset.vid, title: b.dataset.title }));
+  currentEpisodeIndex = seasonEps.indexOf(epItem);
+  playEpisode(currentEpisodeIndex);
 });
 
-// === Abre vídeo no iframe diretamente ===
-document.body.addEventListener("click", e => {
-  if (e.target.classList.contains("open-player")) {
-    const vid = e.target.dataset.vid;
-    const title = e.target.dataset.title;
-    let src = "";
+function playEpisode(index){
+  if(index<0 || index>=episodeQueue.length) return;
+  currentEpisodeIndex=index;
+  const videoData = episodeQueue[currentEpisodeIndex];
+  modalTitle.textContent = videoData.title;
 
-    if (/^(https?:\/\/)/i.test(vid)) {
-      src = vid; // Link completo abre direto
-    } else {
-      src = `https://01.jctvstreaming-vip.workers.dev/${vid}`; // Mantém compatibilidade
-    }
+  if(currentHls){ currentHls.destroy(); currentHls=null; }
+  modalVideo.pause(); modalVideo.src="";
 
-    modalPlayer.src = src;
-    modalTitle.textContent = title;
-    new bootstrap.Modal(document.getElementById("playerModal")).show();
-  }
+  if(Hls.isSupported() && videoData.src.endsWith(".m3u8")){
+    currentHls = new Hls();
+    currentHls.loadSource(videoData.src);
+    currentHls.attachMedia(modalVideo);
+    currentHls.on(Hls.Events.MANIFEST_PARSED, ()=>modalVideo.play());
+  } else { modalVideo.src=videoData.src; modalVideo.play(); }
+
+  new bootstrap.Modal(document.getElementById("playerModal")).show();
+}
+
+// ---------------- Controle de episódios
+prevEpisodeBtn.addEventListener("click", ()=>{ if(currentEpisodeIndex>0) playEpisode(currentEpisodeIndex-1); });
+nextEpisodeBtn.addEventListener("click", ()=>{ if(currentEpisodeIndex<episodeQueue.length-1) playEpisode(currentEpisodeIndex+1); });
+
+// ---------------- Autoplay próximo episódio
+modalVideo.addEventListener("ended", ()=>{ if(currentEpisodeIndex<episodeQueue.length-1) playEpisode(currentEpisodeIndex+1); });
+
+// ---------------- Limpeza ao fechar modal
+document.getElementById("playerModal").addEventListener("hidden.bs.modal", ()=>{
+  modalVideo.pause(); modalVideo.removeAttribute("src"); modalVideo.load();
+  if(currentHls){ currentHls.destroy(); currentHls=null; }
+  episodeQueue=[]; currentEpisodeIndex=0;
+  document.body.classList.remove("modal-open");
+  document.querySelectorAll(".modal-backdrop").forEach(el=>el.remove());
 });
 
-document.getElementById("playerModal").addEventListener("hidden.bs.modal", () => {
-  modalPlayer.src = "";
+// ---------------- Barra de Rolagem ativa quando fecha modal
+const playerModal = document.getElementById('playerModal');
+
+playerModal.addEventListener('hidden.bs.modal', () => {
+  document.body.style.overflowY = 'auto';
+  document.documentElement.style.overflowY = 'auto';
 });
 
-// === Web Video Cast direto ===
-const castButton = document.getElementById("castButton");
-castButton.addEventListener("click", e => {
+// --- Web Video Cast ---
+castButton.addEventListener("click", (e) => {
   e.preventDefault();
-  const url = document.getElementById("modalPlayer").src;
-  if (!url) {
-    alert("Nenhum vídeo carregado.");
-    return;
-  }
-  const cleanUrl = url.replace(/^https?:\/\//, "");
-  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
-  window.location.href = intentLink;
+  if (!episodeQueue.length) return alert("Nenhum vídeo carregado.");
+  const title = modalTitle.textContent || "JC TV STREAMING";
+  const realUrl = episodeQueue[currentEpisodeIndex].src;
+  const cleanUrl = realUrl.replace(/^https?:\/\//, '');
+  const intentUrl = `intent://${cleanUrl}#Intent;scheme=http;package=com.instantbits.cast.webvideo;S.title=${encodeURIComponent(title)};end`;
+  window.location.href = intentUrl;
 });
 
-populateCategories();
-buildTabs();
+// ---------------- Inicialização
+populateCategories(); buildTabs(); updateUIOnTabToggle();
 </script>
-<!-- Tela de Alerta -->
-  <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
-    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
-    <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
-  </div>
-
-  <script>
-    function mostrarAlerta() {
-      const tela = document.getElementById("bloqueio");
-      tela.style.display = "block";
-      setTimeout(() => {
-        location.reload();
-      }, 1000);
-    }
-
-    document.querySelectorAll('a').forEach(link => {
-      link.setAttribute('target', '_self');
-    });
-
-    document.addEventListener('keydown', function(e) {
-      const tecla = e.key.toLowerCase();
-      if (
-        e.key === "F12" ||
-        (e.ctrlKey && tecla === 'u') ||
-        (e.ctrlKey && tecla === 's') ||
-        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
-      ) {
-        e.preventDefault();
-        mostrarAlerta();
-      }
-    });
-
-    window.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
-  </script>
 </body>
 </html>
