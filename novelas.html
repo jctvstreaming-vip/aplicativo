@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -792,7 +790,7 @@ castButton.addEventListener("click", (e) => {
   const title = modalTitle.textContent || "JC TV STREAMING";
   const realUrl = episodeQueue[currentEpisodeIndex].src;
   const cleanUrl = realUrl.replace(/^https?:\/\//, '');
-  const intentUrl = `intent://${cleanUrl}#Intent;scheme=http;package=com.instantbits.cast.webvideo;S.title=${encodeURIComponent(title)};end`;
+  const intentLink = `intent://${cleanUrl}#Intent;scheme=https;package=com.instantbits.cast.webvideo;end`;
   window.location.href = intentUrl;
 });
 
