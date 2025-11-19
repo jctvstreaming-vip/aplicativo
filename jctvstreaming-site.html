@@ -81,7 +81,7 @@
     right: 0px;
     z-index: 25;
     padding: 10px 10px;
-    background: rgba(0, 0, 0, 0.7);
+    background: linear-gradient(135deg, #5f00ff, #0095ff);
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -113,6 +113,75 @@
     border: none;
     background: #000;
   }
+#channelList button img {
+  width: 30px !important;
+  height: 30px !important;
+  object-fit: cover !important;
+  border-radius: 10px; /* opcional */
+}
+/* Bolinha com número estilo PREMIUM */
+.channel-number {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 22px;  /* reduzido */
+  height: 22px; /* reduzido */
+  background: linear-gradient(135deg, #4e00c2, #007bff);
+  color: white;
+  font-size: 13px; /* ajustado proporcional */
+  font-weight: bold;
+  border-radius: 50%;
+  margin-right: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Animação ao passar o mouse no botão do canal */
+#channelList button:hover .channel-number {
+  transform: scale(1.15);
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
+}
+
+/* Estilo do botão */
+#channelList button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #10121a;
+  border: none;
+  padding: 6px;  /* reduzido */
+  border-radius: 12px;
+  width: 100%;
+  color: white;
+  text-align: left;
+  margin-bottom: 8px;
+  transition: background 0.25s ease, transform 0.2s;
+}
+
+/* Hover premium */
+#channelList button:hover {
+  background: linear-gradient(135deg, #3c0055, #0050aa);
+  transform: translateX(4px);
+}
+
+/* Canal selecionado */
+#channelList button.active {
+  background: linear-gradient(135deg, #5f00ff, #0095ff);
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  transform: scale(1.02);
+}
+
+#channelList button.active .channel-number {
+  transform: scale(1.25);
+}
+
+/* Forçar logo 100x100 → reduzido para 70x70 */
+#channelList button img {
+  width: 80px !important;  /* reduzido */
+  height: 50px !important; /* reduzido */
+  object-fit: cover !important;
+  border-radius: 10px;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/clappr-subtitle-plugin@latest/dist/clappr-subtitle-plugin.min.js"></script>
@@ -142,7 +211,6 @@
 
 <script>
 const channels = [
-
 
 //Canais TV Aberta
 
@@ -547,6 +615,10 @@ const channels = [
  link:"",
  embed:"https://player.jmvstream.com/lvw/LQQkxtAMXzxJcp0qLbfdJ4gYVZoag4", type:"m3u8" },
 
+{ name:"BrSuper TV", logo:"https://www.mediafire.com/convkey/463f/ru39fsx9f0ivlbe5g.jpg",
+ link:"https://video01.soultv.com.br/brsupertv/brsupertv/chunklist_w2023916698.m3u8",
+ embed:"", type:"m3u8" },
+
 { name:"Canal do Boi", logo:"https://www.mediafire.com/convkey/bb88/yytyv6vjxlps05p5g.jpg",
  link:"",
  embed:"https://equipea.com.br/player/?canal=canaldoboi", type:"m3u8" },
@@ -670,9 +742,84 @@ const channels = [
  link:"",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/redebrasil", type:"m3u8" },
 
-{ name:"Rede CNT", logo:"https://www.mediafire.com/convkey/887b/uxt7jiftfhchss45g.jpg",
- link:"https://streamer.sattvacabo.com.br/CNT_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
+
+// Canais soultv ---------------
+
+
+{ name: "Bradoky", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/BRADOKY_-_logo_2_-_Transp_reduz_V3mcKdI.png",
+ link:"https://video01.soultv.com.br/bradoky/bradoky/playlist.m3u8",
  embed:"", type:"m3u8" },
+
+{ name:"U CHANNEL", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/logo100x100.png",
+ link:"https://test-soultvex.akamaized.net/umiss/umiss/playlist.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"TV Meio", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/SOULTV-100x100px-.png",
+ link:"https://maystreaming.cloudecast.com/redemeio/index.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"ISTV", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/logo_istv_png.png",
+ link:"https://video08.logicahost.com.br/istvnacional/srt.stream/istvnacional.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"HTO TV", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/HTOTV100X100.png",
+ link:"https://cdn.lincemedia.com.br/hto/index.m3u8?token=hefesto_5efe998fde61ce8ve9ehvev56",
+ embed:"", type:"m3u8" },
+
+{ name:"TV Judaica", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/TV_Judaica_100x100_DlURP1Y.png",
+ link:"https://br5093.streamingdevideo.com.br/tvjudaica/tvjudaica/playlist.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"Bitt TV", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/LOGO_NEGRO_DE_BITT_TV_100x100.png",
+ link:"https://srt.logicahost.com.br/memfs/f3d27992-7c26-4e18-bd88-e35ce3850065_output_0.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"TV Marataizes", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/logotipo__1.png",
+ link:"https://247788.global.ssl.fastly.net/68ad1a7c724a6928f050ebba/live_809e4d1087af11f092f8f727f1f0bfd4/index.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"Alpha Channel TV", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/LOGO_100x100px_-_branco.png..png",
+ link:"https://maystreaming.cloudecast.com/alphachannel/index.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"TV Interior", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/LOGOTIPO-TVIN-100X100_copiar.png",
+ link:"https://live.tvinterior.com.br/hls/stream.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"BH Channel", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/Logo_NLLcngR.png",
+ link:"https://stmv8.samcast.com.br/jcbrasil7363/jcbrasil7363/playlist.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"NSports", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/nsports_LOGO-01.png",
+ link:"https://video01.soultv.com.br/nsports/nsports/playlist.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"Acesso Brasil TV", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/100x100_ecommerce_Acesso_Brasil_TV.png",
+ link:"https://cdn.live.br1.jmvstream.com/webtv/tvacessochannel/playlist/playlist.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"GLN TV", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/LOGO_PNG_DIMENS%C3%A2O_100X100_-_GLN_TV_reduz_zKzqMEP.png",
+ link:"https://stmv8.samcast.com.br/glnfilmes/glnfilmes/playlist.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"Imperial TV", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/ITV_Q1FoOUc.png",
+ link:"https://acesso.ecast.site:3887/hybrid/play.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"TV Sonata", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/logo-tvsonata.png",
+ link:"https://video04.logicahost.com.br/isonata/isonata/playlist.m3u8",
+ embed:"", type:"m3u8" },
+
+{ name:"AWTV", logo:"https://d14vd6r4ppsx57.cloudfront.net/media/brand/LOGO_AWTV_SOULTV_AMARELO_reduz.png",
+ link:"https://streaming.cloudecast.com/hls/awtv/index.m3u8",
+ embed:"", type:"m3u8" },
+
+
+
+
+
+// --------------- 
+
 
 { name:"Rede Gênesis", logo:"https://www.mediafire.com/convkey/17ee/bsahdhz79dt7bpf5g.jpg",
  link:"https://streamer.sattvacabo.com.br/REDE_GENESIS/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
@@ -759,7 +906,7 @@ const channels = [
  embed:"", type:"m3u8" },
 
 { name:"Séries Classic", logo:"https://www.mediafire.com/convkey/4886/0gday2kjqtmjt7v5g.jpg",
- link:"https://streamer.sattvacabo.com.br/SERIE_CLASSIC/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
+ link:"https://video10.logicahost.com.br/serieclassic/serieclassic/chunklist_w554779307.m3u8",
  embed:"", type:"m3u8" },
 
 { name:"Sesc TV", logo:"https://www.mediafire.com/convkey/4884/5e7gyk5jklp1r8z5g.jpg",
@@ -838,28 +985,24 @@ const channels = [
  link:"https://streamer.sattvacabo.com.br/TV_JUSTICA/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"", type:"m3u8" },
 
-{ name:"TV Milagro Brasil", logo:"https://www.mediafire.com/convkey/8e55/gzmi76r226oe4p15g.jpg",
- link:"https://streamer.sattvacabo.com.br/TV_MILAGRO/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
- embed:"", type:"m3u8" },
-
 { name:"TV Mon HD", logo:"https://www.mediafire.com/convkey/482f/zzb4yoe47478epv5g.jpg",
- link:"https://streamer.sattvacabo.com.br/TV_MON/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
+ link:"https://video10.logicahost.com.br/tvmon/tvmon/playlist.m3u8",
  embed:"", type:"m3u8" },
 
 { name:"TV Mundo Maior", logo:"https://www.mediafire.com/convkey/1a30/ws2dgbk2jfd2pe65g.jpg",
- link:"https://streamer.sattvacabo.com.br/TV_MUNDO_MAIOR/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
- embed:"", type:"m3u8" },
+ link:"",
+ embed:"https://4shared.jctvstreaming-vip.workers.dev/tvmundomaior", type:"m3u8" },
 
 { name:"TV NGT", logo:"https://www.mediafire.com/convkey/7fd6/2f7dcx1pohiuzvv5g.jpg",
  link:"https://isaocorp.cloudecast.com/ngt/index.m3u8",
  embed:"", type:"m3u8" },
 
 { name:"TV Pai Eterno", logo:"https://www.mediafire.com/convkey/d0f3/7ec39g6ofb2qguw5g.jpg",
- link:"https://streamer.sattvacabo.com.br/PAI_ETERNO/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
+ link:"https://video09.logicahost.com.br/paieterno/paieterno/playlist.m3u8",
  embed:"", type:"m3u8" },
 
 { name:"TV Pampa", logo:"https://www.mediafire.com/convkey/415a/qtodycvjo8infil5g.jpg",
- link:"https://streamer.sattvacabo.com.br/TV_PAMPA/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
+ link:"https://video04.logicahost.com.br/tvpampa/tvpampa/chunklist_w2096560953.m3u8",
  embed:"", type:"m3u8" },
 
 { name:"TV Plenitude", logo:"https://www.mediafire.com/convkey/2904/vbwalbxb9dmtkfy5g.jpg",
@@ -1094,20 +1237,6 @@ const channels = [
 { name:"O Encantador de Cães", logo:"https://images.pluto.tv/channels/61099df8cee03b00074b2ecf/featuredImage.jpg",
  link:"https://02-1.jctvstreaming-vip.workers.dev/61099df8cee03b00074b2ecf", type:"m3u8", source: "Pluto"  },
 
-{ name:"", logo:"https://images.pluto.tv/channels//featuredImage.jpg",
- link:"https://play.jctvstreaming-vip.workers.dev/y5ggybpjtqechmz", type:"m3u8", source: "Pluto" },
-
-
-
-
-
-
-
-
-
-
-
-
 { name:"Esportes", logo:"https://images.pluto.tv/channels/5f32d2db0af67400077f29c4/featuredImage.jpg",
  link:"https://02-1.jctvstreaming-vip.workers.dev/5f32d2db0af67400077f29c4", type:"m3u8", source: "Pluto"  },
 
@@ -1137,19 +1266,6 @@ const channels = [
 
 { name:"MTV Halloween", logo:"https://images.pluto.tv/channels/68485f62fcd2ec536bd11ac1/featuredImage.jpg",
  link:"https://02-1.jctvstreaming-vip.workers.dev/68485f62fcd2ec536bd11ac1", type:"m3u8", source: "Pluto" },
-
-{ name:"", logo:"",
- link:"", type:"m3u8", source: "Pluto"  },
-
-{ name:"", logo:"",
- link:"", type:"m3u8", source: "Pluto"  },
-
-{ name:"", logo:"",
- link:"", type:"m3u8", source: "Pluto"  },
-
-{ name:"", logo:"",
- link:"", type:"m3u8", source: "Pluto"  },
-
 
 
 
@@ -1330,7 +1446,7 @@ const programacaoUrls = {
       "Real Madrid TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Real Madrid TV 2": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Rookie Blue": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
-      "Runtime": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
+
       "Runtime Ação": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Runtime Cine Espanto": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Runtime Comédia": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
@@ -1389,9 +1505,25 @@ const buttons = [];
 
 // Criar botões de canais
 channels.forEach((c, i) => {
+  const numero = i + 1;
+
   const btn = document.createElement('button');
-  btn.innerHTML = `<span><img src="${c.logo}" alt="${c.name}"> ${c.name}</span><span class="watching" style="display:none;">[Assistindo]</span>`;
-  btn.onclick = () => loadChannel(i);
+  btn.innerHTML = `
+    <span style="display:flex;align-items:center;gap:10px;">
+      <span class="channel-number">${numero}</span>
+      <img src="${c.logo}" alt="${c.name}">
+      ${c.name}
+    </span>
+    <span class="watching" style="display:none;">[Assistindo]</span>
+  `;
+  btn.onclick = () => {
+    loadChannel(i);
+
+    // Remove active dos outros
+    buttons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  };
+
   channelList.appendChild(btn);
   buttons.push(btn);
 });
