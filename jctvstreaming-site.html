@@ -4,11 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>JC TV STREAMING</title>
+
 <style>
   html, body {
     margin:0; padding:0; height:100%; width:100%; background:#000; font-family:Arial,sans-serif; overflow:hidden;
     display:flex;
   }
+
   #channelList {
     width:400px;
     background:rgba(20,20,20,0.9);
@@ -19,13 +21,17 @@
     flex-direction:column;
     gap:5px;
     font-size: 1.2em;
+
+    transition: transform 0.5s ease;
   }
+
   #channelList img {
     width:80px;
     height:auto;
     vertical-align:middle;
     margin-right:5px;
   }
+
   #channelList button {
     display:flex; 
     align-items:center; 
@@ -39,18 +45,29 @@
     text-align:left; 
     gap:5px;
   }
+
   #channelList button:hover { background:#444; }
+
   .watching {
     color: #00ffff;
     font-weight:bold;
     font-size: 1.1em;
   }
-  #playerWrapper {
-    flex:1;
-    position:relative;
-    background:#000;
+
+  /* Quando a lista estiver escondida, o player vira tela cheia de verdade */
+#playerWrapper.expandido {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 5; /* acima da lista recolhida */
+}
+
+  #player, #embedContainer iframe {
+    width:100%;
+    height:100%;
   }
-  #player { width:100%; height:100%; }
 
   #playerFooter {
     position: absolute;
@@ -66,7 +83,7 @@
   }
 
   #playerFooter img {
-    height: 20px;
+    height: 23px;
     margin-right: 8px;
   }
 
@@ -113,22 +130,24 @@
     border: none;
     background: #000;
   }
+
 #channelList button img {
   width: 30px !important;
   height: 30px !important;
   object-fit: cover !important;
-  border-radius: 10px; /* opcional */
+  border-radius: 10px;
 }
+
 /* Bolinha com número estilo PREMIUM */
 .channel-number {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 22px;  /* reduzido */
-  height: 22px; /* reduzido */
+  width: 22px;
+  height: 22px;
   background: linear-gradient(135deg, #4e00c2, #007bff);
   color: white;
-  font-size: 13px; /* ajustado proporcional */
+  font-size: 13px;
   font-weight: bold;
   border-radius: 50%;
   margin-right: 10px;
@@ -136,20 +155,18 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Animação ao passar o mouse no botão do canal */
 #channelList button:hover .channel-number {
   transform: scale(1.15);
   box-shadow: 0 0 12px rgba(0,0,0,0.6);
 }
 
-/* Estilo do botão */
 #channelList button {
   display: flex;
   align-items: center;
   gap: 10px;
   background: #10121a;
   border: none;
-  padding: 6px;  /* reduzido */
+  padding: 6px;
   border-radius: 12px;
   width: 100%;
   color: white;
@@ -158,13 +175,11 @@
   transition: background 0.25s ease, transform 0.2s;
 }
 
-/* Hover premium */
 #channelList button:hover {
   background: linear-gradient(135deg, #3c0055, #0050aa);
   transform: translateX(4px);
 }
 
-/* Canal selecionado */
 #channelList button.active {
   background: linear-gradient(135deg, #5f00ff, #0095ff);
   box-shadow: 0 0 15px rgba(0,0,0,0.5);
@@ -175,14 +190,14 @@
   transform: scale(1.25);
 }
 
-/* Forçar logo 100x100 → reduzido para 70x70 */
 #channelList button img {
-  width: 80px !important;  /* reduzido */
-  height: 50px !important; /* reduzido */
+  width: 80px !important;
+  height: 50px !important;
   object-fit: cover !important;
   border-radius: 10px;
 }
 </style>
+
 <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/clappr-subtitle-plugin@latest/dist/clappr-subtitle-plugin.min.js"></script>
 </head>
@@ -194,7 +209,7 @@
   <div id="player"></div>
 
   <div id="embedContainer">
-    <iframe id="embedFrame" src="" frameborder="0" allowfullscreen style="width:100%; height:100%;"></iframe>
+    <iframe id="embedFrame" src="" frameborder="0" allowfullscreen></iframe>
   </div>
 
   <footer id="playerFooter">
@@ -269,7 +284,7 @@ const channels = [
 
 { name:"Globo News", logo:"https://www.mediafire.com/convkey/d707/vany601v3i6oltz5g.jpg",
  link:"",
- embed:"https://embedcanais.com/globonews/", type:"m3u8" },
+ embed:"https://embedtv-5.icu/globonews", type:"m3u8" },
 
 { name:"Jovem Pan News", logo:"https://www.mediafire.com/convkey/c32e/z6n71wps9nuofum5g.jpg",
  link:"https://hplay.tv:443/live/augetv/12396547488/42.m3u8",
@@ -1497,7 +1512,8 @@ const programacaoUrls = {
       
     };
 
-const playerContainer = document.getElementById('player');
+// NOTE: Renomeei variáveis para evitar conflito: playerEl é o container interno (#player), playerWrapper é o wrapper
+const playerEl = document.getElementById('player');
 const channelList = document.getElementById('channelList');
 let player = null;
 let activeIndex = null;
@@ -1514,7 +1530,7 @@ channels.forEach((c, i) => {
       <img src="${c.logo}" alt="${c.name}">
       ${c.name}
     </span>
-    <span class="watching" style="display:none;">[Assistindo]</span>
+    <span class="watching" style="display:none; color: #00ff00;">[Assistindo]</span>
   `;
   btn.onclick = () => {
     loadChannel(i);
@@ -1550,7 +1566,7 @@ function loadChannel(index) {
   if (!ch) return;
 
   // 1) LIMPA TUDO e destrói player antigo imediatamente
-  playerContainer.innerHTML = "";
+  playerEl.innerHTML = "";
   if (player) { try { player.destroy(); } catch(e){} player = null; }
 
   // 2) SE HOUVER LINK (m3u8/mpd/mp4) -> Clappr
@@ -1565,26 +1581,26 @@ function loadChannel(index) {
     const blank = document.createElement('iframe');
     blank.src = 'about:blank';
     blank.style.display = 'none';
-    playerContainer.appendChild(blank);
+    playerEl.appendChild(blank);
 
     // usa requestAnimationFrame duas vezes para dar chance ao navegador "descarregar" o iframe anterior
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      playerContainer.innerHTML = ""; // garante container limpo
+      playerEl.innerHTML = ""; // garante container limpo
       const iframe = document.createElement('iframe');
       iframe.src = ch.embed;
       iframe.allow = 'autoplay; encrypted-media; fullscreen';
       iframe.style.width = '100%';
       iframe.style.height = '100%';
       iframe.style.border = 'none';
-      playerContainer.appendChild(iframe);
+      playerEl.appendChild(iframe);
     }));
   }
 
   // 4) Atualiza estado visual dos botões (mantive idêntico ao seu)
-  if (activeIndex !== null) {
+  if (activeIndex !== null && buttons[activeIndex]) {
     buttons[activeIndex].querySelector('.watching').style.display = 'none';
   }
-  buttons[index].querySelector('.watching').style.display = 'inline';
+  if (buttons[index]) buttons[index].querySelector('.watching').style.display = 'inline';
   activeIndex = index;
 }
 
@@ -1744,12 +1760,65 @@ btnProgramacao.addEventListener('click', async () => {
     programacaoIframe.srcdoc = `<h3 style="color:white;text-align:center;margin-top:20px">⚠️ Nenhuma programação disponível para ${canal.name}</h3>`;
   }
 });
+
+// =============================
+// AUTO ESCONDER LISTA + EXPANDIR O PLAYER
+// =============================
+
+const channelListEl = document.getElementById("channelList");
+const playerWrapper = document.getElementById("playerWrapper");
+
+let inatividadeTimer = null;
+let listaEscondida = false;
+
+// Estado inicial
+channelListEl.style.transform = "translateX(0)";
+playerWrapper.style.flex = "1"; 
+playerWrapper.style.transition = "all 0.5s ease";
+
+// Função: esconder lista
+function esconderLista() {
+    if (listaEscondida) return;
+
+    listaEscondida = true;
+
+    channelListEl.style.transform = "translateX(-420px)";
+    playerWrapper.classList.add("expandido");
+}
+
+// Função: mostrar lista
+function mostrarLista() {
+    if (!listaEscondida) return;
+
+    listaEscondida = false;
+
+    channelListEl.style.transform = "translateX(0)";
+    playerWrapper.classList.remove("expandido");
+}
+
+// Timer de inatividade
+function resetarInatividade() {
+    mostrarLista();
+    clearTimeout(inatividadeTimer);
+
+    inatividadeTimer = setTimeout(() => {
+        esconderLista();
+    }, 60000);
+}
+
+// Eventos de atividade
+["mousemove", "touchstart", "keydown", "click"].forEach(ev => {
+    document.addEventListener(ev, resetarInatividade);
+});
+
+// Iniciar timer
+resetarInatividade();
 </script>
 <!-- Tela de Alerta -->
 <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
   <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
   <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
-  <p>Desative o AdBlock para continuar.</p>
+  <p>Seu IP Será Bloqueado!</p>
 </div>
 
 <script>
