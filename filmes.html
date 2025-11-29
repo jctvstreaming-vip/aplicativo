@@ -18,7 +18,7 @@ body { background: #fff; color: #000; padding: 1rem; }
 .serie-details img { width: 100px; height: auto; border-radius: 5px; }
 .serie-details div { flex: 1; }
 #serieInfo h4, #serieInfo p { color: #000; font-weight: 600; }
-#backButton { display: none; position: fixed; top: 2px; right: 0px; z-index: 1055; background-color: #FFC107; color: #000; border: none; padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.3s ease; }
+#backButton { display: none; position: fixed; top: 2px; right: 0px; z-index: 1055; background-color: #FFC107; color: #000; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 15px; transition: 0.3s ease; }
 #backButton:hover { background-color: #0d3b66; color: #fff; }
 footer.footer { position: fixed; bottom: 0; left: 0; width: 100%; background: black; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 10px 20px; font-size: 1rem; z-index: 1000; }
 footer.footer img { height: 30px; width: auto; }
@@ -41,7 +41,7 @@ footer.footer img { height: 30px; width: auto; }
   #modalVideo { height: 60vh; }
 }
 #modalTitle {
-  font-size: 0.95rem; /* tamanho menor */
+  font-size: 1.2rem; /* tamanho menor */
   font-weight: 600; /* opcional: mantém legibilidade */
   line-height: 1.4;
   text-align:  left; /* deixa bonito no lado esquerdo */
@@ -83,6 +83,9 @@ footer.footer img { height: 30px; width: auto; }
 .modal-header {
     transition: opacity 0.4s ease;
 }
+#prevEpisodeBtn, #nextEpisodeBtn, #castButton {
+  display: none !important;
+}
 </style>
 </head>
 <body>
@@ -108,6 +111,15 @@ footer.footer img { height: 30px; width: auto; }
     </div>
   </div>
   <div id="seasonEpisodesContainer" class="mt-4"></div>
+</div>
+
+<!-- Rodapé institucional após os canais -->
+<div class="col-12 mt-4">
+   <div class="playerButtons" id="serverButtons"></div>
+  <div style="margin-top: 40px; font-size: 0.85rem; color: #000; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <p><br></p>
+    <p></p>
+  </div>
 </div>
 
 <div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
@@ -143,7 +155,7 @@ footer.footer img { height: 30px; width: auto; }
 
 <script>
 // -------------------- Dados da série --------------------
-const seriesData = {
+const seriesData = { 
     "Drácula: A Última Viagem do Deméter (2023)": {
     name: "Drácula: A Última Viagem do Deméter (2023)",
     date: "24/08/2023",
@@ -155,7 +167,7 @@ const seriesData = {
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/635910-LEG.mp4" }]
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/635910" }]     // Files.fm
     }
     }, 
     "Besouro Azul (2023)": {
@@ -336,7 +348,7 @@ const seriesData = {
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1022787.mp4" }]
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/1022787" }]    // Files.fm
     }
     },
     "Os Caras Malvados 2 (2025)": {
@@ -350,7 +362,7 @@ const seriesData = {
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1175942.mp4" }]
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1175942.mp4" }]     
     }
     },
     "Os Caras Malvados (2022)": {
@@ -406,7 +418,7 @@ const seriesData = {
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/862.mp4" }]
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/862" }]         // Files.fm
     }
     },
     "Toy Story 2 (1999)": {
@@ -420,7 +432,7 @@ const seriesData = {
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/863.mp4" }]
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/863" }]         // Files.fm
     }
     },
     "Toy Story 3 (2010)": {
@@ -434,7 +446,7 @@ const seriesData = {
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/10193.mp4" }]
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/10193" }]         // Files.fm
     }
     },
     "Toy Story: Esquecidos Pelo Tempo (2014)": {
@@ -448,7 +460,7 @@ const seriesData = {
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/256835.mp4" }]
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/25683" }]         // Files.fm
     }
     },
     "Toy Story Toons: Férias no Havaí (2011)": {
@@ -462,7 +474,7 @@ const seriesData = {
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "https://fv5-2.failiem.lv/Files.fm_2023-04-10_file_333hj5rs5/TOYSTRTONFERHAVI.mp4" }]
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/77887" }]         // Files.fm
     }
     },
     "Toy Story de Terror (2013)": {
@@ -476,7 +488,7 @@ const seriesData = {
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/213121.mp4" }]
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/213121" }]         // Files.fm
     }
     },
     "Anjos da Noite (2003)": {
@@ -521,6 +533,552 @@ const seriesData = {
         { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/12437.mp4" }]
     }
     },
+    "Lilo & Stitch (2025)": {
+    name: "Lilo & Stitch (2025)",
+    date: "22/05/2025",
+    synopsis: "Stitch, um alienígena, chega ao planeta Terra após fugir de sua prisão e tenta se passar por um cachorro para se camuflar. As coisas mudam quando Lilo, uma travessa menina, o adota de um abrigo de animais. Juntos, eles aprendem os valores da amizade e família.",
+    poster: "https://image.tmdb.org/t/p/w500/bLeEudeDDufArn1qn6KbmPO2FAL.jpg",
+    background: "https://image.tmdb.org/t/p/original/7Zx3wDG5bBtcfk8lcnCWDOLM4Y4.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/6Dla7WXkkCyn5p9LUsuKVoodDnZ.png",
+    categories: ["Família","Ficção Científica","Comédia","Aventura"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/552524" }]         // Files.fm
+    }
+    },
+    "Capitão América: O Primeiro Vingador (2011)": {
+    name: "Capitão América: O Primeiro Vingador (2011)",
+    date: "29/11/2011",
+    synopsis: "Durante a Segunda Guerra Mundial, Steve Rogers é um homem doente, do Brooklyn, que se transforma no super soldado Capitão América para ajudar nos esforços de guerra. Rogers deve parar o Caveira Vermelha, o implacável chefe de armas de Adolf Hitler e líder de uma organização que pretende usar um misterioso mecanismo de incalculáveis poderes para dominar o mundo.",
+    poster: "https://image.tmdb.org/t/p/w500/19wxfSXHhuJBRbbfUweCsfXFhpv.jpg",
+    background: "https://image.tmdb.org/t/p/original/yFuKvT4Vm3sKHdFY4eG6I4ldAnn.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/aVRucgEmhTZzgnLo97uiqGOKFme.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/1771" }]         // Files.fm
+    }
+    },
+    "Capitã Marvel (2019)": {
+    name: "Capitã Marvel (2019)",
+    date: "07/03/2019",
+    synopsis: "Capitã Marvel, parte do exército de elite dos Kree, uma raça alienígena, encontra-se no meio de uma batalha entre seu povo e os Skrulls. Ao tentar impedir uma invasão de larga escala na Terra, em 1995, ela tem memórias recorrentes de uma outra vida, como Carol Danvers, agente da Força Aérea norte-americana. Com a ajuda de Nick Fury, Capitã Marvel precisa descobrir os segredos de seu passado e pôr um fim ao conflito intergalático com os Skrulls.",
+    poster: "https://image.tmdb.org/t/p/w500/n3BisLdTMceUWcdP1ooP5VwN9JF.jpg",
+    background: "https://image.tmdb.org/t/p/original/qAzYK4YPSWDc7aa4R43LcwRIAyb.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/zvpuvRDxv5UxeXWL5QXiIUDQXlg.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/299537" }]         // Files.fm
+    }
+    },
+    "Homem de Ferro (2008)": {
+    name: "Homem de Ferro (2008)",
+    date: "30/04/2008",
+    synopsis: "Tony Stark é um industrial bilionário, que também é um brilhante inventor. Ao ser sequestrado ele é obrigado por terroristas a construir uma arma devastadora mas, ao invés disto, constrói uma armadura de alta tecnologia que permite que fuja de seu cativeiro. A partir de então ele passa a usá-la para combater o crime, sob o alter ego do Homem de Ferro.",
+    poster: "https://image.tmdb.org/t/p/w500/6yObhDNEsAmFyMVfWNL64wQGyzj.jpg",
+    background: "https://image.tmdb.org/t/p/original/8EgxSaVRZwcm3pWChyW4j7yPplq.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/usljQtXD1SWOEpcz6ifSo3vYuaD.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/1726" }]          // Files.fm
+    }
+    },
+    "O Incrível Hulk (2008)": {
+    name: "O Incrível Hulk (2008)",
+    date: "13/06/2008",
+    synopsis: "Vivendo escondido e longe de Betty Ross, a mulher que ama, o cientista Bruce Banner busca um meio de retirar a radiação gama que está em seu sangue. Ao mesmo tempo ele precisa fugir da perseguição do general Ross, seu grande inimigo, e da máquina militar que tenta capturá-lo, na intenção de explorar o poder que faz com que Banner se transforme no Hulk.",
+    poster: "https://image.tmdb.org/t/p/w500/pA6dp7I97HoTcZ30xKLxkYj59w2.jpg",
+    background: "https://image.tmdb.org/t/p/original/xfBnQ4mgf1jYZsscJGJjr6ce0Ar.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/nNthtSo5N7CRb5LJiiLZLvrANpd.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/1724" }]          // Files.fm
+    }
+    },
+    "Homem de Ferro 2 (2010)": {
+    name: "Homem de Ferro 2 (2010)",
+    date: "30/04/2010",
+    synopsis: "Em um mundo ciente da existência do Homem de Ferro, o inventor bilionário Tony Stark sofre pressão de todos os lados para compartilhar sua tecnologia com as forças armadas. Ele resiste para divulgar os segredos de sua inigualável armadura, com medo de que estas informações caiam nas mãos erradas.",
+    poster: "https://image.tmdb.org/t/p/w500/vzROjQbgKWMVf2EldXipCcjpuBL.jpg",
+    background: "https://image.tmdb.org/t/p/original/nnY3Lac8YGW1Q0Nrqj4H9zlXGps.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/c3ns1kAEmQ2NOY98F9J35249pav.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/10138" }]          // Files.fm
+    }
+    },
+    "Homem de Ferro 3 (2013)": {
+    name: "Homem de Ferro 3 (2013)",
+    date: "26/04/2013",
+    synopsis: "Depois de um inimigo reduzir o mundo de Tony Stark a destroços, o Homem de Ferro precisa aprender a confiar em seus instintos para proteger aqueles que ama, especialmente sua namorada, e lutar contra seu maior medo: o fracasso.",
+    poster: "https://image.tmdb.org/t/p/w500/C7MZwRTjvEy7gkWcLJeBGZFE1w.jpg",
+    background: "https://image.tmdb.org/t/p/original/iVped1djsF0tvGkvnHbzsE3ZPTF.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/ddMT4hpRZYqh1LEGi3ykpJ8blZ8.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/68721" }]          // Files.fm
+    }
+    },
+    "Thor (2011)": {
+    name: "Thor (2011)",
+    date: "29/04/2011",
+    synopsis: "Como filho de Odin, rei dos deuses nórdicos, Thor logo herdará o trono de Asgard de seu idoso pai. Porém, no dia de sua coroação, Thor reage com brutalidade quando os inimigos dos deuses entram no palácio violando o tratado. Como punição, Odin manda Thor para a Terra. Enquanto seu irmão Loki conspira em Asgard, Thor, agora sem seus poderes, enfrenta sua maior ameaça.",
+    poster: "https://image.tmdb.org/t/p/w500/aEV9QmgBqjRTdjsvdCgdK89tavQ.jpg",
+    background: "https://image.tmdb.org/t/p/original/cDJ61O1STtbWNBwefuqVrRe3d7l.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/fsaTApYRLtUMsyV0TE791XMkEvf.png",
+    categories: ["Aventura","Fantasia","Ação","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/10195" }]          // Files.fm
+    }
+    },
+    "Thor: O Mundo Sombrio (2013)": {
+    name: "Thor: O Mundo Sombrio (2013)",
+    date: "01/11/2013",
+    synopsis: "Thor precisa contar com a ajuda de seus companheiros e até de seu traiçoeiro irmão Loki em um plano audacioso para salvar o universo. Entretanto, os caminhos de Thor se cruzam com Jane Foster e, dessa vez, a vida dela está realmente em perigo.",
+    poster: "https://image.tmdb.org/t/p/w500/9qdqXIx2neypuT1kWKCTI2vsO4q.jpg",
+    background: "https://image.tmdb.org/t/p/original/4zTsF0RtO0av3YX1NaKDqGKPxYF.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/k4J1RJBIRfqLx895HOpXSRkinKC.png",
+    categories: ["Aventura","Fantasia","Ação","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/76338" }]          // Files.fm
+    }
+    },
+    "Os Vingadores: The Avengers (2012)": {
+    name: "Os Vingadores: The Avengers (2012)",
+    date: "27/04/2012",
+    synopsis: "Loki, o irmão de Thor, ganha acesso ao poder ilimitado do cubo cósmico ao roubá-lo de dentro das instalações da S.H.I.E.L.D. Nick Fury, o diretor desta agência internacional que mantém a paz, logo reúne os únicos super-heróis que serão capazes de defender a Terra de ameaças sem precedentes. Homem de Ferro, Capitão América, Hulk, Thor, Viúva Negra e Gavião Arqueiro formam o time dos sonhos de Fury, mas eles precisam aprender a colocar os egos de lado e agir como um grupo em prol da humanidade.",
+    poster: "https://image.tmdb.org/t/p/w500/u49fzmIJHkb1H4oGFTXtBGgaUS1.jpg",
+    background: "https://image.tmdb.org/t/p/original/nNmJRkg8wWnRmzQDe2FwKbPIsJV.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/yJ22iTTFYIz5ZRBA9ESOJZvku72.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/24428" }]          // Files.fm
+    }
+    },
+    "Capitão América: O Soldado Invernal (2014)": {
+    name: "Capitão América: O Soldado Invernal (2014)",
+    date: "10/04/2014",
+    synopsis: "Após os eventos catastróficos em Nova York com Os Vingadores, Steve Rogers segue tentando se ajustar ao mundo moderno. Porém, quando um colega da agência S.H.I.E.L.D. é atacado, Steve se vê preso em uma rede de intrigas que ameaça colocar o mundo em risco. Em parceria com a Viúva Negra e Falcão, seu novo aliado, o Capitão América tem que enfrentar um misterioso e inesperado inimigo, o Soldado Invernal.",
+    poster: "https://image.tmdb.org/t/p/w500/9sTDXtIIfHza1rAbmHU2djyzEXA.jpg",
+    background: "https://image.tmdb.org/t/p/original/1RWLMyC9KcFfcaoViMiJGSSZzzr.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/96soX5dVK5GbJ39TVCkYwHMtfyy.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/100402" }]          // Files.fm
+    }
+    },
+    "Guardiões da Galáxia (2014)": {
+    name: "Guardiões da Galáxia (2014)",
+    date: "31/07/2014",
+    synopsis: "Abduzido da Terra quando ainda era criança, Peter Quill fez carreira como saqueador e se auto denominou 'Senhor das Estrelas'. Quando rouba uma esfera, na qual o poderoso vilão Ronan, da raça kree, está interessado, passa a ser procurado por vários caçadores de recompensas. Para escapar do perigo, Quill une forças com quatro personagens fora do sistema: Groot, uma árvore humanóide (Vin Diesel), a sombria e perigosa Gamora, o guaxinim rápido no gatilho Rocket Racoon e o vingativo Drax, o Destruidor. A esfera roubada é capaz de mudar o destino de todo o universo.",
+    poster: "https://image.tmdb.org/t/p/w500/xaY92XMToaSnBuvCui3LHzNGqZB.jpg",
+    background: "https://image.tmdb.org/t/p/original/uLtVbjvS1O7gXL8lUOwsFOH4man.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/vu7pzBkXQJIFcn0ktuDO8XR64JF.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/118340" }]          // Files.fm
+    }
+    },
+    "Guardiões da Galáxia - Vol. 2 (2017)": {
+    name: "Guardiões da Galáxia - Vol. 2 (2017)",
+    date: "27/04/2017",
+    synopsis: "Os Guardiões precisam lutar para manter sua recém descoberta família unida, enquanto descobrem os mistérios sobre o verdadeiro pai de Peter Quill.",
+    poster: "https://image.tmdb.org/t/p/w500/jGtBLu0JAKf5JxhWgmF68HROzCA.jpg",
+    background: "https://image.tmdb.org/t/p/original/aJn9XeesqsrSLKcHfHP4u5985hn.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/nGgvEFdaHeSSyXtl3e5PLsbi82L.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/283995" }]          // Files.fm
+    }
+    },
+    "Vingadores: Era de Ultron (2015)": {
+    name: "Vingadores: Era de Ultron (2015)",
+    date: "23/04/2015",
+    synopsis: "Ao tentar proteger o planeta de ameaças, Tony Stark constrói um sistema de inteligência artificial que cuidaria da paz mundial. O projeto acaba dando errado e gera o nascimento do Ultron. Com o destino da Terra em jogo, os Vingadores terão que se unir para mais uma vez salvar a raça humana da extinção.",
+    poster: "https://media.themoviedb.org/t/p/w500/uvzqTsRmUzk9mJVzX8cMSWMyM5l.jpg",
+    background: "https://image.tmdb.org/t/p/original/kIBK5SKwgqIIuRKhhWrJn3XkbPq.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/a4IXS6fqA7OroPKgd6NzjmJK6S5.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/99861" }]          // Files.fm
+    }
+    },
+    "Homem-Formiga (2015)": {
+    name: "Homem-Formiga (2015)",
+    date: "16/07/2015",
+    synopsis: "Dr. Hank Pym, o inventor da fórmula/traje que permite o encolhimento, precisa impedir que seu ex-pupilo Darren Cross consiga replicar o feito e vender a tecnologia para uma organização do mal. Depois de sair da cadeia, o trambiqueiro Scott Lang está disposto a reconquistar o respeito da ex-mulher, Maggie e, principalmente, da filha. Com dificuldades de arrumar um emprego honesto, ele aceita praticar um último golpe. O que ele não sabia era que tudo não passava de um plano do Dr. Pym que, depois de anos observando o hábil ladrão, o escolhe para vestir o traje do Homem-Formiga.",
+    poster: "https://image.tmdb.org/t/p/w500/pPmKIWhrpdttdRI5VwfiAIQZ9L2.jpg",
+    background: "https://image.tmdb.org/t/p/original/1K3JmSNUN8OpjYsCjc0Hy0SYxAb.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/oU8gRZpwGJNFrVu4w89NWpifiI7.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/102899" }]          // Files.fm
+    }
+    },
+    "Capitão América: Guerra Civil (2016)": {
+    name: "Capitão América: Guerra Civil (2016)",
+    date: "05/05/2016",
+    synopsis: "Depois do ataque de Ultron, os políticos decidem controlar os Vingadores, já que suas ações afetam toda a humanidade. A decisão coloca o Capitão América em rota de colisão com o Homem de Ferro.",
+    poster: "https://image.tmdb.org/t/p/w500/dsvUR5aEVSkB1Sro7nT6Khqik71.jpg",
+    background: "https://image.tmdb.org/t/p/original/wdwcOBMkt3zmPQuEMxB3FUtMio2.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/2JtA3oRSALwFnFUlBH3HtJFp2Xs.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/271110" }]          // Files.fm
+    }
+    },
+    "Viúva Negra (2021)": {
+    name: "Viúva Negra (2021)",
+    date: "08/07/2021",
+    synopsis: "Natasha Romanoff, também conhecida como Viúva Negra, confronta o lado mais sombrio de sua história quando surge uma perigosa conspiração ligada ao seu passado. Perseguida por uma força implacável disposta a tudo para destruí-la, Natasha precisa agora lidar com seu passado como espiã e com as relações que deixou para trás muito antes de se tornar uma Vingadora.",
+    poster: "https://media.themoviedb.org/t/p/w500/pGkBgxoaNynkOBs6HEIG3dvkbuk.jpg",
+    background: "https://image.tmdb.org/t/p/original/dq18nCTTLpy9PmtzZI6Y2yAgdw5.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/2xxt3eOO1JbNO4eavnuYoDzPP5.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/497698" }]          // Files.fm
+    }
+    },
+     "Toy Story Toons: Um Pequeno Grande Erro (2011)": {
+    name: "Toy Story Toons: Um Pequeno Grande Erro (2011)",
+    date: "02/12/2011",
+    synopsis: "O Buzz Lightyear é deixado para trás em uma lanchonete quando uma versão de brinquedo de lanche infantil do Buzz toma seu lugar. Enquanto os brinquedos de Bonnie estão presos com o imitador de Buzz de 6 cm de altura, o verdadeiro Buzz está preso no restaurante em um grupo de apoio para brinquedos descartados. Enquanto Woody e sua turma elaboram uma maneira de resgatar seu amigo, o Buzz tenta escapar da reunião de psicoterapia de brinquedos.",
+    poster: "https://media.themoviedb.org/t/p/w500/7ilZXUFHUiPErGgFbBfMi6dIETW.jpg",
+    background: "https://image.tmdb.org/t/p/original/nRRij2jFTWM6jW2TPSVGtUdcgGY.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/7zogQ85haKoABivA6GwEgixwVID.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/82424" }]          // Files.fm
+    }
+    },
+    "Toy Story Toons: Festa-Sauro Rex (2012)": {
+    name: "Toy Story Toons: Festa-Sauro Rex (2012)",
+    date: "14/09/2012",
+    synopsis: "Os brinquedos acham que Rex é um desmancha-prazeres. Mas quando Bonnie o leva para o banho, ele consegue reverter isso e passa a ser o lendário Festa-Sauro Rex!",
+    poster: "https://media.themoviedb.org/t/p/w500/rnCVDSbSju6MPQO2LRDiz5ZRZ4q.jpg",
+    background: "https://image.tmdb.org/t/p/original/zCP1DkzNm9mSg0aTYi7DXWvJNQd.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/tz5jfkZo27s4QVjQb5EZVycKjg5.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/130925" }]          // Files.fm
+    }
+    },
+    "Homem-Aranha (2002)": {
+    name: "Homem-Aranha (2002)",
+    date: "17/05/2002",
+    synopsis: "Peter Parker é um jovem estudioso que vive com seus tios, Ben e May, desde que seus pais faleceram. Peter tem dificuldade em se relacionar com seus colegas, por ser tímido e por eles o considerarem um nerd. Até que, em uma demonstração científica, um acidente inesperado faz com que uma aranha modificada geneticamente pique Peter. A partir de então seu corpo é quimicamente alterado pela picada da aranha.",
+    poster: "https://image.tmdb.org/t/p/w500/2WIwz0qJpnVAiofTAhrmhbKxuvE.jpg",
+    background: "https://image.tmdb.org/t/p/original/qJzloL8O9YHhiWBrhlPfKAtZu2I.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/dhmku6yWZOkVLlmPAjtjW0QFPsg.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/557" }]          // Files.fm
+    }
+    },
+    "Homem-Aranha 2 (2004)": {
+    name: "Homem-Aranha 2 (2004)",
+    date: "02/07/2004",
+    synopsis: "Dois anos se passaram desde que o tranquilo Peter Parker separou-se do grande amor de sua vida, Mary Jane Watson, e decidiu assumir o compromisso e a responsabilidade de seguir sendo o Homem-Aranha. Peter enfrenta novos desafios enquanto aprende a lidar com 'seu dom e sua maldição', tentando desesperadamente harmonizar suas duas identidades: A do super-herói aracnídeo, o Homem-Aranha, e a do estudante universitário.",
+    poster: "https://image.tmdb.org/t/p/w500/y06FivvCfqapHB3iETOtbAqWdkD.jpg",
+    background: "https://image.tmdb.org/t/p/original/8G6HCS82vNxgg5wp7oBDSk32XpF.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/dsSCUATPalvZKKYLEWesaQ0HLEA.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/558" }]          // Files.fm
+    }
+    },
+    "Homem-Aranha 3 (2007)": {
+    name: "Homem-Aranha 3 (2007)",
+    date: "04/05/2007",
+    synopsis: "O relacionamento entre Peter Parker e Mary Jane parece estar dando certo, mas outros problemas começam a surgir. A roupa de Homem-Aranha torna-se preta e acaba controlando Peter, que apesar de aumentar seus poderes, revela o lado obscuro de sua personalidade. Os vilões Venon e Homem-Areia tentam destruir o super-herói.",
+    poster: "https://image.tmdb.org/t/p/w500/5831VrgpYNPEokBwxurLVpQ3twM.jpg",
+    background: "https://image.tmdb.org/t/p/original/w1oD1MzHjnBJc5snKupIQaSBLIh.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/nbNVDI47kCnuph6O6giApElrPCL.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/559" }]          // Files.fm
+    }
+    },
+    "Hulk (2003)": {
+    name: "Hulk (2003)",
+    date: "27/06/2003",
+    synopsis: "Bruce Banner é um cientista e trabalha ao lado de sua grande paixão, a bela Betty Ross, em um projeto que envolve a reconstituição de tecidos com a utilização da radiação gama. O problema todo começa quando, após ter seus genes alterados por um acidente envolvendo a radiação gama, Bruce Banner passa a se transformar em um ser gigantesco e verde que expressa no corpo todos os seus demônios mais íntimos e pessoais.",
+    poster: "https://image.tmdb.org/t/p/w500/dLEezc8nU4O2i96x68AvpA7xyel.jpg",
+    background: "https://image.tmdb.org/t/p/original/8vQBXqDbb30qNpBcNYwTesSg75.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/pt3XLfqd9FrskI15vAf7Sg8g1fh.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/1927" }]          // Files.fm
+    }
+    },
+    "Quarteto Fantástico (2005)": {
+    name: "Quarteto Fantástico (2005)",
+    date: "08/07/2005",
+    synopsis: "O cientista Reed Richards convence seu arrogante colega Victor von Doom a financiar seus experimentos com energia cósmica. Na estação espacial Von Doom, a tripulação, incluindo o astronauta Ben Grimm, a pesquisadora Sue Storm e o piloto Johnny Storm, é exposta a uma tempestade cósmica misteriosa que dá superpoderes a eles. Eles tentam lidar com suas transformações enquanto o detestável von Doom jura vingança.",
+    poster: "https://image.tmdb.org/t/p/w500/aZLcMo7KzM8PHsRiwHdY0RBRTzo.jpg",
+    background: "https://image.tmdb.org/t/p/original/97Sl8wiR9ULc53YMfiAUf9wWbdM.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/aYuAQgiK8SwOl3LcqywBHejmg9B.png",
+    categories: ["Ação","Aventura","Ficção Científica","Marvel Comics"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/9738" }]          // Files.fm
+    }
+    },
+    "O Gato de Botas: Os Três Diabos (2012)": {
+    name: "O Gato de Botas: Os Três Diabos (2012)",
+    date: "24/02/2012",
+    synopsis: "O Gato de Botas está em uma missão para recuperar o rubi da Princesa, roubado pelo notório ladrão francês, O Sussurrador. Relutantemente acompanhado por três gatinhos, Gato deve domá-los antes que eles põem em perigo a missão.",
+    poster: "https://image.tmdb.org/t/p/w500/ptvbHUWpU8Nh6vrmSvjx4ESDgfC.jpg",
+    background: "https://image.tmdb.org/t/p/original/4Io7sz7ut8zGyxyXcrfYWzVMOUV.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/qEMVjzkTRHPoob1bnxcvhrffDT.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/83201" }]          // Files.fm
+    }
+    },
+    "Gato de Botas: Preso Num Conto Épico (2017)": {
+    name: "Gato de Botas: Preso Num Conto Épico (2017)",
+    date: "16/06/2017",
+    synopsis: "O Gato de Botas se vê dentro de um livro de histórias mágico e, enquanto procura por uma saída, ele irá lutar, dançar e viver várias aventuras.",
+    poster: "https://image.tmdb.org/t/p/w500/rdBzfAGThrxyKYgbJCMziRi9CMz.jpg",
+    background: "https://image.tmdb.org/t/p/original/wwLL8JSrOSwVxfwAmhw0DZwqkJq.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/aonuFUUc6kTOVTylnElGcOgVGLo.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/462650" }]          // Files.fm
+    }
+    },
+    "Gato de Botas 2: O Último Pedido (2022)": {
+    name: "Gato de Botas 2: O Último Pedido (2022)",
+    date: "05/01/2023",
+    synopsis: "O Gato de Botas descobre que sua paixão pela aventura cobrou seu preço: ele queimou oito de suas nove vidas, deixando-o com apenas uma vida restante. Gato parte em uma jornada épica para encontrar o mítico Último Desejo e restaurar suas nove vidas.",
+    poster: "https://image.tmdb.org/t/p/w500/t8F7R3y7Yar2JA8IVHN6fjg2RwX.jpg",
+    background: "https://image.tmdb.org/t/p/original/jr8tSoJGj33XLgFBy6lmZhpGQNu.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/eYEy8zXW9gK7XWM5dMIq5DU786k.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/315162" }]          // Files.fm
+    }
+    },
+    "Gato de Botas (2011)": {
+    name: "Gato de Botas (2011)",
+    date: "09/12/2011",
+    synopsis: "Anos antes de conhecer Shrek e Burro, o adorável, porém astuto, Gato de Botas precisa limpar seu nome de todas as acusações que o tornam um fugitivo procurado. Ao tentar roubar feijões mágicos dos infames criminosos João e Maria, o herói cruza o caminho de sua companheira, Kitty Patas Macias, que o leva até seu velho amigo, mas agora inimigo, Humpty Dumpty. Memórias de amizade e traição aumentam as dúvidas do Gato de Botas, mas ele finalmente concorda em ajudar o ovo a conseguir os feijões mágicos. Juntos, os três planejam roubar os feijões, chegar ao castelo do Gigante, capturar a galinha dos ovos de ouro e limpar o nome do Gato.",
+    poster: "https://image.tmdb.org/t/p/w500/kc7TJHzlLOsN0M6srM67BXdGmhn.jpg",
+    background: "https://image.tmdb.org/t/p/original/ed5eiSLpM3w1v63uj36SA3FjmvG.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/tMv4pIZYiNMjlZ9ZvLNjjgLQtdd.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/417859" }]          // Files.fm
+    }
+    },
+    "Minions (2015)": {
+    name: "Minions (2015)",
+    date: "25/06/2015",
+    synopsis: "Seres amarelos milenares, os minions têm uma missão: servir os maiores vilões. Em depressão desde a morte de seu antigo mestre, eles tentam encontrar um novo chefe. Três voluntários, Kevin, Stuart e Bob, vão até uma convenção de vilões nos Estados Unidos e lá se encantam com Scarlet Overkill, que ambiciona ser a primeira mulher a dominar o mundo.",
+    poster: "https://image.tmdb.org/t/p/w500/caq9Xi6b1sZNREfzFBO2tRIBzWn.jpg",
+    background: "https://image.tmdb.org/t/p/original/c7xTZ9EA6GpH72xJC5s0x0KKR1a.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/92R6YRQXySRYdgw1Jv1z5dVCIhn.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/211672" }]          // Files.fm
+    }
+    },
+    "Minions Curta: Amarelo é o Novo Preto (2018)": {
+    name: "Minions Curta: Amarelo é o Novo Preto (2018)",
+    date: "09/11/2019",
+    synopsis: "Uma aventura sobre dois minions que tentam fugir da cadeia.",
+    poster: "https://image.tmdb.org/t/p/w500/4ECcgq6Znqqbf7QdVCQQHWn3Fzu.jpg",
+    background: "https://image.tmdb.org/t/p/original/k4fONqniV20vCzuCnFuRD6hGZW0.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/92R6YRQXySRYdgw1Jv1z5dVCIhn.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/553903" }]          // Files.fm
+    }
+    },
+    "Minions Curta: Ajudantes do Papai Noel (2019)": {
+    name: "Minions Curta: Ajudantes do Papai Noel (2019)",
+    date: "05/02/2019",
+    synopsis: "Os Minions estão de volta para outra aventura. Tendo sido acidentalmente deixados no Pólo Norte, nossos amigos Minions aproveitam ao máximo a situação tentando se tornar elfos.",
+    poster: "https://image.tmdb.org/t/p/w500/1RwIbBIU4r6By0Ra37W3huNpNrO.jpg",
+    background: "https://image.tmdb.org/t/p/original/7jzVimxqmwiYjp6cfxEqJ9yPvko.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/92R6YRQXySRYdgw1Jv1z5dVCIhn.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/579524" }]          // Files.fm
+    }
+    },
+    "Minions 2: A Origem de Gru (2022)": {
+    name: "Minions 2: A Origem de Gru (2022)",
+    date: "30/06/2022",
+    synopsis: "A continuação das aventuras dos Minions, sempre em busca de um líder tirânico. Dessa vez, eles ajudam um Gru ainda criança, descobrindo como ser vilão.",
+    poster: "https://image.tmdb.org/t/p/w500/iTP3mMw0AoqmScYzDoMmYeKxYe.jpg",
+    background: "https://image.tmdb.org/t/p/original/ArwD5x9bhhceNwLAB4etgJUyqzw.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/mTGthir1j00CBjalFDKTyMox5jJ.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/438148" }]          // Files.fm
+    }
+    },
+    "Curtas dos Minions 1 (2022)": {
+    name: "Curtas dos Minions 1 (2022)",
+    date: "27/09/2022",
+    synopsis: "Esta coletânea de curtas da franquia 'Meu Malvado Favorito' inclui mini-filmes como 'Rodas de Treino', 'Filhotinho' e 'Amarelo é o Novo Preto'.",
+    poster: "https://image.tmdb.org/t/p/w500/fYu3K8m4kax8C54XkcpefjcvdZh.jpg",
+    background: "https://image.tmdb.org/t/p/original/v57iMzSzzM8NsyMqrSmKGToHoCe.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/58LpXIPDUquSAI4EKhh3I6h6ZYp.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/1029119" }]          // Files.fm
+    }
+    },
+    "Curtas dos Minions 2 (2022)": {
+    name: "Curtas dos Minions 2 (2022)",
+    date: "08/11/2022",
+    synopsis: "Conheça curtas de animação como 'Phil’s Dance Party' e 'Binky Nelson sem Chupeta' nesta compilação de curtas da mesma produtora da franquia Meu Malvado Favorito.",
+    poster: "https://image.tmdb.org/t/p/w500/jL2xuJkM4eO0L4jbVWkjHEt5Sp6.jpg",
+    background: "https://image.tmdb.org/t/p/original/m0TSKryA9qRPzsEJxJ9CR4HHBuE.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/7wOVv9uSDtGBxcqcYEP47F8o1m.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/1045644" }]          // Files.fm
+    }
+    },
+    "Toy Story: Aventuras de Betty (2020)": {
+    name: "Toy Story: Aventuras de Betty (2020)",
+    date: "17/11/2020",
+    synopsis: "Ambientado no parque de diversões, a pastora de ovelhas aparece no topo da roda gigante com os outros brinquedos narra os acontecimentos de sua vida entre Toy Story 2 e Toy Story 4.",
+    poster: "https://image.tmdb.org/t/p/w500/gMZRPm4tcwdzfx7xu3sVzdNPVYi.jpg",
+    background: "https://image.tmdb.org/t/p/original/dRPCsvwgB1eyoBEtoGqulNhLd5C.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/sXHFm991rzm93xNfngNlwUGlwnL.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/594530" }]          // Files.fm
+    }
+    },
+    "Contatos Imediatos do Terceiro Grau (1977)": {
+    name: "Contatos Imediatos do Terceiro Grau (1977)",
+    date: "24/12/1977",
+    synopsis: "Em uma pequena cidade americana vive Roy Neary (Richard Dreyfuss), um chefe de família que, ao pressentir a chegada de alienígenas, tem o seu comportamento alterado. Ele fica obcecado pela idéia e começa a investigar a situação, buscando o local de contato dos ET’s. Como ele, diversas outras pessoas sentem a presença extraterrestre e rumam para o local do pouso da nave.",
+    poster: "https://image.tmdb.org/t/p/w500/s9WeI90IL9uh57a4KgeRtMvOdxT.jpg",
+    background: "https://image.tmdb.org/t/p/original/yBCekmb7vK70xUhtsRQBcTu65sB.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/2znJLD5sbXzIHqJ9JpV1mmomY5H.png",
+    categories: ["Ficção Científica","Drama"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://files-fm.jctvstreaming-vip.workers.dev/840" }]          // Files.fm
+    }
+    },
+    "Triplo X (2002)": {
+    name: "Triplo X (2002)",
+    date: "06/09/2002",
+    synopsis: "O ex-atleta de esportes extremos Xander 'XXX' Cage, famoso por suas acrobacias que desafiam a morte, é convencido de que pode ter sucesso em ações que espiões convencionais falharam. Xander é recrutado pelo agente Gibbons para se tornar um tipo diferente de agente secreto. Agora, em uma perigosa missão, ele precisa usar todas as suas habilidades para combater um inimigo mortal.",
+    poster: "https://image.tmdb.org/t/p/w500/lpmyeqSR2Pc7ytfTp1ScD3ferX4.jpg",
+    background: "https://image.tmdb.org/t/p/original/4QXRStvIJHsHLUf6hr7aweMX7em.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/eZ25fp86jM4nwm7cKuCHXpK0qvy.png",
+    categories: ["Ação","Aventura","Crime"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/7451.mp4" }]
+    }
+    },
+    "xXx 2: Estado de Emergência (2005)": {
+    name: "xXx 2: Estado de Emergência (2005)",
+    date: "29/04/2005",
+    synopsis: "Darius Stone é um encrenqueiro nato cuja ficha criminal e obsessão por esportes radicais fazem dele o candidato perfeito para ser o novo agente xXx. Ele deve salvar o governo norte-americano de uma conspiração fatal liderada pelo condecorado general e Secretário de Defesa George Deckert. Somente um renegado agente xXx como Stone possui as habilidades imprescindíveis para deter o perigoso grupo militar de Deckert de assumir o governo na capital norte-americana.",
+    poster: "https://media.themoviedb.org/t/p/w500/eCXmQTNfnDehgjDsyLT1sDQ3qi.jpg",
+    background: "https://image.tmdb.org/t/p/original/vBDHS8bdo5vzqaaqviMupznoRaN.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/f8qltobxXyBhakLubIPE9K8pv0S.png",
+    categories: ["Ação","Aventura","Crime"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/11679.mp4" }]
+    }
+    },
+    "xXx: Reativado (2017)": {
+    name: "xXx: Reativado (2017)",
+    date: "19/01/2017",
+    synopsis: "Quando um grupo de mercenários letais rouba uma arma de alta tecnologia, que representa uma ameaça global, o mundo precisa do superespião Xander Cage. De volta à ação, Xander lidera um time de viciados em adrenalina, capazes de desafiar a morte, em uma missão que vai quebrar tudo e salvar o dia, conseguindo ainda paracer bonzinho.",
+    poster: "https://image.tmdb.org/t/p/w500/6OVKCxeBt3B84yMjvZ4iQ1tB2BP.jpg",
+    background: "https://image.tmdb.org/t/p/original/4QLdZ2A8mkDWp2rpfgDrwmeCtUW.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/sRbPY22Iz3gZjFGwyk7rMGMoAs3.png",
+    categories: ["Ação","Aventura","Crime"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/47971.mp4" }]
+    }
+    },
     "": {
     name: "",
     date: "25/01/2050",
@@ -532,8 +1090,372 @@ const seriesData = {
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "https://zyjc.jctvstreaming-vip.workers.dev/02/" }]
-
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "" }]
+    
 
 }
 }, 
@@ -665,7 +1587,7 @@ function showSeasons(key, tabBtn) {
   if (fullText.length > 120) {
     const lerMaisBtn = document.createElement("span");
     lerMaisBtn.textContent = " ler mais";
-    lerMaisBtn.style.color = "#FFC107";
+    lerMaisBtn.style.color = "#0d3b66";
     lerMaisBtn.style.cursor = "pointer";
     lerMaisBtn.style.textDecoration = "underline";
     lerMaisBtn.style.marginLeft = "5px";
@@ -909,5 +1831,41 @@ castButton.addEventListener("click", (e) => {
 // ---------------- Inicialização
 populateCategories(); buildTabs(); updateUIOnTabToggle();
 </script>
+<!-- Tela de Alerta -->
+  <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
+    <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
+  </div>
+
+  <script>
+    function mostrarAlerta() {
+      const tela = document.getElementById("bloqueio");
+      tela.style.display = "block";
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+
+    document.querySelectorAll('a').forEach(link => {
+      link.setAttribute('target', '_self');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      const tecla = e.key.toLowerCase();
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && tecla === 'u') ||
+        (e.ctrlKey && tecla === 's') ||
+        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+      ) {
+        e.preventDefault();
+        mostrarAlerta();
+      }
+    });
+
+    window.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
 </body>
 </html>
