@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JC TV STREAMING</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+body { background: #fff; color: #000; padding: 1rem; }
+/* Centraliza os cards da aba de séries */
+#seriesTabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; padding: 1rem 0; margin-top: 120px; }
+.series-tab { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background-color: #eee; border-radius: 0.5rem; max-width: 100%; white-space: normal; cursor: pointer; }
+.series-tab img { width: 100%; height: 100%; border-radius: 5px; flex-shrink: 0; }
+.series-tab .card { width: 100px; }
+.card-body p.card-text { white-space: normal !important; word-break: break-word; overflow-wrap: break-word; font-size: 0.75rem; text-align: center; max-height: 6em; line-height: 1.2; }
+#serieInfo { display: none; padding: 1rem; background: rgba(255, 255, 255, 0.25); border-radius: 12px; margin: 1rem auto; max-width: 1200px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #000; }
+.serie-details { display: flex; gap: 1rem; align-items: flex-start; }
+.serie-details img { width: 100px; height: auto; border-radius: 5px; }
+.serie-details div { flex: 1; }
+#serieInfo h4, #serieInfo p { color: #000; font-weight: 600; }
+#backButton { display: none; position: fixed; top: 2px; right: 0px; z-index: 1055; background-color: #FFC107; color: #000; border: none; padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.3s ease; }
+#backButton:hover { background-color: #0d3b66; color: #fff; }
+footer.footer { position: fixed; bottom: 0; left: 0; width: 100%; background: black; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 10px 20px; font-size: 1rem; z-index: 1000; }
+footer.footer img { height: 30px; width: auto; }
+#centralSearch { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 200px; z-index: 1050; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+#serieSynopsis .synopsis-text { display: block; overflow: hidden; max-height: 3.6em; transition: max-height 0.3s ease; }
+#serieSynopsis .expanded { max-height: 1000px; }
+.modal-fullscreen { overflow: hidden; }
+.modal-body { overflow: hidden; display: flex; justify-content: center; align-items: center; }
+#modalVideo { object-fit: contain; width: 100%; height: 100%; }
+.modal-header-transparent { background: rgba(0, 0, 0, 0.4); position: absolute; top: 0; left: 0; width: 100%; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1rem; transition: opacity 0.3s ease; }
+#prevEpisodeBtn, #nextEpisodeBtn, #castButton { background-color: rgba(0, 0, 0, 0.6); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+#prevEpisodeBtn:hover, #nextEpisodeBtn:hover, #castButton:hover { background-color: rgba(255,255,255,0.2); color: #fff; }
+#readMoreBtn { display: inline-block; margin-top: 4px; cursor: pointer; color: #007BFF; font-weight: bold; background: none; border: none; padding: 0; }
+@media (max-width: 576px) {
+  .serie-details { flex-direction: column; align-items: center; text-align: center; }
+  .serie-details img { width: 80%; max-width: 150px; }
+  #seasonEpisodesContainer .accordion-button { font-size: 0.9rem; }
+  .series-tab .card { width: 70px; }
+  .series-tab .card-body p.card-text { font-size: 0.65rem; }
+  #modalVideo { height: 60vh; }
+}
+#modalTitle {
+  font-size: 0.95rem; /* tamanho menor */
+  font-weight: 600; /* opcional: mantém legibilidade */
+  line-height: 1.4;
+  text-align:  left; /* deixa bonito no lado esquerdo */
+}
+/* Botão "Assistir" menor */
+.btn-assistir {
+  background: #FFC107;
+  border: none;
+  color: #000000;
+  font-weight: bold;
+  border-radius: 10px;
+  font-size: 1rem;       /* fonte menor */
+  padding: 0.25rem 1rem;       /* altura e largura menores */
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-weight: bold;
+  margin-left: 0px;
+}
+.btn-assistir:hover { background-color: #0d3b66; color: #fff; }
+}
+
+/* Botão "Ler Mais" */
+.btn-lermais {
+  background: #222;
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-lermais:hover {
+  background: #444;
+  transform: scale(1.05);
+}
+#modalLogo {
+  height: auto;   /* altura pequena */ ex: 50px;
+  width: auto;    /* mantém proporção */
+  object-fit: contain;
+  margin-right: 10px; /* espaçamento do título */
+}
+.modal-header {
+    transition: opacity 0.4s ease;
+}
+</style>
+</head>
+<body>
+<button id="backButton" class="btn btn-primary btn-lg">Voltar</button>
+
+<div id="centralSearch">
+  <input type="search" id="seriesSearch" class="form-control" placeholder="Pesquisar...">
+  <select id="categoryFilter" class="form-select">
+    <option value="">Todas as Categorias</option>
+  </select>
+</div>
+
+<ul class="nav nav-tabs d-flex flex-wrap gap-3 mb-3 border-0" id="seriesTabs"></ul>
+
+<div id="serieInfo" class="card p-3">
+  <div class="serie-details">
+    <img id="seriePoster" src="" alt="Poster da Série">
+    <div>
+      <h4 id="serieTitle"></h4>
+      <p id="serieSynopsis" class="mb-0"></p>
+      <p><strong>Categoria:</strong> <span id="serieCategories"></span></p>
+      <p><strong>Linguagem:</strong> <span id="serieLanguage"></span></p>
+    </div>
+  </div>
+  <div id="seasonEpisodesContainer" class="mt-4"></div>
+</div>
+
+<div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content bg-black text-white">
+      <div class="modal-header border-0 modal-header-transparent">
+        <h5 id="modalTitle" class="modal-title d-flex align-items-center gap-2">
+    <img id="modalLogo" src="" style="height:24px; width:auto;">
+    <span id="modalTitleText"></span>
+</h5>
+        <div>
+          <button id="prevEpisodeBtn" class="btn btn-sm me-2">⏮️ </button>
+          <button id="nextEpisodeBtn" class="btn btn-sm me-2">⏭️ </button>
+          <button id="castButton" class="btn btn-sm me-2">📺 </button>
+          <button type="button" class="btn btn-sm btn-danger me-2" data-bs-dismiss="modal"> X </button>
+        </div>
+      </div>
+
+      <div class="modal-body p-0">
+        <video id="modalVideo" width="100%" height="100%" controls autoplay style="background:black;"></video>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" />
+  <span>JC TV STREAMING © 2025</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<script>
+// -------------------- Dados da série --------------------
+const seriesData = {
+    "Drácula: A Última Viagem do Deméter (2023)": {
+    name: "Drácula: A Última Viagem do Deméter (2023)",
+    date: "24/08/2023",
+    synopsis: "A tripulação do navio mercante Demeter tenta sobreviver à viagem oceânica de Carpathia a Londres enquanto são perseguidos todas as noites por uma presença impiedosa a bordo do navio.",
+    poster: "https://image.tmdb.org/t/p/w500/bojgIXdqn5VbvO8EtQVsLXrepSb.jpg",
+    background: "https://image.tmdb.org/t/p/original/dKC5qWi6S8SKkSzrP6LxTk0cb98.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/mNYHpGUHMVEMkjTNka4jEJh3Abc.png",
+    categories: ["Terror","Lançamento (2023)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/635910-LEG.mp4" }]
+    }
+    }, 
+    "Besouro Azul (2023)": {
+    name: "Besouro Azul (2023)",
+    date: "17/08/2023",
+    synopsis: "Jaime Reyes, um adolescente de origem mexicana que encontra um artefato alienígena que lhe dá um exoesqueleto mecanizado e poderes, tornando-o no Besouro Azul.",
+    poster: "https://image.tmdb.org/t/p/w500/kedGlsobpMXsKKHXhogp7gPSqG7.jpg",
+    background: "https://image.tmdb.org/t/p/original/3H9NA1KWEQN0ItL3Wl3SFZYP6yV.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/7OaQMxO4xIIPFlKGANrXk8uxm9K.png",
+    categories: ["Ação","Ficção Científica","Aventura","DC Comics","Lançamento (2023)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/565770.mp4" }]
+    }
+    }, 
+    "As Tartarugas Ninja: Caos Mutante (2023)": {
+    name: "As Tartarugas Ninja: Caos Mutante (2023)",
+    date: "31/08/2023",
+    synopsis: "Depois de anos sendo protegidos do mundo humano, os irmãos tartarugas saem para ganhar os corações dos nova yorkinos e serem aceitos como adolescentes normais através de seus atos heroicos. Sua nova amiga, April O’Neil, vai ajudá-los a derrotar um misterioso sindicado do crime, mas eles logo se veem em maus lençóis quando um exército de mutantes vai atrás deles.",
+    poster: "https://image.tmdb.org/t/p/w500/gwrFZLMPox82lsPT8MHpAYmFjw9.jpg",
+    background: "https://image.tmdb.org/t/p/original/2Cpg8hUn60PK9CW9d5SWf605Ah8.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/fDeW7FP547MMQYGamG5P04PP12i.png",
+    categories: ["Animação","Lançamento (2023)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/614930.mp4" }]
+    }
+    },     
+    "O Rei dos Assassinos (2023)": {
+    name: "O Rei dos Assassinos (2023)",
+    date: "01/09/2023",
+    synopsis: "Os maiores assassinos do mundo são contratados simultaneamente para matar Jorge Drakos, auto-declarado como Rei dos Assassinos, porém eles descobrem estão presos em uma competição para ver quem é o verdadeiro Rei dos Assassinos.",
+    poster: "https://image.tmdb.org/t/p/w500/tHA2wltMBWuaTzOzSf7P2bzhmIy.jpg",
+    background: "https://image.tmdb.org/t/p/original/hwm4mITZpjb2YVChlf9PbTC2nuK.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/stXh6hHy7MAqAuQCA8LNHgwkYvp.png",
+    categories: ["Ação","Lançamento (2023)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1024127.mp4" }]
+    }
+    }, 
+    "Mansão Mal-Assombrada (2023)": {
+    name: "Mansão Mal-Assombrada (2023)",
+    date: "27/07/2023",
+    synopsis: "Uma mãe solteira chamada Gabbie contrata um guia turístico, um médium, um padre e um historiador para ajudar a exorcizar sua mansão recém-comprada; depois de descobrir que é habitado por fantasmas.",
+    poster: "https://image.tmdb.org/t/p/w500/3puybXuYPlZPRplIVSrExZnWibb.jpg",
+    background: "https://image.tmdb.org/t/p/original/mzlZAMjE2yk2sW3f9HTeBM3B3jw.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/2lRCcfemwNRbA2kO8Pz9F0zuurL.png",
+    categories: ["Comédia","Drama","Fantasia","Lançamento (2023)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/616747.mp4" }]
+    }
+    },    
+    "Super Mario Bros. O Filme (2023)": {
+    name: "Super Mario Bros. O Filme (2023)",
+    date: "05/04/2023",
+    synopsis: "Transportados do Brooklyn para o Reino Cogumelo num passe de mágica, dois corajosos encanadores conhecem uma princesa e combatem um tirano que cospe fogo.",
+    poster: "https://image.tmdb.org/t/p/w500/ktU3MIeZtuEVRlMftgp0HMX2WR7.jpg",
+    background: "https://image.tmdb.org/t/p/original/9n2tJBplPbgR2ca05hS5CKXwP2c.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/xjvumMRQR4JPUBG4H5tgjZiKpjz.png",
+    categories: ["Animação","Lançamento (2023)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [{ title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/502356.mp4" }]
+    }
+    },
+    "Super Mario Bros. (1993)": {
+    name: "Super Mario Bros. (1993)",
+    date: "10/12/1993",
+    synopsis: "Há muito tempo, a Terra era dominada pelos dinossauros e ninguém os incomodava. A vida era boa em um lugar que, após 65 milhões de anos, passou a se chamar Brooklyn. Então algo inesperado aconteceu: Um meteoro gigante atingiu a Terra e os dinossauros foram exterminados. Entretanto, o impacto criou uma dimensão paralela, onde alguns dinossauros sobreviveram e se tornaram uma espécie inteligente e agressiva. Brooklyn, 20 anos atrás. Na porta de um convento é deixado um ovo, que é recolhido pelas freiras e dele nasce uma criança. Brooklyn, dias atuais. Os encanadores Mario Mario (Bob Hoskins) e Luigi Mario (John Leguizamo) se vêem em uma aventura fantástica para salvar a Princesa Daisy (Samantha Mathis) em um escondido mundo, Dinohattan, onde os habitantes evoluíram dos dinossauros. A dupla enfrenta desafios mortais do Rei Koopa (Dennis Hopper) e batalham contra répteis enormes para impedir um terrível plano, que busca invadir nosso mundo.",
+    poster: "https://image.tmdb.org/t/p/w500/yt5bbMfKpg1nRr4k5edxs7tPK2m.jpg",
+    background: "https://image.tmdb.org/t/p/original/7pU5ZCY0Pe8uIVDL5JAVGoUEQx9.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/eB9UAyL74zf5bhqMu1X1w9htFzZ.png",
+    categories: ["Aventura","Fantasia","Comédia","Família"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/9607.mp4" }]
+    }
+    },
+    "Mansão Mal-Assombrada (2003)": {
+    name: "Mansão Mal-Assombrada (2003)",
+    date: "26/11/2003",
+    synopsis: "A confusão começa quando Jim Evers, um agente imobiliário viciado em trabalho, interrompe uma viagem de família para tentar fechar um negócio em uma mansão. Chegando lá, Jim descobre não só que a casa é mal-assombrada, mas também que tem poucas horas para quebrar uma terrível maldição!",
+    poster: "https://image.tmdb.org/t/p/w500/lcrrqT4Rq0N7wuyNKelESbpFNPT.jpg",
+    background: "https://image.tmdb.org/t/p/original/bz7bdPMzBQcWTsyiT7LrLm0S4rL.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/c4kV126LCJnwFa0L85X0dpuhcpH.png",
+    categories: ["Fantasia","Comédia","Família","Mistério"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/10756.mp4" }]
+    }
+    },
+    "Megatubarão 2 (2023)": {
+    name: "Megatubarão 2 (2023)",
+    date: "03/08/2023",
+    synopsis: "Um mergulho exploratório nas profundezas do oceano de uma ousada equipe de pesquisa se transforma em caos quando uma operação de mineração malévola ameaça sua missão e os força a uma batalha de alto risco pela sobrevivência.",
+    poster: "https://image.tmdb.org/t/p/w500/x3uhIodq56mlGBwpDTZ52trGb35.jpg",
+    background: "https://image.tmdb.org/t/p/original/5mzr6JZbrqnqD8rCEvPhuCE5Fw2.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/ztXcVBF7WsLlPvXihNtmAD4oiY8.png",
+    categories: ["Ação","Ficção Científica","Terror","Lançamento (2023)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/615656.mp4" }]
+    }
+    },
+    "Megatubarão (2018)": {
+        name: "Megatubarão (2018)",
+        date: "09/08/2018",
+        synopsis: "Na fossa mais profunda do Oceano Pacífico, a tripulação de um submarino fica presa dentro do local após ser atacada por uma criatura pré-histórica que se achava estar extinta, um tubarão de mais de 20 metros de comprimento, o Megalodon. Para salvá-los, um oceanógrafo chinês contrata Jonas Taylor, um mergulhador especializado em resgates em água profundas que já encontrou com a criatura anteriormente.",
+        poster: "https://image.tmdb.org/t/p/w500/nidLgS7SNKI7HwD2wwgf07jYJZR.jpg",
+        background: "https://image.tmdb.org/t/p/original/ibKeXahq4JD63z6uWQphqoJLvNw.jpg",
+        logotipo: "https://image.tmdb.org/t/p/original/ppaQ4Y7RqNNysRgKtqKrBrHPNjV.png",
+        categories: ["Ação","Ficção Científica","Terror"],
+        language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/345940.mp4" }]
+     }
+    },
+    "Canina (2024)": {
+        name: "Canina (2024)",
+        date: "06/10/2024",
+        synopsis: "Uma mulher interrompe sua carreira para se tornar mãe, mas logo sua nova vida de dona de casa toma um rumo surreal.",
+        poster: "https://image.tmdb.org/t/p/w500/fny7sIv34t3rvCNk2GWpckHSUXU.jpg",
+        background: "https://image.tmdb.org/t/p/original/jvFj4V2C6fQziMhOzCYdeW2vEbS.jpg",
+        logotipo: "https://image.tmdb.org/t/p/original/jiWRmFyqeSSBnxW56n6icYpzJgQ.png",
+        categories: ["Comédia","Terror","Lançamento (2024)"],
+        language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/728949.mp4" }]
+    }
+    },
+    "Como Treinar o Seu Dragão (2025)": {
+    name: "Como Treinar o Seu Dragão (2025)",
+    date: "07/06/2025",
+    synopsis: "Na montanhosa Ilha de Berk, vikings e dragões são inimigos implacáveis há gerações, mas Soluço é diferente. Filho do Chefe Stoico, o Imenso, o criativo e subestimado Soluço desafia séculos de tradição ao fazer amizade com Banguela, um temido dragão Fúria da Noite. Essa relação improvável revela a verdadeira natureza dos dragões, abalando as bases da sociedade viking.",
+    poster: "https://image.tmdb.org/t/p/w500/vdvEClt3J8sFWxyMo0Jm7JpouEo.jpg",
+    background: "https://image.tmdb.org/t/p/original/AeDzjt00Hfh9CuW7TIUdYBJmWYM.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/nJreUuUhGP5mYYtgUs2dvbZoIvT.png",
+    categories: ["Fantasia","Família","Ação","Aventura","Lançamento (2025)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1087192.mp4" }]
+    }
+    },
+    "É Assim Que Acaba (2024)": {
+    name: "É Assim Que Acaba (2024)",
+    date: "08/08/2024",
+    synopsis: "Lily Bloom, uma mulher que supera uma infância traumática para começar uma nova vida em Boston e perseguir o sonho de sua vida de abrir seu próprio negócio. Um encontro casual com o charmoso neurocirurgião Ryle Kincaid desencadeia uma conexão intensa, mas à medida que os dois se apaixonam profundamente, Lily começa a ver lados de Ryle que a lembram do relacionamento de seus pais. Quando o primeiro amor de Lily, Atlas Corrigan, reaparece repentinamente em sua vida, seu relacionamento com Ryle é abalado, e Lily percebe que deve aprender a confiar em sua própria força para fazer uma escolha impossível para o seu futuro.",
+    poster: "https://image.tmdb.org/t/p/w500/tYzTDYmiTVfVzsPtXLMPqrk4t6V.jpg",
+    background: "https://image.tmdb.org/t/p/original/1K2wmvUbWy8ef7bq54NVOxQxVO7.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/xQ3k4tWA4oTESvFK41nPqn4W4mH.png",
+    categories: ["Drama","Romance","Lançamento (2024)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1079091.mp4" }]
+    }
+    },
+    "Elio (2025)": {
+    name: "Elio (2025)",
+    date: "19/06/2025",
+    synopsis: "Elio, um garoto oprimido com uma imaginação fértil, acaba sendo transportado acidentalmente para o Comuniverso. Identificado por engano como o embaixador da Terra para o resto do universo, Elio precisará formar novos laços com excêntricas formas de vida alienígenas, sobreviver a uma série de tribulações terríveis e, de alguma forma, descobrir quem ele realmente está destinado a ser.",
+    poster: "https://image.tmdb.org/t/p/w500/2H8k54MWPQtsxWkQhR2HVfT34ty.jpg",
+    background: "https://image.tmdb.org/t/p/original/bvATKuxz9Wu53caHUJ7SP38gFQ3.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/j0peiZsZgi5b6f0cPZ843F3kd6W.png",
+    categories: ["Animação","Lançamento (2025)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1022787.mp4" }]
+    }
+    },
+    "Os Caras Malvados 2 (2025)": {
+    name: "Os Caras Malvados 2 (2025)",
+    date: "14/08/2025",
+    synopsis: "Os agora reformados Bad Guys estão tentando (muito, muito mesmo) ser bons, mas em vez disso se veem sequestrados para um assalto de alto risco e alcance mundial, arquitetado por uma nova equipe de criminosos que eles nunca imaginaram: as Bad Girls.",
+    poster: "https://image.tmdb.org/t/p/w500/dbpNAldCtWjotI4vEiphPrz8DJh.jpg",
+    background: "https://image.tmdb.org/t/p/original/jvpkBenB6hv19WWYVlaiow8zklq.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/nuVUz26RnMwnimgiix9VDNDoClP.png",
+    categories: ["Animação","Lançamento (2025)"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1175942.mp4" }]
+    }
+    },
+    "Os Caras Malvados (2022)": {
+    name: "Os Caras Malvados (2022)",
+    date: "17/03/2022",
+    synopsis: "Nunca houve cinco amigos tão infames quanto Os Caras Malvados – o arrojado batedor de carteiras Sr. Wolf, o arrombador de cofres Mr. Snake, o mestre do disfarce do frio Sr. Shark, o 'músculo' curto do Sr. Piranha e a especialista em hacker de língua afiada Sra. Tarantula, também conhecido como 'Webs'.",
+    poster: "https://image.tmdb.org/t/p/w500/aiJxdTjQdupyeMxnsmXOqDuw7qq.jpg",
+    background: "https://image.tmdb.org/t/p/original/3AhT4YuBcU4A3KKXzzXZO6fUiKj.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/jtKI7wf67hHclNLdI0f8mxRJyO7.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/629542.mp4" }]
+    }
+    },
+    "Toy Story 4 (2019)": {
+    name: "Toy Story 4 (2019)",
+    date: "20/06/2019",
+    synopsis: "Agora morando na casa da pequena Bonnie, Woody apresenta aos amigos o novo brinquedo construído por ela: Garfinho, baseado em um garfo de verdade. O novo posto de brinquedo não o agrada nem um pouco, o que faz com que Garfinho fuja de casa. Decidido a trazer de volta o atual brinquedo favorito de Bonnie, Woody parte em seu encalço e, no caminho, reencontra Bo Peep, que agora vive em um parque de diversões.",
+    poster: "https://image.tmdb.org/t/p/w500/csiyO6q8rR74pfgJDjwINzhoick.jpg",
+    background: "https://image.tmdb.org/t/p/original/eHz61dRrYZB16glXDttV0CnJf6j.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/xrTa6Y59uC1rURuGHllbzH5Qz2c.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/301528.mp4" }]
+    }
+    },
+    "As Tartarugas Ninja: O Retorno (2007)": {
+    name: "As Tartarugas Ninja: O Retorno (2007)",
+    date: "13/04/2007",
+    synopsis: "Estranhos acontecimentos tomam Nova York. Leonardo e o Mestre Splinter resolvem ir atrás de Raphael, Donatello e Michelangelo para reagrupar as Tartarugas Ninja. Versão animada baseada na série de TV e nos três filmes lançados sobre as adolescentes tartarugas ninja que vivem nos esgotos de Nova York.",
+    poster: "https://media.themoviedb.org/t/p/w500/vNSwMohSS0XMXXbcmw3RsBaE35q.jpg",
+    background: "https://image.tmdb.org/t/p/original/92mpNNg6v2PN2HN2C2Z4g0v3Tya.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/aiV4rLJXM0KR7Idq7GheBt2TlKT.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1273.mp4" }]
+    }
+    },
+    "Toy Story: Um Mundo de Aventuras (1995)": {
+    name: "Toy Story: Um Mundo de Aventuras (1995)",
+    date: "12/01/1996",
+    synopsis: "Buzz Lightyear é o novo e sofisticado astronauta de brinquedo do garoto Andy. Buzz não imaginava que encontraria um rival: Woody, um cowboy de brinquedo que, dominado pelo ciúme, acredita ter perdido um lugar precioso no coração do seu dono. Os dois brinquedos vivem brigando até que vão parar nas garras do vizinho, um verdadeiro destruidor de brinquedos. Agora, mais do que nunca, Buzz e Woody precisam precisam se unir para escapar do perigo. Com a ajuda de seus amigos da caixa de brinquedos, eles vão viver uma incrível aventura.",
+    poster: "https://image.tmdb.org/t/p/w500/6AafgfifXkFS4g2xGJZIwsPQK6P.jpg",
+    background: "https://image.tmdb.org/t/p/original/3Rfvhy1Nl6sSGJwyjb0QiZzZYlB.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/4vtDA6gfNy7V93HqFuwfqZAyNcx.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/862.mp4" }]
+    }
+    },
+    "Toy Story 2 (1999)": {
+    name: "Toy Story 2 (1999)",
+    date: "30/10/1999",
+    synopsis: "Quando Andy viaja para um acampamento de verão, Woody é sequestrado por Al, um ambiocioso colecionador, que precisa do brinquedo favorito de Andy para completar sua coleção da Gangue do Rodeio. Junto com Jessie, Bala no Alvo e Mineiro, Woody corre o risco de ter que passar o resto de sua vida em exposição num museu. Agora, Buzz, Sr. Cabeça de Batata, Porquinho, Rex e Slinky terão que salvar seu amigo e trazê-lo de volta à vida de brinquedos.",
+    poster: "https://image.tmdb.org/t/p/w500/2MFIhZAW0CVlEQrFyqwa4U6zqJP.jpg",
+    background: "https://image.tmdb.org/t/p/original/tPK1kSevALeVGPfDFv1pwyHnoJ9.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/7LsRjAzrib92PMK5jf2VjE4XAyv.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/863.mp4" }]
+    }
+    },
+    "Toy Story 3 (2010)": {
+    name: "Toy Story 3 (2010)",
+    date: "18/06/2010",
+    synopsis: "Woody, Buzz e o resto dos brinquedos de Andy não são usados há anos. Com Andy prestes a ir para a faculdade, o grupo acaba por ser deixado acidentalmente numa creche. Os brinquedos devem se unir para escapar e voltar para casa de Andy.",
+    poster: "https://media.themoviedb.org/t/p/w500/HihMWEvIZrjZL0m6aouMcIfZxI.jpg",
+    background: "https://image.tmdb.org/t/p/original/wE5JGzujfvDPMIfFjJyrhXFjZLc.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/rtVRqcMq5zbimjlp2Dw1NbG9FeH.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/10193.mp4" }]
+    }
+    },
+    "Toy Story: Esquecidos Pelo Tempo (2014)": {
+    name: "Toy Story: Esquecidos Pelo Tempo (2014)",
+    date: "14/12/2014",
+    synopsis: "Em um dia de bricandeiras de Bonnie após o Natal, a galera se encontra em um território desconhecido ao perceber que os bonecos de ação superdivertidos, na verdade, são malucos. Para que os brinquedos voltem para o quarto de Bonnie, tudo depende de Trixie, a triceratops.",
+    poster: "https://media.themoviedb.org/t/p/w500/qNxLl8aRtbkJLLd0UQn8i41D7W8.jpg",
+    background: "https://image.tmdb.org/t/p/original/4vetbabOgDQzpitnAkEVRiZP4P5.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/xyAaqPFtCs4UoDtvp1StktyIIqF.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/256835.mp4" }]
+    }
+    },
+    "Toy Story Toons: Férias no Havaí (2011)": {
+    name: "Toy Story Toons: Férias no Havaí (2011)",
+    date: "24/06/2011",
+    synopsis: "É tempo de férias para Bonnie, que está indo para o Havaí com sua família. Os brinquedos estão animados para uma semana de folga, mas Barbie e Ken entram na mochila de Bonnie, na esperança de ir com ela para o Havaí. Porém, Bonnie deixa sua mochila em casa, para horror de Ken. Barbie revela a Woody que Ken tinha planejado lhe dar o primeiro beijo na praia ao pôr do sol. Woody, Buzz e os outros brinquedos recriam o Havaí para os dois.",
+    poster: "https://media.themoviedb.org/t/p/w500/khfzaTQdj5jYUCSk6nM35dbcNiI.jpg",
+    background: "https://image.tmdb.org/t/p/original/Tvn4W6qdbqhW5qcL7FZgb6570b.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/rkGiXNCpTe7x9sgkUIB0aHQPI60.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://fv5-2.failiem.lv/Files.fm_2023-04-10_file_333hj5rs5/TOYSTRTONFERHAVI.mp4" }]
+    }
+    },
+    "Toy Story de Terror (2013)": {
+    name: "Toy Story de Terror (2013)",
+    date: "16/10/2013",
+    synopsis: "Os brinquedos partem em uma viagem juntamente com Bonnie, mas um evento inesperado faz com que todos parem em um hotel de beira de estrada. Quando um dos brinquedos simplesmente desaparece, Woody, Buzz e toda a turma precisam enfrentar o medo do desconhecido para encontrá-lo.",
+    poster: "https://media.themoviedb.org/t/p/w500/l322MKyX8QDXd0ndsXKf8YObfl2.jpg",
+    background: "https://image.tmdb.org/t/p/original/hrjLiSuPPj4rPPn13Aj9sgAzw.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/l3QGtF7CePmJKniD36YatdGOPXD.png",
+    categories: ["Animação"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/213121.mp4" }]
+    }
+    },
+    "Anjos da Noite (2003)": {
+    name: "Anjos da Noite (2003)",
+    date: "16/04/2004",
+    synopsis: "Na calada da noite, vampiros se envolvem em uma batalha antiga com seus inimigos, os Lycans, um grupo de lobisomens violentos. Selene, uma vampira que é órfã por conta de um ataque dos Lycan, trabalha para o clã dos vampiros como uma matadora treinada. Quando os Lycan se interessam misteriosamente por Michael Corvin, um doutor mortal excepcional, Selene luta para livrá-lo de Lucian, um cruel Lycan.",
+    poster: "https://image.tmdb.org/t/p/w500/4DraJB84CY1UX6IKEjdQbWEJcUQ.jpg",
+    background: "https://image.tmdb.org/t/p/original/zsgdVbuEwqZbnUN9qLGEMBYf2Zo.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/aCceastXJN3EYd2zxUDQidOhH6T.png",
+    categories: ["Fantasia, Ação, Thriller"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/277.mp4" }]
+    }
+    },
+    "Anjos da Noite: A Evolução (2006)": {
+    name: "Anjos da Noite: A Evolução (2006)",
+    date: "17/03/2006",
+    synopsis: "Após o final do primeiro filme, a união de Selene a vampira e seu namorado Michael o vampiro-lobisomen terá de ser mais forte que o amor. Os dois terão de enfrentar uma legião de vampiros e lobisomen, e a evolução das espécies. Além disso, o centenário vampiro Marcus desperta de seu sono, pronto para matá-los.",
+    poster: "https://image.tmdb.org/t/p/w500/psVdP3DDfDzNg0nl25UwBG4rWdw.jpg",
+    background: "https://image.tmdb.org/t/p/original/lao4tAa7y5QX5benDMyIeeRiTCb.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/2yA4u1gYtFImIuUi2dqi2xRsDhg.png",
+    categories: ["Fantasia, Ação, Thriller"],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/834.mp4" }]
+    }
+    },
+    "Anjos da Noite: A Rebelião (2009)": {
+    name: "Anjos da Noite: A Rebelião (2009)",
+    date: "17/04/2009",
+    synopsis: "Viktor, o cruel rei dos vampiros, tem perseguido e escravizado os lycans, uma linhagem de lobisomens nascidos humanos, por séculos. Este tirano ancião exige prata dos nobres, com o propósito de manter o controle dos seus escravos bestiais. Enquanto cresce, o jovem Lucian se apaixona pela filha de Viktor, Sonja, uma vampira insubordinada e imprudente. Juntos, Sonja e Lucian orquestram uma batalha épica, que marca o início de uma longa guerra entre vampiros e lobisomens.",
+    poster: "https://image.tmdb.org/t/p/w500/bXRKtNLPM86snkBXERKnYHuRK2W.jpg",
+    background: "https://image.tmdb.org/t/p/original/rT7Kn7aT5owqpPSRSbxUmqRNz4w.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/rTDvacSqUGNxZpdLt4r0QesmDYR.png",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/12437.mp4" }]
+    }
+    },
+    "": {
+    name: "",
+    date: "25/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    language: ["Dublado"],
+    seasons: {
+      1: [
+        { title: "Filme Completo", url: "https://zyjc.jctvstreaming-vip.workers.dev/02/" }]
+
+
+}
+}, 
+};
+
+
+
+
+// ---------------- Elementos
+const seriesTabs = document.getElementById("seriesTabs");
+const serieInfo = document.getElementById("serieInfo");
+const serieTitle = document.getElementById("serieTitle");
+const serieSynopsis = document.getElementById("serieSynopsis");
+const seriePoster = document.getElementById("seriePoster");
+const serieCategories = document.getElementById("serieCategories");
+const serieLanguage = document.getElementById("serieLanguage");
+const seasonEpisodesContainer = document.getElementById("seasonEpisodesContainer");
+const seriesSearch = document.getElementById("seriesSearch");
+const categoryFilter = document.getElementById("categoryFilter");
+const backButton = document.getElementById('backButton');
+const modalVideo = document.getElementById("modalVideo");
+const modalTitle = document.getElementById("modalTitle");
+const prevEpisodeBtn = document.getElementById("prevEpisodeBtn");
+const nextEpisodeBtn = document.getElementById("nextEpisodeBtn");
+const castButton = document.getElementById("castButton");
+
+let currentSeries = null;
+let episodeQueue = [];
+let currentEpisodeIndex = 0;
+let currentHls = null;
+
+// Função para converter "dd/mm/aaaa" em objeto Date
+function parseDate(dateStr) {
+  const [day, month, year] = dateStr.split('/').map(Number);
+  return new Date(year, month - 1, day);
+}
+
+// Ordenar as séries da mais nova para a mais antiga
+const orderedSeries = Object.entries(seriesData)
+  .sort(([, a], [, b]) => parseDate(b.date) - parseDate(a.date))
+  .reduce((acc, [key, value]) => {
+    acc[key] = value;
+    return acc;
+  }, {});
+
+// Agora orderedSeries tem as séries ordenadas por data (mais novas primeiro)
+console.log(orderedSeries);
+
+// ---------------- Categorias
+function populateCategories(){
+  const allCategories = new Set();
+  Object.values(seriesData).forEach(s => s.categories.forEach(c => allCategories.add(c)));
+  [...allCategories].sort().forEach(cat=>{
+    const option = document.createElement("option");
+    option.value = cat; option.textContent = cat;
+    categoryFilter.appendChild(option);
+  });
+}
+
+// ---------------- Monta abas
+function buildTabs(filteredKeys=null){
+  seriesTabs.innerHTML = "";
+  let keys = filteredKeys || Object.keys(seriesData);
+
+  // 🔹 Ordenar pela data (mais recentes primeiro)
+  keys.sort((a, b) => parseDate(seriesData[b].date) - parseDate(seriesData[a].date));
+
+  keys.forEach(key=>{
+    const s = seriesData[key];
+    const li = document.createElement("li");
+    li.className="nav-item";
+    const btn = document.createElement("button");
+    btn.className="nav-link p-0 border-0 bg-transparent text-center series-tab";
+    btn.dataset.target = key;
+    btn.innerHTML = `
+      <div class="card border-0" style="width: 80px;">
+        <img src="${s.poster}" class="card-img-top rounded" style="height:120px;object-fit:cover;" alt="${s.name}">
+        <div class="card-body p-1">
+          <p class="card-text small text-truncate mb-0">${s.name}</p>
+        </div>
+      </div>`;
+    li.appendChild(btn);
+    seriesTabs.appendChild(li);
+  });
+}
+
+// Função para converter "dd/mm/aaaa" em objeto Date
+function parseDate(dateStr) {
+  const [day, month, year] = dateStr.split('/').map(Number);
+  return new Date(year, month - 1, day);
+}
+
+// Ordenar as séries da mais nova para a mais antiga
+function getOrderedSeries(data) {
+  return Object.entries(data)
+    .sort(([, a], [, b]) => parseDate(b.date) - parseDate(a.date)) // mais novas primeiro
+    .reduce((acc, [key, value]) => {
+      acc[key] = value;
+      return acc;
+    }, {});
+}
+
+// Substituir seu seriesData por uma versão ordenada
+const orderedSeriesData = getOrderedSeries(seriesData);
+
+// -------------------- Mostra detalhes da série --------------------
+function showSeasons(key, tabBtn) {
+  const s = seriesData[key];
+  serieTitle.textContent = s.name;
+  seriePoster.src = s.poster;
+  serieCategories.textContent = s.categories.join(", ");
+  serieLanguage.textContent = s.language.join(", ");
+  serieInfo.style.display = "block";
+
+  // Sinopse com "ler mais/ler menos"
+  serieSynopsis.innerHTML = "";
+  const synopsisText = document.createElement("span");
+  synopsisText.className = "synopsis-text";
+  synopsisText.style.whiteSpace = "pre-wrap";
+  synopsisText.style.display = "inline";
+
+  const fullText = s.synopsis.trim();
+  const shortText = fullText.length > 100 ? fullText.slice(0, 100) + "..." : fullText;
+  let expanded = false;
+
+  synopsisText.textContent = shortText;
+  serieSynopsis.appendChild(synopsisText);
+
+  if (fullText.length > 120) {
+    const lerMaisBtn = document.createElement("span");
+    lerMaisBtn.textContent = " ler mais";
+    lerMaisBtn.style.color = "#FFC107";
+    lerMaisBtn.style.cursor = "pointer";
+    lerMaisBtn.style.textDecoration = "underline";
+    lerMaisBtn.style.marginLeft = "5px";
+
+    serieSynopsis.appendChild(lerMaisBtn);
+
+    lerMaisBtn.addEventListener("click", () => {
+      expanded = !expanded;
+      if (expanded) { synopsisText.textContent = fullText; lerMaisBtn.textContent = " ler menos"; }
+      else { synopsisText.textContent = shortText; lerMaisBtn.textContent = " ler mais"; }
+    });
+  }
+
+  // Posiciona info logo abaixo da aba selecionada
+  const li = tabBtn.closest("li");
+  li.insertAdjacentElement("afterend", serieInfo);
+
+// ---------------- Episódios ----------------
+seasonEpisodesContainer.innerHTML = "";
+
+// Procurar o primeiro episódio disponível em qualquer temporada
+let firstEpisode = null;
+for (const episodes of Object.values(s.seasons)) {
+  if (episodes && episodes.length > 0) {
+    firstEpisode = episodes[0];
+    break;
+  }
+}
+
+// Criar botão "Assistir"
+if (firstEpisode) {
+  const assistirBtn = document.createElement("button");
+  assistirBtn.className = "btn btn-assistir w-100 py-2 mt-2";
+  assistirBtn.textContent = "▶️ Assistir";
+
+  // configurar dados para o player
+  assistirBtn.dataset.vid = firstEpisode.url;
+  assistirBtn.dataset.title = `${s.name} – Assistir`;
+
+  // 🔥 ADICIONAR O LOGO AQUI
+  assistirBtn.dataset.logo = s.logotipo;
+
+  // montar fila
+  episodeQueue = [{
+    src: firstEpisode.url,
+    title: s.name,
+    logo: s.logotipo
+  }];
+  currentEpisodeIndex = 0;
+
+  assistirBtn.addEventListener("click", () => {
+    playEpisode(0);
+  });
+
+  seasonEpisodesContainer.appendChild(assistirBtn);
+}
+
+  // ---------------- Background ----------------
+  document.body.style.backgroundImage = `url('${s.background}')`;
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+  document.body.style.backgroundAttachment = "fixed";
+}
+
+// ---------------- Toggle UI
+function updateUIOnTabToggle(){
+  if(currentSeries){ 
+    backButton.style.display='block'; 
+    seriesSearch.style.display='none'; 
+    categoryFilter.style.display='none'; 
+    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='none'); 
+  }
+  else { 
+    backButton.style.display='none'; 
+    seriesSearch.style.display='block'; 
+    categoryFilter.style.display='block'; 
+    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='inline-block'); 
+  }
+}
+
+// ---------------- Eventos
+seriesTabs.addEventListener("click",(e)=>{
+  const btn = e.target.closest("button.series-tab"); if(!btn) return;
+  const target = btn.dataset.target;
+  if(currentSeries===target){ currentSeries=null; serieInfo.style.display="none"; document.body.style.backgroundImage=""; }
+  else{ currentSeries=target; document.querySelectorAll("#seriesTabs button").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); showSeasons(target,btn); }
+  updateUIOnTabToggle();
+});
+
+backButton.addEventListener("click", ()=>{ currentSeries=null; serieInfo.style.display="none"; document.body.style.backgroundImage=""; updateUIOnTabToggle(); });
+
+// ---------------- Filtros de busca + categoria
+function applyFilters() {
+  const q = (seriesSearch.value || "").toLowerCase().trim();
+  const cat = categoryFilter.value;
+
+  const keys = Object.keys(seriesData).filter(key => {
+    const s = seriesData[key];
+
+    // filtro de texto (nome da série)
+    if (q && !s.name.toLowerCase().includes(q)) return false;
+
+    // filtro de categoria
+    if (cat && !(s.categories || []).some(c => c.toLowerCase() === cat.toLowerCase()))
+      return false;
+
+    return true;
+  });
+
+  buildTabs(keys);
+}
+
+seriesSearch.addEventListener("input", applyFilters);
+categoryFilter.addEventListener("change", applyFilters);
+
+// ---------------- Player
+document.addEventListener("click", (e) => {
+  const epItem = e.target.closest(".open-player");
+  if (!epItem) return;
+
+  const seasonContainer = epItem.closest(".accordion-collapse"); 
+  const seasonEps = Array.from(seasonContainer.querySelectorAll(".open-player"));
+
+  episodeQueue = seasonEps.map(b => ({
+      src: b.dataset.vid,
+      title: b.dataset.title,
+      logo: b.dataset.logo
+  }));
+
+  currentEpisodeIndex = seasonEps.indexOf(epItem);
+  playEpisode(currentEpisodeIndex);
+});
+
+function playEpisode(index){
+  if(index<0 || index>=episodeQueue.length) return;
+
+  currentEpisodeIndex = index;
+  const videoData = episodeQueue[currentEpisodeIndex];
+
+  document.getElementById("modalTitleText").textContent = videoData.title;
+
+  // 🔥 USAR O NOME CERTO DO ATRIBUTO
+  document.getElementById("modalLogo").src = videoData.logo;
+
+  if(currentHls){
+    currentHls.destroy();
+    currentHls = null;
+  }
+
+  modalVideo.pause();
+  modalVideo.src = "";
+
+  if(Hls.isSupported() && videoData.src.endsWith(".m3u8")){
+    currentHls = new Hls();
+    currentHls.loadSource(videoData.src);
+    currentHls.attachMedia(modalVideo);
+    currentHls.on(Hls.Events.MANIFEST_PARSED, ()=> modalVideo.play());
+  } else {
+    modalVideo.src = videoData.src;
+    modalVideo.play();
+  }
+
+  new bootstrap.Modal(document.getElementById("playerModal")).show();
+}
+
+// ---------------- Inatividade (esconder barra do player)
+let inatividadeTimer;
+
+// Mostra a barra
+function mostrarBarraPlayer() {
+    const barra = document.querySelector(".modal-header");
+    barra.style.opacity = "1";
+}
+
+// Esconde a barra
+function esconderBarraPlayer() {
+    const barra = document.querySelector(".modal-header");
+    barra.style.opacity = "0";
+}
+
+// Reseta o timer sempre que mexe
+function resetarInatividade() {
+    mostrarBarraPlayer();
+    clearTimeout(inatividadeTimer);
+
+    inatividadeTimer = setTimeout(() => {
+        esconderBarraPlayer();
+    }, 3000); // 3 segundos
+}
+
+// Eventos de atividade
+document.getElementById("playerModal").addEventListener("mousemove", resetarInatividade);
+document.getElementById("playerModal").addEventListener("click", resetarInatividade);
+
+// Quando abrir o modal, inicia o timer
+document.getElementById("playerModal").addEventListener("shown.bs.modal", () => {
+    resetarInatividade();
+});
+
+// ---------------- Controle de episódios
+prevEpisodeBtn.addEventListener("click", ()=>{ if(currentEpisodeIndex>0) playEpisode(currentEpisodeIndex-1); });
+nextEpisodeBtn.addEventListener("click", ()=>{ if(currentEpisodeIndex<episodeQueue.length-1) playEpisode(currentEpisodeIndex+1); });
+
+// ---------------- Autoplay próximo episódio
+modalVideo.addEventListener("ended", ()=>{ if(currentEpisodeIndex<episodeQueue.length-1) playEpisode(currentEpisodeIndex+1); });
+
+// ---------------- Limpeza ao fechar modal
+document.getElementById("playerModal").addEventListener("hidden.bs.modal", ()=>{
+  modalVideo.pause();
+  modalVideo.removeAttribute("src");
+  modalVideo.load();
+  if (currentHls) {
+    currentHls.destroy();
+    currentHls = null;
+  }
+  // ❌ Removido o reset de episodeQueue e currentEpisodeIndex
+  document.body.classList.remove("modal-open");
+  document.querySelectorAll(".modal-backdrop").forEach(el => el.remove());
+});
+
+// --- Web Video Cast ---
+castButton.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  if (!episodeQueue.length) {
+    alert("Nenhum vídeo carregado.");
+    return;
+  }
+
+  const title = modalTitle.textContent || "JC TV STREAMING";
+  const realUrl = episodeQueue[currentEpisodeIndex].src;
+
+  // Mantém o https://
+  const intentLink = `intent://${realUrl.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.instantbits.cast.webvideo;S.title=${encodeURIComponent(title)};end`;
+
+  // Redireciona para o app
+  window.location.href = intentLink;
+});
+
+// ---------------- Inicialização
+populateCategories(); buildTabs(); updateUIOnTabToggle();
+</script>
+</body>
+</html>
