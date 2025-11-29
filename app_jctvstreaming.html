@@ -10,12 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <style>
- html, body {
-  overflow-y: auto; /* ✅ Permite rolagem vertical */
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
+  body { background: #fff; color: #000; margin: 0; padding: 0; overflow-x: hidden; }
+  html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; } 
   #player, #app-content { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
   #particles-js { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; background:#fff; }
   .content { position: relative; z-index:1; text-align:center; padding-top:80px; padding-bottom:40px; }
@@ -25,9 +21,11 @@
   .subtext { font-size:1.2rem; color:black; margin-top:20px; text-shadow:0 0 4px rgba(0,0,0,0.2); }
   .iframePlayer { display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; background:#fff; }
   #iframeVideo { width:100%; height:100%; border:none; }
-  #backButton { display:none; position:fixed; top:2px; left:0; z-index:1055; background-color:#FFC107; color:#000; border:none; padding:8px 10px; border-radius:10px; cursor:pointer; font-weight:bold; font-size:12px; transition:0.3s ease; }
-  #backButton:hover { background-color:#007BFF; color:#fff; }
-  #backButton i { font-size:20px; }
+  #backButton {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
   .playerContent { text-align:center; padding:50px 20px 20px; }
   .playerButtons { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:30px; }
   .playerButtons button { display:flex; align-items:center; gap:8px; background:black; color:#fff; font-weight:bold; padding:10px 16px; border:none; border-radius:12px; transition:all 0.3s ease; cursor:pointer; backdrop-filter:blur(5px); box-shadow:0 4px 8px rgba(0,0,0,0.1); font-size:14px; }
@@ -71,6 +69,7 @@
 </div>
 
 <footer class="footer">
+  <button id="backButton"><i class="bi bi-house"></i></button>
   <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" width="50" />
   <span>JC TV STREAMING © 2025</span>
 </footer>
@@ -97,13 +96,12 @@ particlesJS("particles-js", {
 
 // Lista de links
 const links = [
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/550/550486.png" style="width:30px;height:30px;margin-right:1px;">TV AO VIVO`, url:"https://jctvstreaming-vip.github.io/aplicativo/tv.html" },
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/512/2459/2459778.png" style="width:30px;height:30px;margin-right:1px;">FILMES`, url:"https://jctvstreaming-vip.github.io/aplicativo/filmes.html" },
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/512/2980/2980219.png" style="width:30px;height:30px;margin-right:1px;">SÉRIES`, url:"https://jctvstreaming-vip.github.io/aplicativo/series.html" },
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/5190/5190335.png" style="width:30px;height:30px;margin-right:1px;">ANIMAÇÃO`, url:"https://jctvstreaming-vip.github.io/aplicativo/desenhos.html" },
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/1071/1071164.png" style="width:30px;height:30px;margin-right:1px;">ANIMES`, url:"https://jctvstreaming-vip.github.io/aplicativo/animes.html" },
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/5347/5347299.png" style="width:30px;height:30px;margin-right:1px;">DORAMAS`, url:"#"},
-  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/3339/3339114.png" style="width:30px;height:30px;margin-right:1px;">NOVELAS`, url:"https://jctvstreaming-vip.github.io/aplicativo/novelas.html"}
+  { nome:`<img src="https://cdn-icons-png.flaticon.com/256/550/550486.png" style="width:30px;height:30px;margin-right:1px;">Tv ao vivo`, 
+   url:"https://jctvstreaming-vip.github.io/aplicativo/tv.html" },
+  { nome:`<img src="https://cdn-icons-png.flaticon.com/512/2459/2459778.png" style="width:30px;height:30px;margin-right:1px;">Filmes`, 
+   url:"https://jctvstreaming-vip.github.io/aplicativo/filmes.html" },
+  { nome:`<img src="https://cdn-icons-png.flaticon.com/512/2980/2980219.png" style="width:30px;height:30px;margin-right:1px;">Séries`, 
+   url:"https://jctvstreaming-vip.github.io/aplicativo/series.html" }
 ];
 
 const serverButtons = document.getElementById("serverButtons");
@@ -166,6 +164,3 @@ window.addEventListener('contextmenu',function(e){e.preventDefault();});
 
 </body>
 </html>
-
-
-
