@@ -10,8 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <style>
-  body { background: #fff; color: #000; margin: 0; padding: 0; overflow-x: hidden; }
-  html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; } 
+html, body {
+  overflow-y: auto; /* ✅ Permite rolagem vertical */
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
   #player, #app-content { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
   #particles-js { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; background:#fff; }
   .content { position: relative; z-index:1; text-align:center; padding-top:80px; padding-bottom:40px; }
@@ -32,6 +36,91 @@
   .playerButtons button:hover { background:#FFC107; color:#000; transform:translateY(-2px); box-shadow:0 6px 12px rgba(0,0,0,0.2); }
   footer.footer { position:fixed; bottom:0; left:0; width:100%; background:black; color:#fff; display:flex; justify-content:center; align-items:center; gap:10px; padding:10px 20px; font-size:1rem; z-index:1000; }
   footer.footer img { height:30px; width:auto; }
+.series-tab.active {
+    background-color: #0d6efd !important;
+    color: #fff !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); /* brilho dourado */
+    border: 2px solid gold !important; /* borda dourada */
+}
+
+/* imagem também com borda dourada */
+.series-tab.active img {
+    border: 2px solid gold !important;
+}
+
+/* texto mais destacado */
+.series-tab.active .card-text {
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+
+    /* Reduz tamanho das abas de séries */
+    .series-tab {
+        transform: scale(0.85);
+        margin: 4px 0 !important;
+    }
+
+    .series-tab img {
+        height: 120px !important;
+        object-fit: cover;
+    }
+
+    /* Títulos menores */
+    .series-tab .card-title,
+    .series-tab .card-text {
+        font-size: 0.85rem !important;
+    }
+
+    /* Container principal com menos largura */
+    .series-container {
+        padding: 6px !important;
+    }
+
+    /* Grade de cards mais compacta */
+    .series-list {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    /* Episódios mais compactos */
+    .episode-btn {
+        font-size: 0.80rem !important;
+        padding: 6px 8px !important;
+    }
+
+    /* Ajuste do modal para caber todo */
+    .modal-content {
+        padding: 0 !important;
+    }
+
+    #playerModal iframe,
+    #playerModal video {
+        height: 240px !important;
+    }
+
+    /* Título do modal menor */
+    #modalTitle {
+        font-size: 1rem !important;
+    }
+
+    #modalLogo {
+        height: 35px !important;
+    }
+
+    /* Menu lateral (se tiver) mais estreito */
+    .sidebar {
+        width: 190px !important;
+    }
+
+    /* Botões e textos gerais menores */
+    button,
+    .btn {
+        padding: 6px 10px !important;
+        font-size: 0.85rem !important;
+    }
+}
 </style>
 </head>
 <body>
@@ -155,12 +244,41 @@ document.addEventListener('keydown',function(e){
 });
 window.addEventListener('contextmenu',function(e){e.preventDefault();});
 </script>
-
 <!-- Tela de Alerta -->
-<div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
-  <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
-  <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
-</div>
+  <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
+    <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
+  </div>
 
+  <script>
+    function mostrarAlerta() {
+      const tela = document.getElementById("bloqueio");
+      tela.style.display = "block";
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+
+    document.querySelectorAll('a').forEach(link => {
+      link.setAttribute('target', '_self');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      const tecla = e.key.toLowerCase();
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && tecla === 'u') ||
+        (e.ctrlKey && tecla === 's') ||
+        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+      ) {
+        e.preventDefault();
+        mostrarAlerta();
+      }
+    });
+
+    window.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
 </body>
 </html>
