@@ -41,7 +41,7 @@ footer.footer img { height: 30px; width: auto; }
   #modalVideo { height: 60vh; }
 }
 #modalTitle {
-  font-size: 1.2rem; /* tamanho menor */
+  font-size: 1rem; /* tamanho menor */
   font-weight: 600; /* opcional: mantém legibilidade */
   line-height: 1.4;
   text-align:  left; /* deixa bonito no lado esquerdo */
@@ -85,6 +85,101 @@ footer.footer img { height: 30px; width: auto; }
 }
 #prevEpisodeBtn, #nextEpisodeBtn, #castButton {
   display: none !important;
+}
+.series-tab.active {
+    background-color: #0d6efd !important;
+    color: #fff !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); /* brilho dourado */
+    border: 2px solid gold !important; /* borda dourada */
+}
+
+/* imagem também com borda dourada */
+.series-tab.active img {
+    border: 2px solid gold !important;
+}
+
+/* texto mais destacado */
+.series-tab.active .card-text {
+    font-weight: bold;
+}
+
+/* RESPONSIVO PARA TELA PEQUENA */
+@media (max-width: 768px) {
+
+    /* Reduz tamanho das abas de séries */
+    .series-tab {
+        transform: scale(0.85);
+        margin: 4px 0 !important;
+    }
+
+    .series-tab img {
+        height: 120px !important;
+        object-fit: cover;
+    }
+
+    /* Títulos menores */
+    .series-tab .card-title,
+    .series-tab .card-text {
+        font-size: 0.85rem !important;
+    }
+
+    /* Container principal com menos largura */
+    .series-container {
+        padding: 6px !important;
+    }
+
+    /* Grade de cards mais compacta */
+    .series-list {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    /* Episódios mais compactos */
+    .episode-btn {
+        font-size: 0.80rem !important;
+        padding: 6px 8px !important;
+    }
+
+    /* Ajuste do modal para caber todo */
+    .modal-content {
+        padding: 0 !important;
+    }
+
+    #playerModal iframe,
+    #playerModal video {
+        height: 240px !important;
+    }
+
+    /* Título do modal menor */
+    #modalTitle {
+        font-size: 1rem !important;
+    }
+
+    #modalLogo {
+        height: 35px !important;
+    }
+
+    /* Menu lateral (se tiver) mais estreito */
+    .sidebar {
+        width: 190px !important;
+    }
+
+    /* Botões e textos gerais menores */
+    button,
+    .btn {
+        padding: 6px 10px !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+/* POSTER */
+#seriePoster {
+    width: 150px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid gold;
 }
 </style>
 </head>
@@ -498,7 +593,7 @@ const seriesData = {
     poster: "https://image.tmdb.org/t/p/w500/4DraJB84CY1UX6IKEjdQbWEJcUQ.jpg",
     background: "https://image.tmdb.org/t/p/original/zsgdVbuEwqZbnUN9qLGEMBYf2Zo.jpg",
     logotipo: "https://image.tmdb.org/t/p/original/aCceastXJN3EYd2zxUDQidOhH6T.png",
-    categories: ["Fantasia, Ação, Thriller"],
+    categories: ["Fantasia","Ação","Thriller"],
     language: ["Dublado"],
     seasons: {
       1: [
@@ -512,7 +607,7 @@ const seriesData = {
     poster: "https://image.tmdb.org/t/p/w500/psVdP3DDfDzNg0nl25UwBG4rWdw.jpg",
     background: "https://image.tmdb.org/t/p/original/lao4tAa7y5QX5benDMyIeeRiTCb.jpg",
     logotipo: "https://image.tmdb.org/t/p/original/2yA4u1gYtFImIuUi2dqi2xRsDhg.png",
-    categories: ["Fantasia, Ação, Thriller"],
+    categories: ["Fantasia","Ação","Thriller"],
     language: ["Dublado"],
     seasons: {
       1: [
@@ -526,7 +621,7 @@ const seriesData = {
     poster: "https://image.tmdb.org/t/p/w500/bXRKtNLPM86snkBXERKnYHuRK2W.jpg",
     background: "https://image.tmdb.org/t/p/original/rT7Kn7aT5owqpPSRSbxUmqRNz4w.jpg",
     logotipo: "https://image.tmdb.org/t/p/original/rTDvacSqUGNxZpdLt4r0QesmDYR.png",
-    categories: [""],
+    categories: ["Fantasia","Ação","Thriller"],
     language: ["Dublado"],
     seasons: {
       1: [
@@ -540,7 +635,7 @@ const seriesData = {
     poster: "https://image.tmdb.org/t/p/w500/bLeEudeDDufArn1qn6KbmPO2FAL.jpg",
     background: "https://image.tmdb.org/t/p/original/7Zx3wDG5bBtcfk8lcnCWDOLM4Y4.jpg",
     logotipo: "https://image.tmdb.org/t/p/original/6Dla7WXkkCyn5p9LUsuKVoodDnZ.png",
-    categories: ["Família","Ficção Científica","Comédia","Aventura"],
+    categories: ["Família","Ficção Científica","Comédia","Aventura","Lançamento (2025)"],
     language: ["Dublado"],
     seasons: {
       1: [
@@ -1079,130 +1174,130 @@ const seriesData = {
         { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/47971.mp4" }]
     }
     },
-    "": {
-    name: "",
-    date: "25/01/2050",
-    synopsis: "",
-    poster: "",
-    background: "",
-    logotipo: "",
-    categories: [""],
+    "Con Air: A Rota da Fuga (1997)": {
+    name: "Con Air: A Rota da Fuga (1997)",
+    date: "20/06/1997",
+    synopsis: "Cameron Poe conquistou a liberdade condicional e pega carona em um voo que transporta diversos criminosos do país, entre eles, o psicopata Cyrus. Mas o que era para ser apenas uma viagem torna-se um grande pesadelo, porque os bandidos assumem o controle do avião para sair do país e dão início a um insano plano de fuga. Agora, Poe terá que fingir que está de acordo com eles para se manter vivo e depois tentar reverter a situação.",
+    poster: "https://image.tmdb.org/t/p/w500/5PKm5WG7cBGFmnfmPqZjOEyw0lp.jpg",
+    background: "https://image.tmdb.org/t/p/original/vsmlShNNHrYlERZaqMOsZ3YctoO.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/3uvnOVwE6Q8T5W1anyEZ9stu7Ev.png",
+    categories: ["Ação","Crime"],
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "" }]
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1701.mp4" }]
     }
     },
-    "": {
-    name: "",
-    date: "25/01/2050",
-    synopsis: "",
-    poster: "",
-    background: "",
-    logotipo: "",
-    categories: [""],
+    "Na Toca do Tigre (2015)": {
+    name: "Na Toca do Tigre (2015)",
+    date: "03/11/2015",
+    synopsis: "Kelly (Kaya Scodelario) é uma ginasta que está lesionada. Ela tem o costume de ir até a casa do seu namorado às escuras, mas esperava ser a única visita indesejada quando assaltantes armados invadem a casa. Agora ela precisa usar toda a sua força e habilidade para tentar escapar da pequena arena de violência que a residência se tornou.",
+    poster: "https://image.tmdb.org/t/p/w500/heqehuEfbg2283Z9hFmsVuv3UE3.jpg",
+    background: "https://image.tmdb.org/t/p/original/6hCYCEJFAbKMb2plBDsu4jeVhcX.jpg",
+    logotipo: "https://upload.wikimedia.org/wikipedia/pt/9/92/Tiger_House.jpg",
+    categories: ["Ação","Crime","Drama"],
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "" }]
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/341077.mp4" }]
     }
     },
-    "": {
-    name: "",
-    date: "25/01/2050",
-    synopsis: "",
-    poster: "",
-    background: "",
-    logotipo: "",
-    categories: [""],
+    "A Filha do Rei do Pântano (2023)": {
+    name: "A Filha do Rei do Pântano (2023)",
+    date: "28/09/2023",
+    synopsis: "Helena, uma mulher que vive uma vida aparentemente comum, esconde um segredo obscuro: seu pai é o infame 'Rei do Pântano', o homem que manteve ela e sua mãe em cativeiro na selva durante anos. Depois de uma vida inteira tentando escapar de seu passado, Helena é forçada a enfrentar seus demônios quando seu pai escapa inesperadamente da prisão.",
+    poster: "https://image.tmdb.org/t/p/w500/f2V05fRxGxSGI6xjqA0pQeXk35.jpg",
+    background: "https://image.tmdb.org/t/p/original/c7MRmF3LMiBWokedmdQl3roTUv2.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/wFO8kHjBsZPxcj5OFBY52VZaFcX.png",
+    categories: ["Thriller","Crime","Mistério","Lançamento (2023)"],
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "" }]
+        { title: "Filme Completo", url: "https://fv5-2.failiem.lv/Files.fm_2025-10-01_file_uve2x7wwva/798362.mp4" }]          // Files.fm
     }
     },
-    "": {
-    name: "",
-    date: "25/01/2050",
-    synopsis: "",
-    poster: "",
-    background: "",
-    logotipo: "",
-    categories: [""],
+    "O Lobo Viking (2022)": {
+    name: "O Lobo Viking (2022)",
+    date: "18/11/2022",
+    synopsis: "Uma adolescente que acabou de se mudar para uma cidadezinha testemunha um assassinato brutal. Depois disso, ela começa a ter visões e desejos bizarros.",
+    poster: "https://image.tmdb.org/t/p/w500/gWfa1uahpIXlNkv7AMEvQt4VMde.jpg",
+    background: "https://image.tmdb.org/t/p/original/d0YSRmp819pMRnKLfGMgAQchpnR.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/vkfJteahkTyc0rdG52HHUwJsFcv.png",
+    categories: ["Terror","Thriller","Mistério"],
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "" }]
+        { title: "Filme Completo", url: "https://fv5-2.failiem.lv/Files.fm_2025-02-02_file_z7pzpurukw/788752.mp4" }]          // Files.fm
     }
     },
-    "": {
-    name: "",
-    date: "25/01/2050",
-    synopsis: "",
-    poster: "",
-    background: "",
-    logotipo: "",
-    categories: [""],
+    "Um Lugar Silencioso: Dia Um (2024)": {
+    name: "Um Lugar Silencioso: Dia Um (2024)",
+    date: "27/06/2024",
+    synopsis: "Quando Samira retorna para Nova York, sua viagem se transforma em um pesadelo angustiante quando as misteriosas criaturas que caçam pelo som atacam. Acompanhada de seu gato Frodo e de um aliado inesperado, Samira deve embarcar em uma perigosa jornada pela cidade que de repente ficou silenciosa, na qual a única regra é permanecer quieta para continuar viva.",
+    poster: "https://image.tmdb.org/t/p/w500/pN9BtzUeqPIKybAu9baihz6YzyO.jpg",
+    background: "https://image.tmdb.org/t/p/original/6XjMwQTvnICBz6TguiDKkDVHvgS.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/c6YCaR3O2e6IIj8rO3lzevY2AF8.png",
+    categories: ["Terror","Ficção Científica","Thriller","Lançamento (2024)"],
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "" }]
+        { title: "Filme Completo", url: "https://fv5-2.failiem.lv/Files.fm_2025-02-02_file_k6sbkzw4mq/762441.mp4" }]          // Files.fm
     }
     },
-    "": {
-    name: "",
-    date: "25/01/2050",
-    synopsis: "",
-    poster: "",
-    background: "",
-    logotipo: "",
-    categories: [""],
+    "Kraven: O Caçador (2024)": {
+    name: "Kraven: O Caçador (2024)",
+    date: "12/12/2024",
+    synopsis: "Sergei Kravinoff é um grande caçador, que toma um soro mágico que lhe dá habilidades sobre-humanas e uma vida mais longa.",
+    poster: "https://image.tmdb.org/t/p/w500/pWvQsP9o1MQ4vQNjpL9QeYFXKOs.jpg",
+    background: "https://image.tmdb.org/t/p/original/bGGjyPqtNc8hhGkPo8W8D8t90bW.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/45a7p4e7pmZ66Ggn6Eix4VqCyn8.png",
+    categories: ["Ação","Aventura","Thriller","Marvel Comics","Lançamento (2024)"],
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "" }]
+        { title: "Filme Completo", url: "https://fv5-2.failiem.lv/Files.fm_2025-02-03_file_mydhhv22vt/539972.mp4" }]          // Files.fm
     }
     },
-    "": {
-    name: "",
-    date: "25/01/2050",
-    synopsis: "",
-    poster: "",
-    background: "",
-    logotipo: "",
-    categories: [""],
+    "O Vidente (2007)": {
+    name: "O Vidente (2007)",
+    date: "19/07/2007",
+    synopsis: "Um astro do cassino ganha a vida prevendo acontecimentos, mas sua vida muda quando a polícia de Los Angeles descobre seu dom e lhe pede ajuda para evitar que um ataque terrorista detone armas nucleares. Porém ele fica dividido entre salvar o mundo ou salvar a mulher que ama.",
+    poster: "https://image.tmdb.org/t/p/w500/fFehtsCSORmECTCgs6mntAYFvL4.jpg",
+    background: "https://image.tmdb.org/t/p/original/8OAuQm5Bxg4k4HIYfmcga5rYSzU.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/m6MhYibrRzUvtXSTajEc4o8iYuc.png",
+    categories: ["Ação","Ficção Científica","Thriller"],
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "" }]
+        { title: "Filme Completo", url: "https://fv5-2.failiem.lv/Files.fm_2025-02-03_file_mydhhv22vt/539972.mp4" }]          // Files.fm
     }
     },
-    "": {
-    name: "",
-    date: "25/01/2050",
-    synopsis: "",
-    poster: "",
-    background: "",
-    logotipo: "",
-    categories: [""],
+    "O Demônio do Alasca (2025)": {
+    name: "O Demônio do Alasca (2025)",
+    date: "01/10/2025",
+    synopsis: "No rigoroso inverno do Alasca, Alex e sua mãe transformam o próprio lar em uma armadilha mortal, atraindo pessoas para um ritual de abuso e canibalismo.",
+    poster: "https://image.tmdb.org/t/p/w500/2b8tnSruPQnzEJSSsI0lEsY84KJ.jpg",
+    background: "https://image.tmdb.org/t/p/original/j6OkZpiBZPXGGN0EFSIN1Rg7xI.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/bVpzws0dFcFGgmbzGlcRRE2mDOT.png",
+    categories: ["Terror","Crime","Lançamento (2024)"],
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "" }]
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/1512581.mp4" }]
     }
     },
-    "": {
-    name: "",
-    date: "25/01/2050",
-    synopsis: "",
-    poster: "",
-    background: "",
-    logotipo: "",
-    categories: [""],
+    "Com Amor, Alasca (2019)": {
+    name: "Com Amor, Alasca (2019)",
+    date: "26/10/2019",
+    synopsis: "Pode não ser a mais feliz das circunstâncias, mas dois amigos de infância, Maggie e Finn, voltaram para casa e se reencontraram em Love, Alaska. Enquanto recomeçam suas vidas e lidam com seu passado, esses dois terão uma segunda chance no amor?",
+    poster: "https://image.tmdb.org/t/p/w500/lcbJQz5Qa5TizglCzITzCpKfgld.jpg",
+    background: "https://image.tmdb.org/t/p/original/cBMXtrIGC6dglxaaNRM20mYcqY.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/5aJbAKsb9ZjLMGUpTwVfGxWGgMn.png",
+    categories: ["Comédia","Romance"],
     language: ["Dublado"],
     seasons: {
       1: [
-        { title: "Filme Completo", url: "" }]
+        { title: "Filme Completo", url: "https://plustv.jctvstreaming-vip.workers.dev/01/609441.mp4" }]
     }
     },
     "": {

@@ -26,8 +26,8 @@ body { background: #fff; color: #000; padding: 1rem; }
 .serie-details img { width: 100px; height: auto; border-radius: 5px; }
 .serie-details div { flex: 1; }
 #serieInfo h4, #serieInfo p { color: #000; font-weight: 600; }
-#backButton { display: none; position: fixed; top: 2px; right: 0px; z-index: 1055; background-color: #FFC107; color: #000; border: none; padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; transition: 0.3s ease; }
-#backButton:hover { background-color: #007BFF; color: #fff; }
+#backButton { display: none; position: fixed; top: 2px; right: 0px; z-index: 1055; background-color: #FFC107; color: #000; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 15px; transition: 0.3s ease; }
+#backButton:hover { background-color: #0d3b66; color: #fff; }
 footer.footer { position: fixed; bottom: 0; left: 0; width: 100%; background: black; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px; padding: 10px 20px; font-size: 1rem; z-index: 1000; }
 footer.footer img { height: 30px; width: auto; }
 #centralSearch { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); width: 200px; z-index: 1050; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
@@ -42,7 +42,7 @@ footer.footer img { height: 30px; width: auto; }
 #readMoreBtn { display: inline-block; margin-top: 4px; cursor: pointer; color: #007BFF; font-weight: bold; background: none; border: none; padding: 0; }
 @media (max-width: 576px) { .serie-details { flex-direction: column; align-items: center; text-align: center; } .serie-details img { width: 80%; max-width: 150px; } #seasonEpisodesContainer .accordion-button { font-size: 0.9rem; } .series-tab .card { width: 70px; } .series-tab .card-body p.card-text { font-size: 0.65rem; } #modalVideo { height: 60vh; } }
 #modalTitle {
-  font-size: 0.95rem; /* tamanho menor */
+  font-size: 1rem; /* tamanho menor */
   font-weight: 600; /* opcional: mantém legibilidade */
   line-height: 1.4;
   text-align:  left; /* deixa bonito no lado esquerdo */
@@ -74,6 +74,102 @@ footer.footer img { height: 30px; width: auto; }
 #castButton {
   display: none !important;
 }
+.series-tab.active {
+    background-color: #0d6efd !important;
+    color: #fff !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); /* brilho dourado */
+    border: 2px solid gold !important; /* borda dourada */
+}
+
+/* imagem também com borda dourada */
+.series-tab.active img {
+    border: 2px solid gold !important;
+}
+
+/* texto mais destacado */
+.series-tab.active .card-text {
+    font-weight: bold;
+}
+
+/* RESPONSIVO PARA TELA PEQUENA */
+@media (max-width: 768px) {
+
+    /* Reduz tamanho das abas de séries */
+    .series-tab {
+        transform: scale(0.85);
+        margin: 4px 0 !important;
+    }
+
+    .series-tab img {
+        height: 120px !important;
+        object-fit: cover;
+    }
+
+    /* Títulos menores */
+    .series-tab .card-title,
+    .series-tab .card-text {
+        font-size: 0.85rem !important;
+    }
+
+    /* Container principal com menos largura */
+    .series-container {
+        padding: 6px !important;
+    }
+
+    /* Grade de cards mais compacta */
+    .series-list {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    /* Episódios mais compactos */
+    .episode-btn {
+        font-size: 0.80rem !important;
+        padding: 6px 8px !important;
+    }
+
+    /* Ajuste do modal para caber todo */
+    .modal-content {
+        padding: 0 !important;
+    }
+
+    #playerModal iframe,
+    #playerModal video {
+        height: 240px !important;
+    }
+
+    /* Título do modal menor */
+    #modalTitle {
+        font-size: 1rem !important;
+    }
+
+    #modalLogo {
+        height: 35px !important;
+    }
+
+    /* Menu lateral (se tiver) mais estreito */
+    .sidebar {
+        width: 190px !important;
+    }
+
+    /* Botões e textos gerais menores */
+    button,
+    .btn {
+        padding: 6px 10px !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+/* POSTER */
+#seriePoster {
+    width: 150px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid gold;
+}
+</style>
 </style>
 </head>
 <body>
@@ -812,7 +908,10 @@ const seriesData = {
         { title: "Esquema de amizade da mamãe", url: "https://files.jctvstreaming-vip.workers.dev/23/spy-x-family-3-dublado/05.mp4/index.m3u8" },
         { title: "Inveja branca / Caso do sequestro do ônibus do Colégio Éden", url: "https://files.jctvstreaming-vip.workers.dev/23/spy-x-family-3/06.mp4/index.m3u8" },
         { title: "O Circo Vermelho", url: "https://files.jctvstreaming-vip.workers.dev/23/spy-x-family-3/07.mp4/index.m3u8" },
-        { title: "Neutralizem os sequestradores de ônibus", url: "https://files.jctvstreaming-vip.workers.dev/23/spy-x-family-3/08.mp4/index.m3u8" }]
+        { title: "Neutralizem os sequestradores de ônibus", url: "https://files.jctvstreaming-vip.workers.dev/23/spy-x-family-3/08.mp4/index.m3u8" },
+        { title: "A era da Anya chegou", url: "https://files.jctvstreaming-vip.workers.dev/23/spy-x-family-3/09.mp4/index.m3u8" },
+        
+]
     }
     },
     "Spy Kyoushitsu (2023)": {
@@ -1602,19 +1701,1652 @@ const seriesData = {
     language: ["Legendado"],
     seasons: {
        1: [
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/hq64cwajfae736a" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/9ogo5xbovijkn74" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/fhx3ob7tmm0w60d" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/y4r84zs580tfnf2" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/h4h72shdfdzoupb" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/7cnyfmt8o65rzpi" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/" },
-        { title: "", url: "https://play.jctvstreaming-vip.workers.dev/" }]
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_aekqk3n227/28326-1x1.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_dbu8qxu8vm/28326-1x2.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_wndzt46wy2/28326-1x3.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_xfjanc66qt/28326-1x4.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_c4z66hnzaf/28326-1x5.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_3v4vhwxkwu/28326-1x6.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_ygrfue3kfv/28326-1x7.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_pbn6bwpym6/28326-1x8.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_y8zmvr43ya/28326-1x9.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_mhnrg2yqz3/28326-1x10.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_557fhaww4j/28326-1x11.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-11-28_file_8c7uvbpf9q/28326-1x12.mp4" }]
     }
+    },
+    "07-Ghost (2009)": {
+    name: "07-Ghost (2009)",
+    date: "07/04/2009",
+    synopsis: "Teito Klein, é um jovem aluno da academia militar que não possui grandes aspirações. Tratado como ralé pelos colegas por sua posição inferior na sociedade, Teito, depende apenas de seu amigo Mikage, com quem conta para os piores momentos.",
+    poster: "https://image.tmdb.org/t/p/w500/xmqAgtAnhNNi4q9PUIHYE0NThXl.jpg",
+    background: "https://image.tmdb.org/t/p/original/iCTqQXF08jmwUNhlySvOBg1WTjh.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/6JiZvRJqGl3MAWyGAlOWtZ1mSmb.png",
+    categories: ["Animes"],
+    genero: ["Animação, Drama"],
+    language: ["Legendado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/8.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/9.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/10.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/11.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/12.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/13.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/14.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/15.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/16.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/17.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/18.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/19.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/20.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/21.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/22.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/23.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/24.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/21855/1/leg/25.mp4" }]
+    }
+    },
+    "009-1 (2006)": {
+    name: "009-1 (2006)",
+    date: "06/10/2006",
+    synopsis: "A história ocorre no meio de uma guerra fria num futuro distante, quando o mundo foi dividido em dois blocos, leste e oeste. No meio de guerras entre espiões, surge uma bela espiã de uma agência secreta de inteligência chamada Mylene Hoffmann, code name 009-1. Ela é uma das agentes do grupo feminino \"Grupo Número 9\", um dos dez grupos na Organização Zero Zero (uma organização do Bloco Ocidental). Quase todo o seu corpo foi mecanizado e a maioria das partes são equipadas com funções especiais, necessárias para as atividades de um espião. Ela tem amnésia e é uma das agentes que mais se sobressai dentro da Organização Zero Zero",
+    poster: "https://image.tmdb.org/t/p/w500/r1zbGhkKXmzZR8h5y7LQxiE8yW9.jpg",
+    background: "https://image.tmdb.org/t/p/original/byuLWybI5Am5I6f7tGVr8H1k3Kn.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/uliuuiTVrtTtkMIOEiqILR09qMd.png",
+    categories: ["Animes"],
+    genero: ["Animação, Ação e Aventura, Ficção Científica & Fantasia, Guerra e Política, Drama"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "Missão 1: Infiltrados", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/1.mp4" },
+        { title: "Missão 2: Noite Santa", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/2.mp4" },
+        { title: "Missão 3: Duro cozido", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/3.mp4" },
+        { title: "Missão 4: Convite ao castelo", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/4.mp4" },
+        { title: "Missão 5: Mulher de ouro", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/5.mp4" },
+        { title: "Missão 6: POP", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/6.mp4" },
+        { title: "Missão 7: Porto", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/7.mp4" },
+        { title: "Missão 8: Calendário do Passado", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/8.mp4" },
+        { title: "Missão 9: Vingança", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/9.mp4" },
+        { title: "Missão 10: Explosão reversa", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/10.mp4" },
+        { title: "Missão 11: Êxodo", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/11.mp4" },
+        { title: "Missão 12: Aurora", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/12.mp4" },
+        { title: "Missão 13: O Fim", url: "https://plustv.jctvstreaming-vip.workers.dev/04/34835/1/dub/13.mp4" }]
+    }
+    },
+    "11eyes (2009)": {
+    name: "11eyes (2009)",
+    date: "07/10/2009",
+    synopsis: "Após a morte da irmã há cinco anos atrás, Satsuki Kakeru levava uma vida vazia, só conseguiu voltar a sua vida normal, com a ajuda de sua amiga de infância Minase Yuka e outros amigos na escola. Até que, um dia, o céu fica vermelho de repente e a Lua escurece. Todos, além de Kakeru e Yuka, desaparecem e monstros começam a percorrer as ruas. Tudo que eles puderam fazer foi apenas fugir e se esconder. Após um tempo, o mundo volta ao normal. Mas quando todo mundo achava que era um sonho, a Noite Vermelha ocorre novamente. Kakeru e Yuka conseguem encontrar mais quatro pessoas que estão envolvidas neste fenômeno misterioso: Kusakabe Misuzu, Kukuri Tachibana, Hirohara Yukiko e Tajima Takahisa. Eles se reúnem e tentam sobreviver, mas a partir daí a situação apenas piora...",
+    poster: "https://image.tmdb.org/t/p/w500/o0UnWewTlZbtkRQDQGrKMGzruVI.jpg",
+    background: "https://image.tmdb.org/t/p/original/cQ00og9D1sFwZ3Q8UlTMfmtlp83.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/yDKHmIKhOweTc838sj5LmZOLvu1.png",
+    categories: ["Animes"],
+    genero: ["Ação & aventura, Animação, Ficção científica & fantasia"],
+    language: ["Legendado"],
+    seasons: {
+       1: [
+        { title: "Noite Carmesim", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/1.mp4" },
+        { title: "A Garota do Cristal", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/2.mp4" },
+        { title: "Orgulho Desamparado", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/3.mp4" },
+        { title: "Sorriso Mascarado", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/4.mp4" },
+        { title: "Pelo Bem dos amigos e do amanhã", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/5.mp4" },
+        { title: "Coração Confuso", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/6.mp4" },
+        { title: "Despertar Distorcido", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/7.mp4" },
+        { title: "Hora Sedutora", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/8.mp4" },
+        { title: "Laços Quebrados", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/9.mp4" },
+        { title: "A Bruxa Desperta", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/10.mp4" },
+        { title: "A Escolha Chamada Destruição", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/11.mp4" },
+        { title: "A Alvorada Depois da Noite Negra", url: "https://plustv.jctvstreaming-vip.workers.dev/04/44310/1/leg/12.mp4" }]
+    }
+    },
+    "30-sai no Hoken Taiiku (2011)": {
+    name: "30-sai no Hoken Taiiku (2011)",
+    date: "06/05/2011",
+    synopsis: "Imagawa é um homem de 30 anos virgem que recebe a visita do Deus do Sexo, que lhe ajudará passo a passo a conseguir uma namorada.",
+    poster: "https://image.tmdb.org/t/p/w500/izvmVfsgwUjxbEBLhM4UL5agJSZ.jpg",
+    background: "https://image.tmdb.org/t/p/original/3jDhbBpJSh85uHsuSt6VLIp3cj9.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/188XWANZ57XmfNJGIv9B9peisZe.png",
+    categories: ["Animes"],
+    genero: ["Animação, Comédia"],
+    language: ["Legendado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/8.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/9.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/10.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/11.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/67922/1/leg/12.mp4" }]
+    }
+    },
+    "100 Coisas para Fazer Antes de Virar Zumbi (2023)": {
+    name: "100 Coisas para Fazer Antes de Virar Zumbi (2023)",
+    date: "09/07/2023",
+    synopsis: "Com apenas três anos em sua carreira numa empresa infernal, Akira Tendo está esgotado mental e fisicamente... tudo isso com 24 anos de idade. Até mesmo sua paixão do time de contabilidade, Saori, não quer nada com ele. Então, quando a vida começa a parecer uma grande decepção, acontece! O apocalipse zumbi atinge sobre o Japão! Cercado por hordas de zumbis famintos, Akira chega a uma conclusão que mudará para sempre sua vida… Ao perceber que não precisa mais trabalhar, Akira agora vai viajar pelo Japão, festejar todo dia e realizar tudo o que deseja!",
+    poster: "https://image.tmdb.org/t/p/w500/wUgE1ceORQzsZnGrASVKjEaGkzO.jpg",
+    background: "https://image.tmdb.org/t/p/original/90b5d67rcpYfh5aVOwfd9jrbnfL.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/iPbE4p9cDnrIcUhSYvBYzcDQvK7.png",
+    categories: ["Animes"],
+    genero: ["Animação, Ação & Aventura, Comédia, Ficção Científica & Fantasia"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "Akira dos Mortos", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/1.mp4" },
+        { title: "Lista de desejos dos mortos", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/2.mp4" },
+        { title: "Melhor Amigo dos Mortos", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/3.mp4" },
+        { title: "Comissária de bordo dos mortos", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/4.mp4" },
+        { title: "Herói dos Mortos", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/5.mp4" },
+        { title: "RV dos Mortos", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/6.mp4" },
+        { title: "Parada de Caminhões dos Mortos", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/7.mp4" },
+        { title: "Sushi e Termas dos Mortos", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/8.mp4" },
+        { title: "A Casa da Árvore dos Mortos", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/9.mp4" },
+        { title: "Cidade natal dos mortos I", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/10.mp4" },
+        { title: "Cidade Natal dos Mortos II", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/11.mp4" },
+        { title: "Cidade Natal dos Mortos III", url: "https://plustv.jctvstreaming-vip.workers.dev/04/217766/1/dub/12.mp4" }]
+    }
+    },
+    "801 T.T.S Airbats (1994)": {
+    name: "801 T.T.S Airbats (1994)",
+    date: "21/10/1994",
+    synopsis: "A Japanese Self Defense Force tem um lugar para aqueles aviadores problemáticos 801 esquadrão tático do treinamento feminino da base aérea de Iruma, aonde os pilotos e os aviões vão a uma base regular.",
+    poster: "https://image.tmdb.org/t/p/w500/bPq5zzehzRu0APoGIhzJ3Mi0yTD.jpg",
+    background: "https://image.tmdb.org/t/p/original/flxb4GFEOULSxM6ttaHtjXuenVp.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/dabXdg9GLrZFazaiBlWPGrewoJ.png",
+    categories: ["Animes"],
+    genero: ["Animação, Ação & Aventura, Comédia"],
+    language: ["Legendado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/35195/1/leg/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/35195/1/leg/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/35195/1/leg/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/35195/1/leg/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/35195/1/leg/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/35195/1/leg/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/04/35195/1/leg/7.mp4" }]
+    }
+    },
+    ".hack//Quantum (2011)": {
+    name: ".hack//Quantum (2011)",
+    date: "28/01/2011",
+    synopsis: ".hack//Quantum é uma série OVA animada de três episódios da franquia .hack , produzida pela Kinema Citrus e apresentada pela Bandai Visual.",
+    poster: "https://image.tmdb.org/t/p/w500/2ofq1sdi25CuyktnBQsQqY7GtEL.jpg",
+    background: "https://image.tmdb.org/t/p/original/cJl7EuALO3Mz3iGtmrbVct5gXAB.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/vgLoItAarRRbBwp0I5baT41Z8Aa.png",
+    categories: ["Animes"],
+    genero: ["Ação & Aventura, Drama, Animação"],
+    language: ["Legendado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-12-01_file_jbctd9jghx/295900-1x1.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-12-01_file_66dn6zye55/295900-1x2.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2025-12-01_file_x7sn9rpd9v/295900-1x3.mp4" },
+        { title: "Extra 01", url: "https://fv5-2.failiem.lv/Files.fm_2025-12-01_file_9zegby6g9z/295900-1x4.mp4" },
+        { title: "Extra 02", url: "https://fv5-2.failiem.lv/Files.fm_2025-12-01_file_zbvmnptraz/295900-1x5.mp4" }]
+    }
+    },
+    "Caverna do Dragão (1983)": {
+    name: "Caverna do Dragão (1983)",
+    date: "17/07/1983",
+    synopsis: "Dungeons & Dragons (Brasil: Caverna do Dragão ) é uma série de animação baseada no jogo de RPG homônimo da TSR, coproduzida pela Marvel Productions, TSR e Toei Animation. A série possui 27 episódios divididos em três temporadas, transmitidas originalmente entre os anos de 1983 e 1985 pela rede de televisão estadunidense CBS. A animação da série ficou a cargo da empresa japonesa Toei Animation. A série estreou no Brasil em 1985, no programa Balão Mágico da Rede Globo. A série focou em um grupo de seis amigos que são transportados para o reino titular e seguiram suas aventuras enquanto tentavam encontrar um caminho para casa com a ajuda de seu guia, o Mestre dos Magos (Dungeon Master no original).",
+    poster: "https://image.tmdb.org/t/p/w500/4fFRnZwlOwhcZkwLK8DCxtApyYP.jpg",
+    background: "https://image.tmdb.org/t/p/original/zgFJXU66zLmjPUpgSuA6P2TNN92.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/rRSyVMrbyWzIh1hNnu6dk52Fc3d.png",
+    categories: ["Animes","Desenhos"],
+    genero: ["Animação, Ficção Científica e Fantasia, Comédia, Ação e Aventura, Kids"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "A Noite sem Amanhã", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_85cceftsxm/553-1x1.mp4" },
+        { title: "O Olho do Observador", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_nj43tmccgf/553-1x2.mp4" },
+        { title: "O Salão dos Ossos", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_9zm747htw3/553-1x3.mp4" },
+        { title: "O Vale dos Unicórnios", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_5jw8q49nak/553-1x4.mp4" },
+        { title: "Em Busca do Mestre dos Magos", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_j6pkzubrqb/553-1x5.mp4" },
+        { title: "A Bela e a Fera do Pântano", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_fypwu8fj8f/553-1x6.mp4" },
+        { title: "Prisão sem Muros", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_b873hxmttz/553-1x7.mp4" },
+        { title: "Servo do Mal", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_ys6qhas5xn/553-1x8.mp4" },
+        { title: "A Procura do Esqueleto Guerreiro", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_t4atknypgp/553-1x9.mp4" },
+        { title: "O Jardim de Zinn", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_5edst5442b/553-1x10.mp4" },
+        { title: "A Caixa", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_7gryb94t6v/553-1x11.mp4" },
+        { title: "As Crianças Perdidas", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_t6g6ce6v54/553-1x12.mp4" },
+        { title: "As Mágicas Desastrosas de Presto", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_9svkxapq23/553-1x13.mp4" }],
+       2: [
+        { title: "O Sonho", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_c5yeny5hv7/553-2x1.mp4" },
+        { title: "O Tesouro de Tardos", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_a3b6v9y7py/553-2x2.mp4" },
+        { title: "A Cidade à Margem da Meia-Noite", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_vw86kvpf7p/553-2x3.mp4" },
+        { title: "O Traidor", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_8jwk9zzfaa/553-2x4.mp4" },
+        { title: "O Dia do Mestre dos Magos", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_4yvcmguncg/553-2x5.mp4" },
+        { title: "A Última Ilusão", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_2qnzqnrjsy/553-2x6.mp4" },
+        { title: "O Cemitério dos Dragões", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_vcwwyqw4pb/553-2x7.mp4" },
+        { title: "O Filho do Astrólogo", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_ca2xszjcfa/553-2x8.mp4" }],
+       3: [
+        { title: "O Portal do Amanhecer", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_m8nzhgkauy/553-3x1.mp4" },
+        { title: "Apagando-se o Tempo", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_4rmurv3cnt/553-3x2.mp4" },
+        { title: "A Odisséia do Décimo Segundo Talismã", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_hb7z4cnnsm/553-3x3.mp4" },
+        { title: "A Cidadela da Sombra", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_upcygwqqsj/553-3x4.mp4" },
+        { title: "A Caverna das Fadas Dragão", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_em59xetjm8/553-3x5.mp4" },
+        { title: "A Névoa da Escuridão", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_q5y57fjb8h/553-3x6.mp4" },
+        { title: "Requiem", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-21_file_5q6v2dz9j5/553-3x7.mp4" }]
+       
+    }
+    },
+    "Produção de Sonhos (2024)": {
+    name: "Produção de Sonhos (2024)",
+    date: "11/12/2024",
+    synopsis: "Riley está crescendo e, quando suas memórias precisam de mais processamento, Alegria e as outras Emoções Base as enviam para a Produção de Sonhos. A aclamada diretora Paula Persimmon encara seu próprio pesadelo: tentar criar o próximo sonho de sucesso trabalhando ao lado de Xeni, um presunçoso diretor de devaneios que quer estar entre os grandes nomes dos sonhos noturnos.",
+    poster: "https://image.tmdb.org/t/p/w500/1VTzfd9FMyCkGaUwafCXZIYQC5o.jpg",
+    background: "https://image.tmdb.org/t/p/original/qxNKDWOeoesCBvy4d03EVbnzXPw.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/u402GzSbMVYymrKjZwdzc9yX5E1.png",
+    categories: ["Desenhos"],
+    genero: ["Animação, Comédia, Família"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "A Equipe dos Sonhos", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-30_file_5rwpv9t6q5/255868-3x1.mp4" },
+        { title: "Fora do Corpo", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-30_file_wk3deunez2/255868-3x2.mp4" },
+        { title: "Romance!", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-30_file_p6y6ucrqrj/255868-3x3.mp4" },
+        { title: "Uma Noite Para Recordar", url: "https://fv5-2.failiem.lv/Files.fm_2025-01-30_file_r2npqjcu5s/255868-3x4.mp4" },]
+    }
+    },
+    "Havaí Selvagem (2014)": {
+    name: "Havaí Selvagem (2014)",
+    date: "20/08/2014",
+    synopsis: "Vamos fazer um passeio extraordinário pelo Havaí, um lugar que pela alquimia do fogo, do gelo e da água se transformou, de deserto vulcânico, em um paraíso terrestre.",
+    poster: "https://image.tmdb.org/t/p/w500/sCXeJbhWqnhUvI9tTe145Nv7MoW.jpg",
+    background: "https://image.tmdb.org/t/p/original/vrJifeL8MdeV8G5sp9M4g6Zz45m.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/xJKGdxvk5ZbtxiuTyM4tDPDYYt8.png",
+    categories: ["Séries"],
+    genero: ["Documentário"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2023-08-11_file_nt6b6b3eq/73456-1x1.mp4" },
+        { title: "", url: "https://fv5-2.failiem.lv/Files.fm_2023-08-11_file_pgwtugu3w/73456-1x2.mp4" }]
+    }
+    },
+    "A Pior das Bruxas (2017)": {
+    name: "A Pior das Bruxas (2017)",
+    date: "11/01/2017",
+    synopsis: "Depois de encontrar, sem querer, uma escolinha para bruxas, uma heroína desastrada percebe que este é seu lugar. Baseado nos adorados livros de Jill Murphy.",
+    poster: "https://image.tmdb.org/t/p/w500/5efw8Or4N18o0ceQ6IXf5xoDSoT.jpg",
+    background: "https://image.tmdb.org/t/p/original/rboZ8THSUD68ux24f9wuf4ptBln.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/lS6WBrzIlDiTk8kgNxTDKbLNFA.png",
+    categories: ["Séries"],
+    genero: ["Kids, Mistério, Ficção Científica e Fantasia"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "Dia da seleção", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/1.mp4" },
+        { title: "Malhado", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/2.mp4" },
+        { title: "A aluna nova", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/3.mp4" },
+        { title: "Vida no lago", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/4.mp4" },
+        { title: "A visita do Grande Mago", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/5.mp4" },
+        { title: "A melhor professora", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/6.mp4" },
+        { title: "O grande erro de Maud", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/7.mp4" },
+        { title: "A primeira bruxa", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/8.mp4" },
+        { title: "O torneio", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/9.mp4" },
+        { title: "As Brumas do Tempo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/10.mp4" },
+        { title: "As aparências enganam", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/11.mp4" },
+        { title: "A pior diretora", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/1/12.mp4" }],
+       2: [
+        { title: "Problema cascudo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/1.mp4" },
+        { title: "A armadilha da amizade", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/2.mp4" },
+        { title: "Ethel, Ethel, Ethel...", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/3.mp4" },
+        { title: "A extraordinária Esper Vespertilio", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/4.mp4" },
+        { title: "A árvore genealógica da Mildred", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/5.mp4" },
+        { title: "Garota-morcego", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/6.mp4" },
+        { title: "Bosque do Oco", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/7.mp4" },
+        { title: "O aniversário da Diretora Cackle", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/8.mp4" },
+        { title: "A nova professora Hardbroom", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/9.mp4" },
+        { title: "Novos tempos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/10.mp4" },
+        { title: "Amor à primeira vista", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/11.mp4" },
+        { title: "Como reacender uma pedra fundamental", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/12.mp4" },
+        { title: "Gelo mágico", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/2/13.mp4" }],
+       3: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/8.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/9.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/10.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/11.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/12.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/3/13.mp4" }],
+       4: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/8.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/9.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/10.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/11.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/12.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/02/69581/4/13.mp4" }]       
+    }
+    },
+    "Alasca: Reabilitação Selvagem (2020)": {
+    name: "Alasca: Reabilitação Selvagem (2020)",
+    date: "11/04/2020",
+    synopsis: "Socorristas, veterinários e cuidadores de animais dedicados enfrentam terrenos perigosos e climas implacáveis para acorrer aos animais em necessidade.",
+    poster: "https://image.tmdb.org/t/p/w500/wH8q5G6NM5ZSoeqxBT8u9DH1eTg.jpg",
+    background: "https://image.tmdb.org/t/p/original/4uvmV168yHhFXal60T3pzvOVNdZ.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/7agxV8EZQvnKPTuc1SsQEM36dyw.png",
+    categories: ["Séries"],
+    genero: ["Reality, Documentário"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/104521/1/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/104521/1/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/104521/1/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/104521/1/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/104521/1/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/104521/1/6.mp4" }]
+    }
+    },
+    "Construindo no Alaska (2012)": {
+    name: "Construindo no Alaska (2012)",
+    date: "11/11/2012",
+    synopsis: "O que é preciso para construir uma casa totalmente fora da grade em alguns dos terrenos mais implacáveis ​​do planeta? Seguimos um elenco de personagens que se propõe a construir três cabanas incríveis no obscuro deserto do Alasca. Sem estradas e sem centros de materiais de construção, eles terão que ser criativos em uma nova temporada de Building Alaska.",
+    poster: "https://image.tmdb.org/t/p/w500/oA3BmVLj3M36ofro8pw3COifiG8.jpg",
+    background: "https://image.tmdb.org/t/p/original/ylxCkqc9wO79m2OGzKKONOvyl5r.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/6CITJSTdO582ZP6F7rhfCYsqrm5.png",
+    categories: ["Séries"],
+    genero: ["Documentário, Drama, Reality"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/1/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/1/dub/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/1/dub/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/1/dub/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/1/dub/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/1/dub/6.mp4" }],
+       2: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/2/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/2/dub/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/2/dub/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/2/dub/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/2/dub/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/2/dub/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/2/dub/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/2/dub/8.mp4" }],
+       3: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/8.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/9.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/10.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/11.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/3/dub/12.mp4" }],
+       4: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/8.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/9.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/10.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/11.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/74908/4/dub/12.mp4" }]
+    }
+    },
+    "Mistérios no Alasca (2021)": {
+    name: "Mistérios no Alasca (2021)",
+    date: "15/02/2021",
+    synopsis: "O Alasca é o cenário constante de avistamentos de óvnis, abduções e contatos extraterrestres. Novas evidências e relatos de testemunhas ajudam a esclarecer esta incomum atividade alienígena.",
+    poster: "https://image.tmdb.org/t/p/w500/kTuMlTTo3xfirw4dnTtZXq9UpyR.jpg",
+    background: "https://image.tmdb.org/t/p/original/2roVbEdeKCTRqa92GG7whfH97lu.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/y81p9tvbCYrD1Maq0JTlbRneDda.png",
+    categories: ["Séries"],
+    genero: ["Documentário, Reality"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/119539/1/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/119539/1/dub/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/119539/1/dub/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/119539/1/dub/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/119539/1/dub/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/119539/1/dub/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/119539/1/dub/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/119539/1/dub/8.mp4" }]
+    }
+    },
+    "Quem é Você, Alaska? (2019)": {
+    name: "Quem é Você, Alaska? (2019)",
+    date: "19/10/2019",
+    synopsis: "Miles Halter é um adolescente obcecado pelas últimas palavras de pessoas famosas. Cansado da vida monótona e segura que leva em casa, o jovem decide se aventurar em uma nova escola, onde encontra alguém prestes a tirá-lo da mesmisse: a ousada e increvelmente charmosa Alasca Young. Baseado no livro homônimo de John Green.",
+    poster: "https://image.tmdb.org/t/p/w500/qssHQ7mcymCKqlWDFN32qPSnowf.jpg",
+    background: "https://image.tmdb.org/t/p/original/Ah7762FWHdQYHUnbCwAzPFHsgOs.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/nLQl8WD6Th5wIQjnfiyPtpNbhrM.png",
+    categories: ["Séries"],
+    genero: ["Drama"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/88640/1/dub/1.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/88640/1/dub/2.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/88640/1/dub/3.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/88640/1/dub/4.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/88640/1/dub/5.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/88640/1/dub/6.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/88640/1/dub/7.mp4" },
+        { title: "", url: "https://plustv.jctvstreaming-vip.workers.dev/03/88640/1/dub/8.mp4" }]
+    }
+    },
+    "Abel, O Grande (2025)": {
+    name: "Abel, O Grande (2025)",
+    date: "13/07/2025",
+    synopsis: "Esta série documental é sobre a vida e carreira marcantes de Abel Braga, técnico de futebol campeão do Mundial de Clubes em 2006 com o Internacional. O documentário joga luz sobre o lado humano do treinador e conta como Abel superou sua pior partida, a trágica perda de seu filho João Pedro em 2017.",
+    poster: "https://image.tmdb.org/t/p/w500/cFXA7AkLfGLkG8yx3Ot92r71zYv.jpg",
+    background: "https://image.tmdb.org/t/p/original/gfwo8F80qiKom286co2mfnfKPrt.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/6W08YGtnXJNfLljCFA7lXnIMR2a.png",
+    categories: ["Séries"],
+    genero: ["Documentário"],
+    language: ["Idioma Original"],
+    seasons: {
+       1: [
+        { title: "Esquadrão Colorado", url: "https://plustv.jctvstreaming-vip.workers.dev/03/300570/1/dub/1.mp4" },
+        { title: "Abelão com a Macaca", url: "https://plustv.jctvstreaming-vip.workers.dev/03/300570/1/dub/2.mp4" },
+        { title: "Cidadão do Mundo", url: "https://plustv.jctvstreaming-vip.workers.dev/03/300570/1/dub/3.mp4" },
+        { title: "O Grande Abel", url: "https://plustv.jctvstreaming-vip.workers.dev/03/300570/1/dub/4.mp4" }]
+    }
+    },
+    "The Walking Dead: Daryl Dixon (2023)": {
+    name: "The Walking Dead: Daryl Dixon (2023)",
+    date: "10/07/2023",
+    synopsis: "Daryl Dixon chega à costa da França e luta para entender como chegou lá e por quê. A série acompanha a sua jornada por uma França quebrada, mas resiliente, enquanto ele tenta encontrar um caminho de volta para casa. As conexões que ele forma no caminho, no entanto, complicam os seus planos.",
+    poster: "https://image.tmdb.org/t/p/original/1ZVoJqgXHEA851cv6pmK4jyrcok.jpg",
+    background: "https://image.tmdb.org/t/p/original/rvy6fX3FVBuAZQZLUU9edw8heQr.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/ggeeJM93cx7iKkAVoRamai1RIsK.png",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "A Alma Perdida", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/1/dub/1.mp4" },
+        { title: "Alouette", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/1/dub/2.mp4" },
+        { title: "Paris Sempre Será Paris", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/1/dub/3.mp4" },
+        { title: "A Dama de Ferro", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/1/dub/4.mp4" },
+        { title: "Dois Amores", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/1/dub/5.mp4" },
+        { title: "Voltando Pra Casa", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/1/dub/6.mp4" }],
+       2: [
+        { title: "A Bondade dos Estranhos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/2/dub/1.mp4" },
+        { title: "Moinho Vermelho", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/2/dub/2.mp4" },
+        { title: "O Invisível", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/2/dub/3.mp4" },
+        { title: "Paraíso para Você", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/2/dub/4.mp4" },
+        { title: "Querer é Poder", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/2/dub/5.mp4" },
+        { title: "Adeus Criança", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/2/dub/6.mp4" }],
+       3: [
+        { title: "Costa da Morte", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/3/dub/1.mp4" },
+        { title: "A Oferta", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/3/dub/2.mp4" },
+        { title: "O Sacrifício", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/3/dub/3.mp4" },
+        { title: "A Justiça da Fronteira", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/3/dub/4.mp4" },
+        { title: "Limbo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/3/dub/5.mp4" },
+        { title: "Contrabando", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/3/dub/6.mp4" },
+        { title: "Consolo do Mar", url: "https://plustv.jctvstreaming-vip.workers.dev/02/211684/3/dub/7.mp4" }]
+    }
+    },
+    "The Walking Dead: Um Novo Universo (2020)": {
+    name: "The Walking Dead: Um Novo Universo (2020)",
+    date: "04/10/2020",
+    synopsis: "Um grupo de adolescentes abrigados dos perigos do mundo pós-apocalíptico recebe uma mensagem que os inspira a deixar a segurança do único lar que já conheceram e embarcar em uma jornada pelo país para salvar seu pai.",
+    poster: "https://image.tmdb.org/t/p/w500/zjcZFQ5WhJ1x5RhJoNwoVM8yAFT.jpg",
+    background: "https://image.tmdb.org/t/p/original/pLVrN9B750ehwTFdQ6n3HRUERLd.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/eu0KiB1wQYKkVhHhG74M7WCz05Q.png",
+    categories: ["Séries"],
+    genero: ["Drama, Ficção Científica e Fantasia"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "Bravo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/1/dub/1.mp4" },
+        { title: "A Chama da Glória", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/1/dub/2.mp4" },
+        { title: "O Tyger e o Cordeiro", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/1/dub/3.mp4" },
+        { title: "A Extremidade Errada de um Telescópio", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/1/dub/4.mp4" },
+        { title: "Louco do Outro Lado da Água", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/1/dub/5.mp4" },
+        { title: "Bonecos de Sombra", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/1/dub/6.mp4" },
+        { title: "Verdade ou Desafio", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/1/dub/7.mp4" },
+        { title: "O Céu é um Cemitério", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/1/dub/8.mp4" },
+        { title: "O Corte Mais Profundo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/1/dub/9.mp4" },
+        { title: "Nessa Vida", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/1/dub/10.mp4" }],
+       2: [
+        { title: "Consequências", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/2/dub/1.mp4" },
+        { title: "Ponto de Apoio", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/2/dub/2.mp4" },
+        { title: "Feridas de saída", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/2/dub/3.mp4" },
+        { title: "Família é uma palavra de quatro letras", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/2/dub/4.mp4" },
+        { title: "Quatervois", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/2/dub/5.mp4" },
+        { title: "Quem é você?", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/2/dub/6.mp4" },
+        { title: "Sangue e Mentiras", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/2/dub/7.mp4" },
+        { title: "Ponto de Retorno", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/2/dub/8.mp4" },
+        { title: "Morte e os mortos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/2/dub/9.mp4" },
+        { title: "A última luz", url: "https://plustv.jctvstreaming-vip.workers.dev/02/94305/2/dub/10.mp4" }]
+    }
+    },
+    "Contos de The Walking Dead (2022)": {
+    name: "Contos de The Walking Dead (2022)",
+    date: "14/08/2022",
+    synopsis: "Série Antológica composta de episódios independentes focados em personagens novos e já apresentados do universo The Walking Dead.",
+    poster: "https://image.tmdb.org/t/p/w500/jDwjAEQJXP9dkGmh5MWZgbDjFMv.jpg",
+    background: "https://image.tmdb.org/t/p/original/uFU4ItwbxHnFHxntb76ASnZbWTN.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/2Urg2eso1pW6vVdn4O1Bsdge9P1.png",
+    categories: ["Séries"],
+    genero: ["Drama, Ação e Aventura, Ficção Científica e Fantasia"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "Evie / Joe", url: "https://plustv.jctvstreaming-vip.workers.dev/02/136248/1/dub/1.mp4" },
+        { title: "Blair / Gina", url: "https://plustv.jctvstreaming-vip.workers.dev/02/136248/1/dub/2.mp4" },
+        { title: "Dee", url: "https://plustv.jctvstreaming-vip.workers.dev/02/136248/1/dub/3.mp4" },
+        { title: "Amy / Dr. Everett", url: "https://plustv.jctvstreaming-vip.workers.dev/02/136248/1/dub/4.mp4" },
+        { title: "Davon", url: "https://plustv.jctvstreaming-vip.workers.dev/02/136248/1/dub/5.mp4" },
+        { title: "La Doña", url: "https://plustv.jctvstreaming-vip.workers.dev/02/136248/1/dub/6.mp4"}]
+    }
+    },
+    "The Walking Dead: Dead City (2023)": {
+    name: "The Walking Dead: Dead City (2023)",
+    date: "18/06/2023",
+    synopsis: "Maggie e Negan viajam para uma Manhattan pós-apocalíptica há muito isolada do continente. A cidade em ruínas está cheia de mortos e habitantes que fizeram de Nova York seu próprio mundo cheio de anarquia, perigo, beleza e terror.",
+    poster: "https://image.tmdb.org/t/p/w500/oC4SG9TXM0C6KUoAUv76WOvQ103.jpg",
+    background: "https://image.tmdb.org/t/p/original/vV5LKWmuysEe5wsuZJGbdiL5XJ2.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/9CialwWMr9OE5GFNwl47vVWQFm8.png",
+    categories: ["Séries"],
+    genero: ["Drama, Ação e Aventura, Ficção Científica e Fantasia"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "Velhos Conhecidos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/1/dub/1.mp4" },
+        { title: "Quem Está Aí?", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/1/dub/2.mp4" },
+        { title: "Pessoas São um Recurso", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/1/dub/3.mp4" },
+        { title: "Todo Mundo Ganha um Prêmio", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/1/dub/4.mp4" },
+        { title: "Histórias que Contamos a Nós Mesmos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/1/dub/5.mp4"},
+        { title: "Estamos em Casa", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/1/dub/6.mp4" }],
+       2: [
+        { title: "Poder é Igual a Poder", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/2/dub/1.mp4" },
+        { title: "Outra Lição de Merda", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/2/dub/2.mp4" },
+        { title: "Por que os Continentais Cruzaram o Rio?", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/2/dub/3.mp4" },
+        { title: "Amigável e Implacável", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/2/dub/4.mp4" },
+        { title: "O Pássaro Sempre Sabe", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/2/dub/5.mp4" },
+        { title: "Parceiros de Ponte São Difíceis de Encontrar Hoje em Dia", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/2/dub/6.mp4" },
+        { title: "Novo dia, Novo começo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/2/dub/7.mp4" },
+        { title: "Se a História Fosse uma Conflagração", url: "https://plustv.jctvstreaming-vip.workers.dev/02/194583/2/dub/8.mp4"}]
+    }
+    },
+    "The Walking Dead: The Ones Who Live (2024)": {
+    name: "The Walking Dead: The Ones Who Live (2024)",
+    date: "25/02/2024",
+    synopsis: "Uma história de amor épica de duas pessoas mudadas por um mundo mudado, separadas pela distância e por um poder imparável. Rick e Michonne conseguirão encontrar um ao outro e quem eles eram em um lugar diferente de todos que já conheceram? Sem o outro, eles estão vivos?",
+    poster: "https://media.themoviedb.org/t/p/w500/ywbacot78IuNhGW4uVZPxxxVTkm.jpg",
+    background: "https://image.tmdb.org/t/p/original/5PCKxpFcCTDFT3b1olJGPaAIM9e.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/9xCqIcl2c8UYn5dKvK2aB9y8cL2.png",
+    categories: ["Séries"],
+    genero: ["Drama, Ação e Aventura, Ficção Científica e Fantasia"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "Anos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/206586/1/dub/1.mp4" },
+        { title: "Perdida", url: "https://plustv.jctvstreaming-vip.workers.dev/02/206586/1/dub/2.mp4" },
+        { title: "Adeus", url: "https://plustv.jctvstreaming-vip.workers.dev/02/206586/1/dub/3.mp4" },
+        { title: "O Que Nós", url: "https://plustv.jctvstreaming-vip.workers.dev/02/206586/1/dub/4.mp4" },
+        { title: "Tornar-se", url: "https://plustv.jctvstreaming-vip.workers.dev/02/206586/1/dub/5.mp4" },
+        { title: "A Última Vez", url: "https://plustv.jctvstreaming-vip.workers.dev/02/206586/1/dub/6.mp4"}]
+    }
+    },
+    "Fear the Walking Dead (2015)": {
+    name: "Fear the Walking Dead (2015)",
+    date: "23/08/2015",
+    synopsis: "Ambientada em Los Angeles, a série mostra o começo do apocalipse zumbi e a temível desintegração da sociedade pelos olhos de uma família disfuncional, que precisa se unir para tentar sobreviver ao caos do fim dos tempos.",
+    poster: "https://image.tmdb.org/t/p/w500/lKIhibYjzmpr8KQTYNEcwtUne5S.jpg",
+    background: "https://image.tmdb.org/t/p/original/dvDkq5Mcv27vpHRvF1ywFGroh03.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/z3Egz2rgq1fawIJksMJTzR4Im3T.png",
+    categories: ["Séries"],
+    genero: ["Ação e Aventura, Drama"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "Piloto", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/1/1.mp4" },
+        { title: "Tão Perto, e Ainda Assim, Tão Longe", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/1/2.mp4" },
+        { title: "O Cachorro", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/1/3.mp4" },
+        { title: "Não Desapareça", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/1/4.mp4" },
+        { title: "Cobalto", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/1/5.mp4" },
+        { title: "O Homem Bom", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/1/6.mp4"}],
+       2: [
+        { title: "Monstro", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/1.mp4" },
+        { title: "Todos Nós Caímos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/2.mp4" },
+        { title: "Ouroboros", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/3.mp4" },
+        { title: "Sangue nas Ruas", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/4.mp4" },
+        { title: "Aprisionados", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/5.mp4" },
+        { title: "Sicut Cervus", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/6.mp4" },
+        { title: "Shiva", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/7.mp4" },
+        { title: "Grotesco", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/8.mp4" },
+        { title: "Los Muertos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/9.mp4" },
+        { title: "Não Perturbe", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/10.mp4" },
+        { title: "Pablo & Jessica", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/11.mp4" },
+        { title: "Estátua de Sal", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/12.mp4" },
+        { title: "Data da Morte", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/13.mp4" },
+        { title: "Ira", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/14.mp4" },
+        { title: "Norte", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/2/15.mp4" }],
+       3: [
+        { title: "Os Olhos de Quem Vê", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/1.mp4" },
+        { title: "A Nova Fronteira", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/2.mp4" },
+        { title: "Teotwawki", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/3.mp4" },
+        { title: "100", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/4.mp4" },
+        { title: "Queimando na Água, Afogando-se no Fogo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/5.mp4" },
+        { title: "Sujeira Vermelha", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/6.mp4" },
+        { title: "A Revelação", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/7.mp4" },
+        { title: "Os Filhos da Ira", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/8.mp4" },
+        { title: "Minotauro", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/9.mp4" },
+        { title: "O Adivinhador", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/10.mp4" },
+        { title: "La Serpiente", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/11.mp4" },
+        { title: "O Guardião do Irmão", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/12.mp4" },
+        { title: "Essa Terra é Sua Terra", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/13.mp4" },
+        { title: "El Matadero", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/14.mp4" },
+        { title: "Coisas Ruins Começaram", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/15.mp4" },
+        { title: "O Passeio de Trenó", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/3/16.mp4" }],
+       4: [
+        { title: "Qual é a Sua História?", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/1.mp4" },
+        { title: "Outro Dia no Diamante", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/2.mp4" },
+        { title: "Fique Bem Aqui", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/3.mp4" },
+        { title: "Enterrado", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/4.mp4" },
+        { title: "Laura", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/5.mp4" },
+        { title: "Por Precaução", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/6.mp4" },
+        { title: "O Lado Errado de Onde Você Está Agora", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/7.mp4" },
+        { title: "Ninguém Se Foi", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/8.mp4" },
+        { title: "Pessoas como Nós", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/9.mp4" },
+        { title: "Feche Seus Olhos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/10.mp4" },
+        { title: "O Código", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/11.mp4" },
+        { title: "Fraco", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/12.mp4" },
+        { title: "Blackjack", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/13.mp4" },
+        { title: "MM 54", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/14.mp4" },
+        { title: "Eu Perco Pessoas...", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/15.mp4" },
+        { title: "...Eu Me Perco", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/4/16.mp4" }],
+       5: [
+        { title: "Aqui para Ajudar", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/1.mp4" },
+        { title: "A Dor Que Vai Causar", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/2.mp4" },
+        { title: "Humbug's Gulch", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/3.mp4" },
+        { title: "Rajado", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/4.mp4" },
+        { title: "O Fim de Tudo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/5.mp4" },
+        { title: "O Pequeno Príncipe", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/6.mp4" },
+        { title: "Ainda em Pé", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/7.mp4" },
+        { title: "Tem Alguém Aí Fora?", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/8.mp4" },
+        { title: "Canal 4", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/9.mp4" },
+        { title: "210 Palavras por Minuto", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/10.mp4" },
+        { title: "Você Ainda Está Aqui", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/11.mp4" },
+        { title: "Ner Tamid", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/12.mp4" },
+        { title: "Deixe O Que Não Precisa", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/13.mp4" },
+        { title: "Hoje e Amanhã", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/14.mp4" },
+        { title: "Canal 5", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/15.mp4" },
+        { title: "Fim da Linha", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/5/16.mp4" }],
+       6: [
+        { title: "O Fim é o Começo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/1.mp4" },
+        { title: "Bem-Vindo ao Clube", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/2.mp4" },
+        { title: "Alaska", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/3.mp4" },
+        { title: "A Chave", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/4.mp4" },
+        { title: "Mel", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/5.mp4" },
+        { title: "Enterre-a ao Lado da Perna de Jasper", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/6.mp4" },
+        { title: "Danos Internos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/7.mp4" },
+        { title: "A porta", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/8.mp4" },
+        { title: "Coisas que faltam fazer", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/9.mp4" },
+        { title: "Manuseie com cuidado", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/10.mp4" },
+        { title: "A Contenção", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/11.mp4" },
+        { title: "Em sonhos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/12.mp4" },
+        { title: "J.D.", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/13.mp4" },
+        { title: "Mãe", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/14.mp4" },
+        { title: "USS Pennsylvania", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/15.mp4" },
+        { title: "O início", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/6/dub/16.mp4" }],
+       7: [
+        { title: "O farol", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/1.mp4" },
+        { title: "Seis horas", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/2.mp4" },
+        { title: "Cindy Hawkins", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/3.mp4" },
+        { title: "Respire comigo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/4.mp4" },
+        { title: "Até a morte", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/5.mp4" },
+        { title: "Recuperação", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/6.mp4" },
+        { title: "O retrato", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/7.mp4" },
+        { title: "Padre", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/8.mp4" },
+        { title: "Siga-me", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/9.mp4" },
+        { title: "Manto de luto", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/10.mp4" },
+        { title: "Ofelia", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/11.mp4" },
+        { title: "Filhinho", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/12.mp4" },
+        { title: "A Jangada", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/13.mp4" },
+        { title: "Providência Divina", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/14.mp4" },
+        { title: "A Mina", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/15.mp4" },
+        { title: "Se foi", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/7/dub/16.mp4" }],
+       8: [
+        { title: "Lembre-se do Que Eles Tiraram de Você", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/1.mp4" },
+        { title: "Gaio Azul", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/2.mp4" },
+        { title: "Odessa", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/3.mp4" },
+        { title: "Condado do Rei", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/4.mp4" },
+        { title: "Mais Tempo do que Você", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/5.mp4" },
+        { title: "Tudo o que Eu Vejo é Vermelho", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/6.mp4" },
+        { title: "Anton", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/7.mp4" },
+        { title: "Tigre de Ferro", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/8.mp4" },
+        { title: "Santuário", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/9.mp4" },
+        { title: "Mantendo-a viva", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/10.mp4" },
+        { title: "Lutando Como Você", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/11.mp4" },
+        { title: "A Estrada à Frente", url: "https://plustv.jctvstreaming-vip.workers.dev/02/62286/8/dub/12.mp4" }],
+    }
+    },
+    "The Walking Dead (2010)": {
+    name: "The Walking Dead (2010)",
+    date: "31/10/2010",
+    synopsis: "Nos Estados Unidos pós-apocalíptico, um pequeno grupo de sobreviventes segue viajando à procura de uma nova casa longe dos mortos-vivos. O desespero por segurança e suprimentos os coloca constantemente à beira da sanidade.",
+    poster: "https://image.tmdb.org/t/p/w500/9lb02gTh4LLB17yAEXFd4C3R4JP.jpg",
+    background: "https://image.tmdb.org/t/p/original/rAOjnEFTuNysY7bot8zonhImGMh.jpg",
+    logotipo: "https://image.tmdb.org/t/p/original/t4mho6jfBs2D4VkLKGOE37lxxiQ.png",
+    categories: ["Séries"],
+    genero: ["Drama, Ação e Aventura, Ficção Científica e Fantasia"],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "Dias Passados", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/1/1.mp4" },
+        { title: "Entranhas", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/1/2.mp4" },
+        { title: "Diga aos Sapos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/1/3.mp4" },
+        { title: "Hermanos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/1/4.mp4" },
+        { title: "Fogo Selvagem", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/1/5.mp4" },
+        { title: "Cobaia 19", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/1/6.mp4" }],
+       2: [
+        { title: "O que vem pela frente", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/1.mp4" },
+        { title: "Sangria", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/2.mp4" },
+        { title: "Última bala", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/3.mp4" },
+        { title: "Rosa cherokee", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/4.mp4" },
+        { title: "Chupa-cabra", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/5.mp4" },
+        { title: "Segredos", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/6.mp4" },
+        { title: "Já quase morto", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/7.mp4" },
+        { title: "Nebraska", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/8.mp4" },
+        { title: "Dedo no gatilho", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/9.mp4" },
+        { title: "A 29 km", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/10.mp4" },
+        { title: "Juiz, júri, carrasco", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/11.mp4" },
+        { title: "Anjos bons", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/12.mp4" },
+        { title: "Fogueira apagando", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/2/13.mp4" }],
+       3: [
+        { title: "Sementes", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/1.mp4" },
+        { title: "Doente", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/2.mp4" },
+        { title: "Vem comigo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/3.mp4" },
+        { title: "O assassino dentro", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/4.mp4" },
+        { title: "É só falar", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/5.mp4" },
+        { title: "Atormentado", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/6.mp4" },
+        { title: "A Marca da Maldade", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/7.mp4" },
+        { title: "Feitos para sofrer", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/8.mp4" },
+        { title: "O rei suicida", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/9.mp4" },
+        { title: "Lar", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/10.mp4" },
+        { title: "Eu Não Sou Judas", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/11.mp4" },
+        { title: "Limpo", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/12.mp4" },
+        { title: "Saída", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/13.mp4" },
+        { title: "Dia do Caçador", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/14.mp4" },
+        { title: "Por Uma Vida Infeliz", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/15.mp4" },
+        { title: "Bem-Vindos às Tumbas", url: "https://plustv.jctvstreaming-vip.workers.dev/02/1402/3/16.mp4" }],
+       4: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       5: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       6: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       7: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       8: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       9: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      10: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+      11: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
+    },
+    "": {
+    name: "",
+    date: "01/01/2050",
+    synopsis: "",
+    poster: "",
+    background: "",
+    logotipo: "",
+    categories: [""],
+    genero: [""],
+    language: ["Dublado"],
+    seasons: {
+       1: [
+        { title: "", url: "" },
+        { title: "", url: "" }],
+       2: [
+        { title: "", url: "" },
+        { title: "", url: "" }]
+   }
     },
     "": {
     name: "",
@@ -2135,6 +3867,43 @@ castButton.addEventListener("click", (e) => {
 
 // ---------------- Inicialização
 populateCategories(); buildTabs(); updateUIOnTabToggle();
+
 </script>
+<!-- Tela de Alerta -->
+  <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
+    <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
+  </div>
+
+  <script>
+    function mostrarAlerta() {
+      const tela = document.getElementById("bloqueio");
+      tela.style.display = "block";
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+
+    document.querySelectorAll('a').forEach(link => {
+      link.setAttribute('target', '_self');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      const tecla = e.key.toLowerCase();
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && tecla === 'u') ||
+        (e.ctrlKey && tecla === 's') ||
+        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+      ) {
+        e.preventDefault();
+        mostrarAlerta();
+      }
+    });
+
+    window.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
 </body>
 </html>

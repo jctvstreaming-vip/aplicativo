@@ -196,6 +196,101 @@
   object-fit: cover !important;
   border-radius: 10px;
 }
+.series-tab.active {
+    background-color: #0d6efd !important;
+    color: #fff !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); /* brilho dourado */
+    border: 2px solid gold !important; /* borda dourada */
+}
+
+/* imagem também com borda dourada */
+.series-tab.active img {
+    border: 2px solid gold !important;
+}
+
+/* texto mais destacado */
+.series-tab.active .card-text {
+    font-weight: bold;
+}
+
+/* RESPONSIVO PARA TELA PEQUENA */
+@media (max-width: 768px) {
+
+    /* Reduz tamanho das abas de séries */
+    .series-tab {
+        transform: scale(0.85);
+        margin: 4px 0 !important;
+    }
+
+    .series-tab img {
+        height: 120px !important;
+        object-fit: cover;
+    }
+
+    /* Títulos menores */
+    .series-tab .card-title,
+    .series-tab .card-text {
+        font-size: 0.85rem !important;
+    }
+
+    /* Container principal com menos largura */
+    .series-container {
+        padding: 6px !important;
+    }
+
+    /* Grade de cards mais compacta */
+    .series-list {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    /* Episódios mais compactos */
+    .episode-btn {
+        font-size: 0.80rem !important;
+        padding: 6px 8px !important;
+    }
+
+    /* Ajuste do modal para caber todo */
+    .modal-content {
+        padding: 0 !important;
+    }
+
+    #playerModal iframe,
+    #playerModal video {
+        height: 240px !important;
+    }
+
+    /* Título do modal menor */
+    #modalTitle {
+        font-size: 1rem !important;
+    }
+
+    #modalLogo {
+        height: 35px !important;
+    }
+
+    /* Menu lateral (se tiver) mais estreito */
+    .sidebar {
+        width: 190px !important;
+    }
+
+    /* Botões e textos gerais menores */
+    button,
+    .btn {
+        padding: 6px 10px !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+/* POSTER */
+#seriePoster {
+    width: 150px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid gold;
+}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
@@ -1823,90 +1918,40 @@ function resetarInatividade() {
 resetarInatividade();
 </script>
 <!-- Tela de Alerta -->
-<div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
-  <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
-  <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
-  <p>Seu IP Será Bloqueado!</p>
-</div>
+  <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
+    <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
+  </div>
 
-<script>
-  // Mostrar o alerta e recarregar após 1 segundo
-  function mostrarAlerta() {
-    const tela = document.getElementById("bloqueio");
-    tela.style.display = "block";
-    setTimeout(() => {
-      location.reload();
-    }, 1000);
-  }
-
-  // Força todos os links a abrirem na mesma aba
-  document.querySelectorAll('a').forEach(link => {
-    link.setAttribute('target', '_self');
-  });
-
-  // Bloqueia ações de desenvolvedor  
-  document.addEventListener('keydown', function(e) {
-    const tecla = e.key.toLowerCase();
-    if (
-      e.key === "F12" ||
-      (e.ctrlKey && tecla === 'u') ||
-      (e.ctrlKey && tecla === 's') ||
-      (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
-    ) {
-      e.preventDefault();
-      mostrarAlerta();
+  <script>
+    function mostrarAlerta() {
+      const tela = document.getElementById("bloqueio");
+      tela.style.display = "block";
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
     }
-  });
 
-  // Bloqueia botão direito
-  window.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-  });
-
-  // -----------------------------------------------------------
-  //  🚫 BLOQUEADOR DE POPUPS / NOVA ABA
-  // -----------------------------------------------------------
-
-  (function() {
-    // BLOQUEIA qualquer tentativa de abrir nova aba via scripts
-    const open = window.open;
-    window.open = function() {
-      console.warn("Popup bloqueado.");
-      return null;
-    };
-
-    // Bloqueia links com target _blank
-    document.addEventListener("click", function(e) {
-      let el = e.target;
-
-      // Sobe até achar um <a>
-      while (el && el.tagName !== "A") {
-        el = el.parentElement;
-      }
-
-      if (el && el.tagName === "A") {
-        if (el.target === "_blank") {
-          e.preventDefault();
-          el.target = "_self";
-          console.warn("Nova aba bloqueada.");
-        }
-      }
-    }, true);
-
-    // Impede popups automáticos
-    window.addEventListener("beforeunload", function(e) {
-      e.stopImmediatePropagation();
+    document.querySelectorAll('a').forEach(link => {
+      link.setAttribute('target', '_self');
     });
 
-    // Impede iframes abrirem novas abas
-    document.addEventListener("DOMContentLoaded", () => {
-      document.querySelectorAll("iframe").forEach(f => {
-        f.setAttribute("sandbox", "allow-same-origin allow-scripts allow-forms");
-      });
+    document.addEventListener('keydown', function(e) {
+      const tecla = e.key.toLowerCase();
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && tecla === 'u') ||
+        (e.ctrlKey && tecla === 's') ||
+        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+      ) {
+        e.preventDefault();
+        mostrarAlerta();
+      }
     });
 
-  })();
-</script>
-
+    window.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
 </body>
 </html>
