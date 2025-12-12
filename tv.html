@@ -75,7 +75,7 @@
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.6);
-    padding: 5px 10px;
+    padding: 3px 8px;
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -83,7 +83,7 @@
   }
 
   #playerFooter img {
-    height: 23px;
+    height: 20px;
     margin-right: 8px;
   }
 
@@ -95,9 +95,9 @@
   #btnProgramacao {
     position: absolute;
     top: 17px;
-    right: 20px;
+    right: 22px;
     z-index: 25;
-    padding: 10px 30px;
+    padding: 15px 35px;
     background: linear-gradient(135deg, #5f00ff, #0095ff);
     color: #fff;
     border: none;
@@ -290,6 +290,16 @@
     object-fit: cover;
     border-radius: 12px;
     border: 2px solid gold;
+}
+/* FOOTER */
+#playerFooter {
+    opacity: 1;
+    transition: opacity .3s ease;
+}
+
+#playerFooter.oculto {
+    opacity: 0;
+    pointer-events: none;
 }
 </style>
 
@@ -693,15 +703,15 @@ const channels = [
  embed:"", type:"m3u8" },
 
 { name:"Agro Brasil tv", logo:"https://www.mediafire.com/convkey/b13e/uh3wi5n02zs3quf5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/AGROBRASIL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://live.agrobrasiltv.com.br/ao-vivo.html", type:"m3u8" },
 
 { name:"Agro Canal", logo:"https://www.mediafire.com/convkey/9681/s673k65kk4tu9so5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/AGRO_CANAL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://equipea.com.br/player/?canal=agrocanal", type:"m3u8" },
 
 { name:"Agro+", logo:"https://www.mediafire.com/convkey/5295/vcv6hm69ni4moit5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/AGROMAIS_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/agromais", type:"m3u8" },
 
 { name:"Al Jazeera English", logo:"https://www.mediafire.com/convkey/16d0/htj1ra92jujf1ed5g.jpg",
@@ -713,27 +723,27 @@ const channels = [
  embed:"", type:"m3u8" },
 
 { name:"Blits TV", logo:"https://www.mediafire.com/convkey/0089/6kuyvmcqpmaodcr5g.jpg",
- link:"https://s1.tvr.ovh/video78574/video78574/playlist.m3u8",
- embed:"", type:"m3u8" },
+ link:"https://streamer.sattvacabo.com.br/BLITS_TV/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
+ embed:"https://s1.tvr.ovh/video78574/video78574/playlist.m3u8", type:"m3u8" },
 
 { name:"BM&C News", logo:"https://www.mediafire.com/convkey/a44a/m4dskw8yegyidnk5g.jpg",
  link:"https://origin-nxtv.b-cdn.net/BMCNEWS/index.m3u8",
  embed:"", type:"m3u8" },
 
 { name:"Boas Novas", logo:"https://www.mediafire.com/convkey/4276/7i3twb55s4gjhom5g.jpg",
- link:"",
+ link:"https://cdn.live.br1.jmvstream.com/w/LVW-9375/LVW9375_6i0wPBCHYc/chunklist.m3u8",
  embed:"https://player.jmvstream.com/lvw/LQQkxtAMXzxJcp0qLbfdJ4gYVZoag4", type:"m3u8" },
 
 { name:"BrSuper TV", logo:"https://www.mediafire.com/convkey/463f/ru39fsx9f0ivlbe5g.jpg",
- link:"https://video01.soultv.com.br/brsupertv/brsupertv/chunklist_w2023916698.m3u8",
- embed:"", type:"m3u8" },
+ link:"https://streamer.sattvacabo.com.br/RSC/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
+ embed:"https://video01.soultv.com.br/brsupertv/brsupertv/chunklist_w2023916698.m3u8", type:"m3u8" },
 
 { name:"Canal do Boi", logo:"https://www.mediafire.com/convkey/bb88/yytyv6vjxlps05p5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/CANAL_DO_BOI/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://equipea.com.br/player/?canal=canaldoboi", type:"m3u8" },
 
 { name:"Canal Rural", logo:"https://www.mediafire.com/convkey/662d/8r84ld2v05uba2x5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/CANAL_RURAL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/canal_rural", type:"m3u8" },
 
 { name:"Canal Saúde", logo:"https://www.mediafire.com/convkey/d8cc/qkosfy28ktiuii65g.jpg",
@@ -745,26 +755,26 @@ const channels = [
  embed:"", type:"m3u8" },
 
 { name:"Canção Nova", logo:"https://www.mediafire.com/convkey/73e0/lqupkenvqv64wgn5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/CANCAO_NOVA_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/cancao_nova", type:"m3u8" },
 
 { name:"Com Brasil TV", logo:"https://www.mediafire.com/convkey/db98/9u4tff594bf42me5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/COM_BRASIL/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/combrasil", type:"m3u8" },
 
 { name:"diatv", logo:"https://www.mediafire.com/convkey/dfb0/fevhce1fxcbh0qh5g.jpg",
- link:"",
+ link:"https://fast-channels.b-cdn.net/9978b7063e297d84f8e3e29087600654/playlist.m3u8",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/diatv", type:"m3u8" },
 
 { name:"E!", logo:"https://www.mediafire.com/convkey/d59c/76hy39fcai41z955g.jpg",
  link:"https://origin-07.nxplay.com.br/E_BRASIL/index.m3u8",
  embed:"", type:"m3u8" },
 
-{ name:"Filmelier TV", logo:"https://www.mediafire.com/convkey/c6ec/nvjioj8h68t08we5g.jpg",
+{ name:"Filmelier", logo:"https://www.mediafire.com/convkey/c6ec/nvjioj8h68t08we5g.jpg",
  link:"https://fast-channels.b-cdn.net/9978b7063e297d8465228d85771c5d52/playlist.m3u8",
  embed:"", type:"m3u8" },
 
-{ name:"Filmelier TV Vida Real", logo:"https://www.mediafire.com/convkey/58b6/sxubj5t09si7if95g.jpg",
+{ name:"Filmelier Vida Real", logo:"https://www.mediafire.com/convkey/58b6/sxubj5t09si7if95g.jpg",
  link:"https://fast-channels.b-cdn.net/9978b7063e297d84519b9ca053ca4b6c/playlist.m3u8",
  embed:"", type:"m3u8" },
 
@@ -821,11 +831,11 @@ const channels = [
  embed:"", type:"m3u8" },
 
 { name:"NHK World Japan", logo:"https://www.mediafire.com/convkey/9b64/2wqxatqn0iqsd5w5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/NHK/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/nhk", type:"m3u8" },
 
 { name:"Novo Tempo", logo:"https://www.mediafire.com/convkey/dbaf/rvdxpsaly4claon5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/TV_NOVO_TEMPO/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/novotempo", type:"m3u8" },
 
 { name:"NSC TV", logo:"https://www.mediafire.com/convkey/e05c/yxr96n6r2bwfsdm5g.jpg",
@@ -848,7 +858,7 @@ const channels = [
  embed:"", type:"m3u8" },
 
 { name:"Rede Brasil", logo:"https://www.mediafire.com/convkey/691c/evk20xbyszsuqw05g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/REDE_BRASIL_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/redebrasil", type:"m3u8" },
 
 
@@ -1019,7 +1029,7 @@ const channels = [
  embed:"", type:"m3u8" },
 
 { name:"Sesc TV", logo:"https://www.mediafire.com/convkey/4884/5e7gyk5jklp1r8z5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/SESC_TV/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://beyond.spalla.io/player/?live=0195ede1-c23c-7078-8f2a-25f982a9fc91", type:"m3u8" },
 
 { name:"Sony One Cinema", logo:"https://www.mediafire.com/convkey/a7eb/7p6b975pdd71dx95g.jpg",
@@ -1067,7 +1077,7 @@ const channels = [
  embed:"", type:"m3u8" },
 
 { name:"TV Aparecida", logo:"https://www.mediafire.com/convkey/bbc4/22w3uwky37jsh3j5g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/TV_APARECIDA_HD/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/aparecida", type:"m3u8" },
 
 { name:"TV Brasil", logo:"https://www.mediafire.com/convkey/7926/qonq8haw3miy4f05g.jpg",
@@ -1099,7 +1109,7 @@ const channels = [
  embed:"", type:"m3u8" },
 
 { name:"TV Mundo Maior", logo:"https://www.mediafire.com/convkey/1a30/ws2dgbk2jfd2pe65g.jpg",
- link:"",
+ link:"https://streamer.sattvacabo.com.br/TV_MUNDO_MAIOR/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
  embed:"https://4shared.jctvstreaming-vip.workers.dev/tvmundomaior", type:"m3u8" },
 
 { name:"TV NGT", logo:"https://www.mediafire.com/convkey/7fd6/2f7dcx1pohiuzvv5g.jpg",
@@ -1107,8 +1117,8 @@ const channels = [
  embed:"", type:"m3u8" },
 
 { name:"TV Pai Eterno", logo:"https://www.mediafire.com/convkey/d0f3/7ec39g6ofb2qguw5g.jpg",
- link:"https://video09.logicahost.com.br/paieterno/paieterno/playlist.m3u8",
- embed:"", type:"m3u8" },
+ link:"https://streamer.sattvacabo.com.br/PAI_ETERNO/index.m3u8?token=TLGacFXd0gIXIuo2u8Zj7f4FE5J2vtgf",
+ embed:"https://video09.logicahost.com.br/paieterno/paieterno/playlist.m3u8", type:"m3u8" },
 
 { name:"TV Pampa", logo:"https://www.mediafire.com/convkey/415a/qtodycvjo8infil5g.jpg",
  link:"https://video04.logicahost.com.br/tvpampa/tvpampa/chunklist_w2096560953.m3u8",
@@ -1515,8 +1525,6 @@ const programacaoUrls = {
       "Com Brasil TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "diatv": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "E!": "https://mi.tv/br/canais/e",
-      "Filmelier TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
-      "Filmelier TV Vida Real": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Fit Dance": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Fuel TV": "https://jctvstreaming-vip.github.io/aplicativo/programação.html",
       "Futura": "https://mi.tv/br/canais/futura",
@@ -1830,7 +1838,7 @@ btnProgramacao.addEventListener('click', async () => {
     if (dados.programas) {
       let html = `<style>
         body{font-family:sans-serif;color:white;background:#111;margin:0;padding:10px;}
-        h2{text-align:center;margin:20px 0;font-size:1em;color:#0ff;}
+        h2{text-align:center;margin:50px 0;font-size:1em;color:#0ff;}
         .programa{border-bottom:1px solid #333;padding:6px 0;}
         .hora{color:#0ff;font-size:0.9em;}
         .hora.no-ar{color:#0f0;font-weight:bold;}
@@ -1849,7 +1857,7 @@ btnProgramacao.addEventListener('click', async () => {
     } else if (dados.url) {
       const html = `<style>
         html,body{margin:0;padding:0;height:100%;width:100%;background:#111;color:white;font-family:sans-serif;display:flex;flex-direction:column;}
-        h2{text-align:center;margin:30px 0;font-size:1em;color:#0ff;}
+        h2{text-align:center;margin:50px 0;font-size:1em;color:#0ff;}
         iframe{flex:1;width:100%;height:100%;border:none;background:#111;}
       </style>
       <h2>📺 ${dados.nome}</h2>
@@ -1870,14 +1878,24 @@ btnProgramacao.addEventListener('click', async () => {
 
 const channelListEl = document.getElementById("channelList");
 const playerWrapper = document.getElementById("playerWrapper");
+const footer = document.getElementById("playerFooter");
 
 let inatividadeTimer = null;
 let listaEscondida = false;
 
 // Estado inicial
 channelListEl.style.transform = "translateX(0)";
-playerWrapper.style.flex = "1"; 
+playerWrapper.style.flex = "1";
 playerWrapper.style.transition = "all 0.5s ease";
+
+// Funções para o footer
+function esconderFooter() {
+    footer.classList.add("oculto");
+}
+
+function mostrarFooter() {
+    footer.classList.remove("oculto");
+}
 
 // Função: esconder lista
 function esconderLista() {
@@ -1887,6 +1905,8 @@ function esconderLista() {
 
     channelListEl.style.transform = "translateX(-420px)";
     playerWrapper.classList.add("expandido");
+
+    esconderFooter(); // <<< AQUI
 }
 
 // Função: mostrar lista
@@ -1897,6 +1917,8 @@ function mostrarLista() {
 
     channelListEl.style.transform = "translateX(0)";
     playerWrapper.classList.remove("expandido");
+
+    mostrarFooter(); // <<< AQUI
 }
 
 // Timer de inatividade
