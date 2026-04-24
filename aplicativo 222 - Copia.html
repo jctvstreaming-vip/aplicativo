@@ -172,9 +172,6 @@ footer.footer img {
   display: block;
   overflow: hidden;
 }
-
-}
-
 #espelharBtn {
   display: none !important;
 }
@@ -315,8 +312,13 @@ footer.footer img {
       </div>
 
       <div class="modal-body p-0">
-        <video id="modalVideo" width="100%" height="100%" controls autoplay style="background:black;"></video>
-      </div>
+  <iframe id="iframePlayer"
+    width="100%"
+    height="100%"
+    style="border:none;"
+    allow="autoplay; fullscreen">
+  </iframe>
+</div>
     </div>
   </div>
 </div>
@@ -563,7 +565,7 @@ const seasonEpisodesContainer = document.getElementById("seasonEpisodesContainer
 const seriesSearch = document.getElementById("seriesSearch");
 const categoryFilter = document.getElementById("categoryFilter");
 const backButton = document.getElementById('backButton');
-const modalVideo = document.getElementById("modalVideo");
+const iframePlayer = document.getElementById("iframePlayer");
 const modalTitle = document.getElementById("modalTitle");
 const prevEpisodeBtn = document.getElementById("prevEpisodeBtn");
 const nextEpisodeBtn = document.getElementById("nextEpisodeBtn");
@@ -937,19 +939,6 @@ function playEpisode(index){
     currentHls = null;
   }
 
-  modalVideo.pause();
-  modalVideo.src = "";
-
-  if (Hls.isSupported() && videoData.src.endsWith(".m3u8")) {
-    currentHls = new Hls();
-    currentHls.loadSource(videoData.src);
-    currentHls.attachMedia(modalVideo);
-    currentHls.on(Hls.Events.MANIFEST_PARSED, () => modalVideo.play());
-  } else {
-    modalVideo.src = videoData.src;
-    modalVideo.play();
-  }
-
   new bootstrap.Modal(document.getElementById("playerModal")).show();
 }
 
@@ -991,38 +980,17 @@ document.getElementById("playerModal").addEventListener("shown.bs.modal", () => 
 prevEpisodeBtn.addEventListener("click", ()=>{ if(currentEpisodeIndex>0) playEpisode(currentEpisodeIndex-1); });
 nextEpisodeBtn.addEventListener("click", ()=>{ if(currentEpisodeIndex<episodeQueue.length-1) playEpisode(currentEpisodeIndex+1); });
 
-// ---------------- Autoplay próximo episódio
-modalVideo.addEventListener("ended", ()=>{ if(currentEpisodeIndex<episodeQueue.length-1) playEpisode(currentEpisodeIndex+1); });
+
 
 // ---------------- Limpeza ao fechar modal
 document.getElementById("playerModal").addEventListener("hidden.bs.modal", ()=>{
 
-  // 🔥 PARA VIDEO HTML5
-  modalVideo.pause();
-  modalVideo.removeAttribute("src");
-  modalVideo.load();
-
-  // 🔥 DESTRÓI HLS
-  if (currentHls) {
-    currentHls.destroy();
-    currentHls = null;
-  }
-
-  // 🔥 REMOVE IFRAME (ESSENCIAL)
   const iframe = document.getElementById("iframePlayer");
-  if (iframe) {
-    iframe.src = "";   // corta o stream
-    iframe.remove();   // remove do DOM
-  }
+  if (iframe) iframe.src = "";
 
-  // 🔥 LIMPA FILA
   episodeQueue = [];
   currentEpisodeIndex = 0;
 
-  // 🔥 RESTAURA VIDEO
-  modalVideo.style.display = "block";
-
-  // 🔥 REMOVE BACKDROP BUGADO
   document.body.classList.remove("modal-open");
   document.querySelectorAll(".modal-backdrop").forEach(el => el.remove());
 
@@ -1088,89 +1056,10 @@ playEpisode = function(index){
     modalLogo.style.display = "none";
   }
 
-  // ---------------- LIMPA PLAYER ----------------
-  if (currentHls) {
-    currentHls.destroy();
-    currentHls = null;
-  }
+  // ---------------- IFRAME PLAYER ----------------
+  const iframe = document.getElementById("iframePlayer");
 
-  modalVideo.pause();
-  modalVideo.removeAttribute("src");
-  modalVideo.load();
-
-  // Remove iframe antigo
-  const oldIframe = document.getElementById("iframePlayer");
-  if (oldIframe) oldIframe.remove();
-
-  modalVideo.style.display = "block";
-
-  const url = videoData.src;
-
-  // ===============================
-  // 🔥 DETECÇÃO INTELIGENTE
-  // ===============================
-
-  if (url.includes(".m3u8")) {
-
-    if (Hls.isSupported()) {
-      currentHls = new Hls();
-      currentHls.loadSource(url);
-      currentHls.attachMedia(modalVideo);
-
-      currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
-        modalVideo.play();
-      });
-
-      currentHls.on(Hls.Events.ERROR, () => {
-        nextEpisodeFallback();
-      });
-
-    } else if (modalVideo.canPlayType("application/vnd.apple.mpegurl")) {
-      modalVideo.src = url;
-      modalVideo.play();
-    }
-
-  } else if (url.includes(".mp4")) {
-
-    modalVideo.src = url;
-    modalVideo.play();
-
-    modalVideo.onerror = () => nextEpisodeFallback();
-
-  } else if (url.includes(".mpd")) {
-
-    // DASH
-    if (!window.dashjs) {
-      const script = document.createElement("script");
-      script.src = "https://cdn.dashjs.org/latest/dash.all.min.js";
-      script.onload = () => {
-        const player = dashjs.MediaPlayer().create();
-        player.initialize(modalVideo, url, true);
-      };
-      document.body.appendChild(script);
-    } else {
-      const player = dashjs.MediaPlayer().create();
-      player.initialize(modalVideo, url, true);
-    }
-
-  } else {
-
-    // ===============================
-    // 🔥 EMBED / IFRAME
-    // ===============================
-
-    modalVideo.style.display = "none";
-
-    const iframe = document.createElement("iframe");
-    iframe.id = "iframePlayer";
-    iframe.src = url;
-    iframe.style.width = "100%";
-    iframe.style.height = "100%";
-    iframe.style.border = "none";
-    iframe.allow = "autoplay; fullscreen";
-
-    document.querySelector(".modal-body").appendChild(iframe);
-  }
+  iframe.src = videoData.src;
 
   new bootstrap.Modal(document.getElementById("playerModal")).show();
 };
