@@ -1,0 +1,271 @@
+#EXTM3U url-tvg="https://epg-xml.jctvstreaming-vip.workers.dev/epg.xml?token=exclusivo-JCTVSTREAMING"
+
+#EXTINF:-1 tvg-id="01" tvg-name="Arte 1" tvg-logo="https://www.mediafire.com/convkey/aa70/9s2kgymo4v7jl4l5g.jpg" group-title="Canais | TV Ao Vivo",Arte 1
+https://cdn-5.nxplay.com.br/ARTE1/index.m3u8
+
+#EXTINF:-1 tvg-id="02" tvg-name="Band SP" tvg-logo="https://www.mediafire.com/convkey/7dcd/ors0qr3jqbwm2sh5g.jpg" group-title="Canais | TV Ao Vivo",Band SP
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/bandsp.m3u8
+
+#EXTINF:-1 tvg-id="03" tvg-name="Cultura" tvg-logo="https://www.mediafire.com/convkey/7cde/qs9sfyv4lvjrzsw5g.jpg" group-title="Canais | TV Ao Vivo",Cultura
+https://player-tvcultura.stream.uol.com.br/live/tvcultura_lsd.m3u8?vhost=player-tvcultura.stream.uol.com.br
+
+#EXTINF:-1 tvg-id="04" tvg-name="Cultura Fast" tvg-logo="https://www.mediafire.com/convkey/c821/szi91ocxfkd3qb15g.jpg" group-title="Canais | TV Ao Vivo",Cultura Fast
+https://fpa-gateway.tvcultura.com.br:8181/memfs/606caef0-a290-413d-9f1f-8fcdb3a73831_output_0.m3u8
+
+#EXTINF:-1 tvg-id="05" tvg-name="Globo SP" tvg-logo="https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg" group-title="Canais | TV Ao Vivo",Globo SP
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/globosp.m3u8
+
+#EXTINF:-1 tvg-id="06" tvg-name="SBT" tvg-logo="https://www.mediafire.com/convkey/ec97/n1ustsu38sqw0vj5g.jpg" group-title="Canais | TV Ao Vivo",SBT
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/sbtsp.m3u8
+
+#EXTINF:-1 tvg-id="07" tvg-name="Record TV" tvg-logo="https://www.mediafire.com/convkey/996b/3hk43pafo0b5zve5g.jpg" group-title="Canais | TV Ao Vivo",Record TV
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/recordsp.m3u8
+
+#EXTINF:-1 tvg-id="08" tvg-name="RedeTV!" tvg-logo="https://www.mediafire.com/convkey/72bc/q2h6sp6no62q4j15g.jpg" group-title="Canais | TV Ao Vivo",RedeTV!
+http://domainforxc.cfd:80/live/287945811/148063/80172.ts
+
+#EXTINF:-1 tvg-id="09" tvg-name="Band News" tvg-logo="https://www.mediafire.com/convkey/2ef7/f9duyhtq2fvdja95g.jpg" group-title="Canais | TV Ao Vivo",Band News
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/bandnews.m3u8
+
+#EXTINF:-1 tvg-id="10" tvg-name="CNN Brasil" tvg-logo="https://www.mediafire.com/convkey/9cf0/ufwwfpli3cxsayv5g.jpg" group-title="Canais | TV Ao Vivo",CNN Brasil
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/cnnbrasil.m3u8
+
+#EXTINF:-1 tvg-id="11" tvg-name="CNN Brasil Money" tvg-logo="https://www.mediafire.com/convkey/3c55/79782iw447zo65s5g.jpg" group-title="Canais | TV Ao Vivo",CNN Brasil Money
+https://cdn-5.nxplay.com.br/CNN_MONEY/index.m3u8
+
+#EXTINF:-1 tvg-id="12" tvg-name="Globo News" tvg-logo="https://www.mediafire.com/convkey/d707/vany601v3i6oltz5g.jpg" group-title="Canais | TV Ao Vivo",Globo News
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/globonews.m3u8
+
+#EXTINF:-1 tvg-id="13" tvg-name="Jovem Pan News" tvg-logo="https://www.mediafire.com/convkey/c32e/z6n71wps9nuofum5g.jpg" group-title="Canais | TV Ao Vivo",Jovem Pan News
+https://cdn-5.nxplay.com.br/JovemPan/index.m3u8
+
+#EXTINF:-1 tvg-id="14" tvg-name="Record News" tvg-logo="https://www.mediafire.com/convkey/4ea5/qlxfi1vsvu7m5m55g.jpg" group-title="Canais | TV Ao Vivo",Record News
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/recordnews.m3u8
+
+#EXTINF:-1 tvg-id="15" tvg-name="Amazon Prime" tvg-logo="https://i.imgur.com/0iq8t8j.png" group-title="Canais | TV Ao Vivo",Amazon Prime
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/primevideo.m3u8
+
+#EXTINF:-1 tvg-id="16" tvg-name="Band Sports" tvg-logo="https://www.mediafire.com/convkey/1e18/eblhu8culfgis5f5g.jpg" group-title="Canais | TV Ao Vivo",Band Sports
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/bandsports.m3u8
+
+#EXTINF:-1 tvg-id="17" tvg-name="Canal Off" tvg-logo="https://embedcanaisonline.com/images/canaloff.png" group-title="Canais | TV Ao Vivo",Canal Off
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/off.m3u8
+
+#EXTINF:-1 tvg-id="18" tvg-name="CazÃ©TV" tvg-logo="https://x.gd/OQ0L5" group-title="Canais | TV Ao Vivo",CazÃ©TV
+http://172.110.219.252/live/47125065/12264670/223746.ts
+
+#EXTINF:-1 tvg-id="19" tvg-name="Combate" tvg-logo="https://www.mediafire.com/convkey/8692/4u9xbfujsnwx8a95g.jpg" group-title="Canais | TV Ao Vivo",Combate
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/combate.m3u8
+
+#EXTINF:-1 tvg-id="20" tvg-name="DAZN" tvg-logo="https://embedcanaisonline.com/images/dazn.png" group-title="Canais | TV Ao Vivo",DAZN
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/pt_eleven1.m3u8
+
+#EXTINF:-1 tvg-id="21" tvg-name="Disney+" tvg-logo="https://embedcanaisonline.com/images/disneyplus.png" group-title="Canais | TV Ao Vivo",Disney+
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/disneyplus1.m3u8
+
+#EXTINF:-1 tvg-id="22" tvg-name="ESPN" tvg-logo="https://www.mediafire.com/convkey/3512/ovq21ck4lile4sx5g.jpg" group-title="Canais | TV Ao Vivo",ESPN
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/espn.m3u8
+
+#EXTINF:-1 tvg-id="23" tvg-name="ESPN 2" tvg-logo="https://www.mediafire.com/convkey/96c0/1n8z2pjnpe6knip5g.jpg" group-title="Canais | TV Ao Vivo",ESPN 2
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/espn2.m3u8
+
+#EXTINF:-1 tvg-id="24" tvg-name="ESPN 3" tvg-logo="https://www.mediafire.com/convkey/a705/x0oad6vreapio1v5g.jpg" group-title="Canais | TV Ao Vivo",ESPN 3
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/espn3.m3u8
+
+#EXTINF:-1 tvg-id="25" tvg-name="ESPN 4" tvg-logo="https://www.mediafire.com/convkey/e418/1rirj01jj917x865g.jpg" group-title="Canais | TV Ao Vivo",ESPN 4
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/espn4.m3u8
+
+#EXTINF:-1 tvg-id="26" tvg-name="ESPN 5" tvg-logo="https://www.mediafire.com/convkey/d37d/1ojbd4ekwad59j05g.jpg" group-title="Canais | TV Ao Vivo",ESPN 5
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/espn5.m3u8
+
+#EXTINF:-1 tvg-id="27" tvg-name="ESPN 6" tvg-logo="https://www.mediafire.com/convkey/41cd/wzlgga0jyir8rud5g.jpg" group-title="Canais | TV Ao Vivo",ESPN 6
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/espn6.m3u8
+
+#EXTINF:-1 tvg-id="28" tvg-name="Max" tvg-logo="https://embedcanaisonline.com/images/max.png" group-title="Canais | TV Ao Vivo",Max
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/max1.m3u8
+
+#EXTINF:-1 tvg-id="29" tvg-name="Max 02" tvg-logo="https://embedcanaisonline.com/images/max.png" group-title="Canais | TV Ao Vivo",Max 02
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/max2.m3u8
+
+#EXTINF:-1 tvg-id="30" tvg-name="Max 03" tvg-logo="https://embedcanaisonline.com/images/max.png" group-title="Canais | TV Ao Vivo",Max 03
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/max3.m3u8
+
+#EXTINF:-1 tvg-id="31" tvg-name="N Sports" tvg-logo="https://embedcanaisonline.com/images/nsports.png" group-title="Canais | TV Ao Vivo",N Sports
+https://cdn-5.nxplay.com.br/NSPORTS/index.m3u8
+
+#EXTINF:-1 tvg-id="32" tvg-name="Paramount +" tvg-logo="https://embedcanaisonline.com/images/paramountplus.png" group-title="Canais | TV Ao Vivo",Paramount +
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/paramountplus.m3u8
+
+#EXTINF:-1 tvg-id="33" tvg-name="Premiere Clubes" tvg-logo="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg" group-title="Canais | TV Ao Vivo",Premiere Clubes
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/premiere.m3u8
+
+#EXTINF:-1 tvg-id="34" tvg-name="Premiere 2" tvg-logo="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg" group-title="Canais | TV Ao Vivo",Premiere 2
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/premiere2.m3u8
+
+#EXTINF:-1 tvg-id="35" tvg-name="Premiere 3" tvg-logo="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg" group-title="Canais | TV Ao Vivo",Premiere 3
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/premiere3.m3u8
+
+#EXTINF:-1 tvg-id="36" tvg-name="Premiere 4" tvg-logo="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg" group-title="Canais | TV Ao Vivo",Premiere 4
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/premiere4.m3u8
+
+#EXTINF:-1 tvg-id="37" tvg-name="Premiere 5" tvg-logo="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg" group-title="Canais | TV Ao Vivo",Premiere 5
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/premiere5.m3u8
+
+#EXTINF:-1 tvg-id="38" tvg-name="Premiere 6" tvg-logo="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg" group-title="Canais | TV Ao Vivo",Premiere 6
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/premiere6.m3u8
+
+#EXTINF:-1 tvg-id="39" tvg-name="Premiere 7" tvg-logo="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg" group-title="Canais | TV Ao Vivo",Premiere 7
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/premiere7.m3u8
+
+#EXTINF:-1 tvg-id="40" tvg-name="Premiere 8" tvg-logo="https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg" group-title="Canais | TV Ao Vivo",Premiere 8
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/premiere8.m3u8
+
+#EXTINF:-1 tvg-id="41" tvg-name="Sportv" tvg-logo="https://www.mediafire.com/convkey/cd23/p1rxf0qpxtclpw75g.jpg" group-title="Canais | TV Ao Vivo",Sportv
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/sportv.m3u8
+
+#EXTINF:-1 tvg-id="42" tvg-name="Sportv 2" tvg-logo="https://www.mediafire.com/convkey/9c1e/318ioitp90nqrsa5g.jpg" group-title="Canais | TV Ao Vivo",Sportv 2
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/sportv2.m3u8
+
+#EXTINF:-1 tvg-id="43" tvg-name="Sportv 3" tvg-logo="https://www.mediafire.com/convkey/a89c/8hoohulrzb92th55g.jpg" group-title="Canais | TV Ao Vivo",Sportv 3
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/sportv3.m3u8
+
+#EXTINF:-1 tvg-id="44" tvg-name="Xsports" tvg-logo="https://embedcanaisonline.com/images/xsports.png" group-title="Canais | TV Ao Vivo",Xsports
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/xsports.m3u8
+
+#EXTINF:-1 tvg-id="45" tvg-name="A&E" tvg-logo="https://www.mediafire.com/convkey/2598/huxkg4lcurlfko35g.jpg" group-title="Canais | TV Ao Vivo",A&E
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/ae.m3u8
+
+#EXTINF:-1 tvg-id="46" tvg-name="AMC" tvg-logo="https://www.mediafire.com/convkey/aa3e/xbc07letcmluym65g.jpg" group-title="Canais | TV Ao Vivo",AMC
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/amc.m3u8
+
+#EXTINF:-1 tvg-id="47" tvg-name="AXN" tvg-logo="https://www.mediafire.com/convkey/e488/5ajoj97di8f0rvu5g.jpg" group-title="Filmes",AXN
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/axn.m3u8
+
+#EXTINF:-1 tvg-id="48" tvg-name="Adult Swim" tvg-logo="https://www.mediafire.com/convkey/bafc/u6lut22bmswk8hq5g.jpg" group-title="Filmes",Adult Swim
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/adultswim.m3u8
+
+#EXTINF:-1 tvg-id="49" tvg-name="Cinemax" tvg-logo="https://www.mediafire.com/convkey/36a2/lieqkrv92trvw865g.jpg" group-title="Canais | TV Ao Vivo",Cinemax
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/cinemax.m3u8
+
+#EXTINF:-1 tvg-id="50" tvg-name="GNT" tvg-logo="https://embedtv.live/assets/images/gnt.png" group-title="Canais | TV Ao Vivo",GNT
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/gnt.m3u8
+
+#EXTINF:-1 tvg-id="51" tvg-name="HBO" tvg-logo="https://www.mediafire.com/convkey/57f8/f46d0ht9k9h6qor5g.jpg" group-title="Canais | TV Ao Vivo",HBO
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/hbo.m3u8
+
+#EXTINF:-1 tvg-id="52" tvg-name="HBO 2" tvg-logo="https://www.mediafire.com/convkey/6784/094ecv56q1gx9wp5g.jpg" group-title="Canais | TV Ao Vivo",HBO 2
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/hbo2.m3u8
+
+#EXTINF:-1 tvg-id="53" tvg-name="HBO Family" tvg-logo="https://www.mediafire.com/convkey/6ffa/gc4rc1r9pf6yeyd5g.jpg" group-title="Canais | TV Ao Vivo",HBO Family
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/hbofamily.m3u8
+
+#EXTINF:-1 tvg-id="54" tvg-name="HBO Plus" tvg-logo="https://www.mediafire.com/convkey/1ced/vso3ujiky4tvvk05g.jpg" group-title="Canais | TV Ao Vivo",HBO Plus
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/hboplus.m3u8
+
+#EXTINF:-1 tvg-id="55" tvg-name="HBO POP" tvg-logo="https://www.mediafire.com/convkey/2732/c5stimdg4fu9dch5g.jpg" group-title="Canais | TV Ao Vivo",HBO POP
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/hbopop.m3u8
+
+#EXTINF:-1 tvg-id="56" tvg-name="HBO Mundi" tvg-logo="https://www.mediafire.com/convkey/284a/ijtp3sgtjxyn7tf5g.jpg" group-title="Canais | TV Ao Vivo",HBO Mundi
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/hbomundi.m3u8
+
+#EXTINF:-1 tvg-id="57" tvg-name="HBO Signature" tvg-logo="https://www.mediafire.com/convkey/04de/mjgp608mx042zg25g.jpg" group-title="Canais | TV Ao Vivo",HBO Signature
+http://domainforxc.cfd:80/287945811/148063/559666
+
+#EXTINF:-1 tvg-id="58" tvg-name="HBO Xtreme" tvg-logo="https://www.mediafire.com/convkey/048b/voyryixm40xwr5n5g.jpg" group-title="Canais | TV Ao Vivo",HBO Xtreme
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/hboxtreme.m3u8
+
+#EXTINF:-1 tvg-id="59" tvg-name="Megapix" tvg-logo="https://www.mediafire.com/convkey/6e6b/1zy0dskxz4mtzai5g.jpg" group-title="Canais | TV Ao Vivo",Megapix
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/megapix.m3u8
+
+#EXTINF:-1 tvg-id="60" tvg-name="Sony Channel" tvg-logo="https://www.mediafire.com/convkey/0684/tk9baeut61ufh605g.jpg" group-title="Canais | TV Ao Vivo",Sony Channel
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/sonychannel.m3u8
+
+#EXTINF:-1 tvg-id="61" tvg-name="Space" tvg-logo="https://www.mediafire.com/convkey/a9ef/0jdw8czly0dnjug5g.jpg" group-title="Canais | TV Ao Vivo",Space
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/space.m3u8
+
+#EXTINF:-1 tvg-id="62" tvg-name="Studio Universal" tvg-logo="https://www.mediafire.com/convkey/44dc/cnmkzxavfqi9gq85g.jpg" group-title="Canais | TV Ao Vivo",Studio Universal
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/studiouniversal.m3u8
+
+#EXTINF:-1 tvg-id="63" tvg-name="TCM" tvg-logo="https://embedtv.live/assets/images/tcm.png" group-title="Canais | TV Ao Vivo",TCM
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/tcm.m3u8
+
+#EXTINF:-1 tvg-id="64" tvg-name="TLC" tvg-logo="https://www.mediafire.com/convkey/604c/qt0chtp1k0i3ex35g.jpg" group-title="Canais | TV Ao Vivo",TLC
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/tlc.m3u8
+
+#EXTINF:-1 tvg-id="65" tvg-name="TNT" tvg-logo="https://www.mediafire.com/convkey/1fda/hnpl392ek0uvhxn5g.jpg" group-title="Canais | TV Ao Vivo",TNT
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/tnt.m3u8
+
+#EXTINF:-1 tvg-id="66" tvg-name="TNT Novelas" tvg-logo="https://www.mediafire.com/convkey/47ac/qgr3erww8f9hg225g.jpg" group-title="Canais | TV Ao Vivo",TNT Novelas
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/tntnovelas.m3u8
+
+#EXTINF:-1 tvg-id="67" tvg-name="TNT SÃ©ries" tvg-logo="https://www.mediafire.com/convkey/5225/9mfad9o7744un765g.jpg" group-title="Canais | TV Ao Vivo",TNT SÃ©ries
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/tntseries.m3u8
+
+#EXTINF:-1 tvg-id="68" tvg-name="Telecine Action" tvg-logo="https://www.mediafire.com/convkey/f015/ss85xdbgpn4v4co5g.jpg" group-title="Canais | TV Ao Vivo",Telecine Action
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/telecineaction.m3u8
+
+#EXTINF:-1 tvg-id="69" tvg-name="Telecine Cult" tvg-logo="https://www.mediafire.com/convkey/3407/tzbsl532lvhl9lh5g.jpg" group-title="Canais | TV Ao Vivo",Telecine Cult
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/telecinecult.m3u8
+
+#EXTINF:-1 tvg-id="70" tvg-name="Telecine Fun" tvg-logo="https://www.mediafire.com/convkey/d8b5/m49v3xpcsp4ggc15g.jpg" group-title="Canais | TV Ao Vivo",Telecine Fun
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/telecinefun.m3u8
+
+#EXTINF:-1 tvg-id="71" tvg-name="Telecine Pipoca" tvg-logo="https://www.mediafire.com/convkey/5389/40r58hvzgexg1tg5g.jpg" group-title="Canais | TV Ao Vivo",Telecine Pipoca
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/telecinepipoca.m3u8
+
+#EXTINF:-1 tvg-id="72" tvg-name="Telecine Premium" tvg-logo="https://www.mediafire.com/convkey/6bff/rhznq8sgw3jsnsc5g.jpg" group-title="Canais | TV Ao Vivo",Telecine Premium
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/telecinepremium.m3u8
+
+#EXTINF:-1 tvg-id="73" tvg-name="Telecine Touch" tvg-logo="https://www.mediafire.com/convkey/4b1d/em13al9fywmoio65g.jpg" group-title="Canais | TV Ao Vivo",Telecine Touch
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/telecinetouch.m3u8
+
+#EXTINF:-1 tvg-id="74" tvg-name="Universal TV" tvg-logo="https://www.mediafire.com/convkey/6342/uw3j9griyzwfhvo5g.jpg" group-title="Canais | TV Ao Vivo",Universal TV
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/universaltv.m3u8
+
+#EXTINF:-1 tvg-id="75" tvg-name="Warner TV" tvg-logo="https://www.mediafire.com/convkey/2c78/akts8nrxrn16nw35g.jpg" group-title="Canais | TV Ao Vivo",Warner TV
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/warnerchannel.m3u8
+
+#EXTINF:-1 tvg-id="76" tvg-name="Cartoonito" tvg-logo="https://www.mediafire.com/convkey/ffb9/ys1gxu0qrkzp0zl5g.jpg" group-title="Canais | TV Ao Vivo",Cartoonito
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/cartoonito.m3u8
+
+#EXTINF:-1 tvg-id="77" tvg-name="Cartoon Network" tvg-logo="https://www.mediafire.com/convkey/628c/uadp0amudpo14db5g.jpg" group-title="Canais | TV Ao Vivo",Cartoon Network
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/cartoonnetwork.m3u8
+
+#EXTINF:-1 tvg-id="78" tvg-name="Discovery Kids" tvg-logo="https://www.mediafire.com/convkey/f84e/0twpa5zx2b6a2y55g.jpg" group-title="Canais | TV Ao Vivo",Discovery Kids
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/discoverykids.m3u8
+
+#EXTINF:-1 tvg-id="79" tvg-name="Gloob" tvg-logo="https://www.mediafire.com/convkey/e6b7/prcguyxudq0sa7a5g.jpg" group-title="Canais | TV Ao Vivo",Gloob
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/gloob.m3u8
+
+#EXTINF:-1 tvg-id="80" tvg-name="Animal Planet" tvg-logo="https://www.mediafire.com/convkey/08d9/l1syfzof817nmk75g.jpg" group-title="Canais | TV Ao Vivo",Animal Planet
+https://4e7d6e85c8ce6182d620b5ebdac0ab49.cloudfronte.lat/zzzstream/animalplanet.m3u8
+
+#EXTINF:-1 tvg-id="81" tvg-name="Discovery Channel" tvg-logo="https://www.mediafire.com/convkey/a885/ngdunnc8ddnkrt65g.jpg" group-title="Canais | TV Ao Vivo",Discovery Channel
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/discoverychannel.m3u8
+
+#EXTINF:-1 tvg-id="82" tvg-name="Discovery Home & Health" tvg-logo="https://www.mediafire.com/convkey/c4ff/yqsk6z5mhtlxju65g.jpg" group-title="Canais | TV Ao Vivo",Discovery Home & Health
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/discoveryhh.m3u8
+
+#EXTINF:-1 tvg-id="83" tvg-name="InvestigaÃ§Ã£o Discovery" tvg-logo="https://www.mediafire.com/convkey/3911/uxao9373njw0dje5g.jpg" group-title="Canais | TV Ao Vivo",InvestigaÃ§Ã£o Discovery
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/discoveryid.m3u8
+
+#EXTINF:-1 tvg-id="84" tvg-name="Discovery Science" tvg-logo="https://www.mediafire.com/convkey/c074/43qs60gg70r9ndl5g.jpg" group-title="Canais | TV Ao Vivo",Discovery Science
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/discoveryscience.m3u8
+
+#EXTINF:-1 tvg-id="85" tvg-name="Discovery Theater" tvg-logo="https://www.mediafire.com/convkey/ba73/ldr09d61fvwlakc5g.jpg" group-title="Canais | TV Ao Vivo",Discovery Theater
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/discoverytheather.m3u8
+
+#EXTINF:-1 tvg-id="86" tvg-name="Discovery Turbo" tvg-logo="https://www.mediafire.com/convkey/6b07/x56n8bfmodktzgb5g.jpg" group-title="Canais | TV Ao Vivo",Discovery Turbo
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/discoveryturbo.m3u8
+
+#EXTINF:-1 tvg-id="87" tvg-name="Discovery World" tvg-logo="https://www.mediafire.com/convkey/cd0a/zdg6db0hx0j0d325g.jpg" group-title="Canais | TV Ao Vivo",Discovery World
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/discoveryworld.m3u8
+
+#EXTINF:-1 tvg-id="88" tvg-name="HGTV" tvg-logo="https://www.mediafire.com/convkey/151e/vq9v53wervrvlqe5g.jpg" group-title="Canais | TV Ao Vivo",HGTV
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/hgtv.m3u8
+
+#EXTINF:-1 tvg-id="89" tvg-name="History" tvg-logo="https://www.mediafire.com/convkey/713f/rkbl3yw9r456lla5g.jpg" group-title="Canais | TV Ao Vivo",History
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/history.m3u8
+
+#EXTINF:-1 tvg-id="90" tvg-name="History 2" tvg-logo="https://www.mediafire.com/convkey/e388/udadrcaxjzjgv3b5g.jpg" group-title="Canais | TV Ao Vivo",History 2
+https://xn--d204s777hp27.cloudfronte.lat/zzzstream/history2.m3u8
