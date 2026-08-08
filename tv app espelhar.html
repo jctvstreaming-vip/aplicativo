@@ -1,0 +1,2341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>JC TV STREAMING</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+
+body {
+  background: #fff;
+  color: #000;
+  padding: 1rem;
+}
+
+/* Centraliza os cards da aba de séries */
+#seriesTabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  margin-top: 100px; /* espaço para a barra fixa */
+}
+
+#seriesTabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  margin-top: 100px;
+}
+
+.series-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #eee;
+  border-radius: 0.5rem;
+  max-width: 100%;
+  white-space: normal;
+  cursor: pointer;
+}
+
+.series-tab img {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+
+.series-tab .card {
+  width: 100px;
+}
+
+.card-body p.card-text {
+  white-space: normal !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  font-size: 0.75rem;
+  text-align: center;
+  max-height: 6em;
+  line-height: 1.2;
+}
+
+#serieInfo {
+  display: none;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.25); /* fundo transparente */
+  border-radius: 12px;
+  margin: 1rem auto;
+  max-width: 1200px;
+  backdrop-filter: blur(10px); /* deixa borrado */
+  -webkit-backdrop-filter: blur(10px);
+  color: #000; /* texto preto forte */
+}
+
+.serie-details {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.serie-details img {
+  width: 100px;
+  height: auto;
+  border-radius: 5px;
+}
+
+.serie-details div {
+  flex: 1;
+}
+
+#serieInfo h4,
+#serieInfo p {
+  color: #000; /* garante que todos os textos fiquem bem pretos */
+  font-weight: 600; /* um pouco mais forte que normal */
+}
+
+.ep-thumb {
+  width: 80px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+#backButton {
+  display: none;
+  position: fixed;
+  top: 2px; /* afasta um pouco do topo */
+  right: 0px; /* afasta um pouco da esquerda */
+  z-index: 1055;
+  background-color: #FFC107;
+  color: #000000;
+  border: none;
+  padding: 8px 10px; /* menor que antes */
+  border-radius: 10px; /* menor arredondamento */
+  cursor: pointer;
+  font-weight: bold; /* Texto em negrito */
+  font-size: 12px; /* fonte menor */
+  transition: 0.3s ease;
+}
+
+#backButton:hover {
+  background-color: #007BFF;
+  color: #fff; /* melhora contraste no hover */
+}
+
+/* Footer */
+footer.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: black;
+  color: #fff; /* cor diferente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  font-size: 1rem; /* maior */
+  z-index: 1000;
+}
+
+footer.footer img {
+  height: 30px;
+  width: auto;
+}
+
+#centralSearch {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#serieSynopsis .synopsis-text {
+  display: block;
+  overflow: hidden;
+}
+#espelharButton {
+  display: none !important;
+}
+.btn-success {
+  background-color: #FFC107;
+  color: #000000;
+  font-size: 1rem;
+  padding: 0.25rem 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-left: 0; /* 👈 remove o bug */
+}
+
+.btn-success:hover {
+  background: #007BFF;
+}
+
+.active-episode {
+  background: #ffc107 !important;
+  color: #000 !important;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.modal-header {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+  border: none;
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+}
+
+#modalTitleText {
+  font-size: clamp(10px, 2vw, 14px);
+}
+
+/* MINI BOTÕES */
+.episode-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.episode-mini-btn{
+  width:35px;              /* menor */
+  height:35px;             /* menor */
+  border:none;
+  border-radius:8px;
+
+background: rgba(20,20,20,0.75);
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);
+color: #fff;
+border: 1px solid rgba(255,255,255,0.10);
+box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+
+  font-size:13px;          /* texto menor */
+  font-weight:bold;
+
+  transition:.2s;
+  cursor:pointer;
+
+  box-shadow:0 2px 5px rgba(0,0,0,.20);
+}
+
+.episode-mini-btn:hover{
+  background:#FFC107;      /* hover */
+  color:#000;
+  transform:scale(1.08);
+}
+
+.episode-mini-btn.active-episode{
+  background:#FFC107 !important;
+  color:#000 !important;
+  border:2px solid #000;
+}
+/* Informações do Modal sempre visível */
+.modal-header {
+  opacity: 1 !important;
+  transition: none !important;
+}
+/* logotipo maior */
+.logo-fixed {
+  width: 40px;        /* tamanho padrão que você quer */
+  height: 40px;       /* força proporção fixa */
+  object-fit: contain; /* mantém a imagem inteira sem distorcer */
+}
+</style>
+
+</head>
+<body>
+<button id="backButton" class="btn btn-primary btn-lg">Voltar</button>
+
+<div id="centralSearch">
+  <input type="search" id="seriesSearch" class="form-control" placeholder="Pesquisar...">
+  <select id="categoryFilter" class="form-select">
+    <option value="">Todas as Categorias</option>
+  </select>
+</div>
+
+<ul class="nav nav-tabs d-flex flex-wrap gap-3 mb-3 border-0" id="seriesTabs"></ul>
+
+<div id="serieInfo" class="card p-3">
+  <div class="serie-details">
+    <img id="seriePoster" src="" alt="Poster da Série">
+    <div>
+      <h4 id="serieTitle"></h4>
+      <p id="serieSynopsis" class="mb-0"></p>
+      <p><strong>Categoria:</strong> <span id="serieCategories"></span></p>
+      <p><strong>Gênero:</strong> <span id="serieGênero"></span></p>
+      <p><strong>Linguagem:</strong> <span id="serieLanguage"></span></p>
+    </div>
+  </div>
+  <div id="seasonEpisodesContainer" class="mt-4"></div>
+</div>
+
+<!-- Rodapé institucional após os canais -->
+<div class="col-12 mt-4">
+   <div class="playerButtons" id="serverButtons"></div>
+  <div style="margin-top: 40px; font-size: 0.85rem; color: #000; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+    <p><br></p>
+    <p></p>
+  </div>
+</div>
+
+<div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content text-white" style="background:transparent;">
+      <div class="modal-header border-0 modal-header-transparent">
+        <h5 id="modalTitle" class="modal-title d-flex align-items-center gap-2">
+    <img id="modalLogo" src="" class="logo-fixed">
+    <span id="modalTitleText"></span>
+</h5>
+        <div>
+          <button id="prevEpisodeBtn" class="btn btn-sm me-2">⏮️ </button>
+          <button id="nextEpisodeBtn" class="btn btn-sm me-2">⏭️ </button>
+          <button id="castButton" class="btn btn-sm me-2">📺 </button>
+          <button type="button" class="btn btn-sm btn-danger me-2" data-bs-dismiss="modal"> X </button>
+        </div>
+      </div>
+
+      <div class="modal-body p-0">
+  <iframe id="iframePlayer"
+    width="100%"
+    height="100%"
+    style="border:none;"
+    allow="autoplay; fullscreen">
+  </iframe>
+</div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" />
+  <span>JC TV STREAMING © 2026</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<script>
+const seriesData = {
+
+
+
+"Arte1": {
+  name: "Arte1",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/0/06/200px-Arte_1_logo.png/revision/latest?cb=20190330171026",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/0/06/200px-Arte_1_logo.png/revision/latest?cb=20190330171026",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/arte1" }
+    ]
+  }
+},
+"Band": {
+  name: "Band",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/4e/Band.svg/revision/latest?cb=20211029182137",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/4e/Band.svg/revision/latest?cb=20211029182137",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/bandsp" }
+    ]
+  }
+},
+"tvcultura": {
+  name: "Cultura",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/b/b8/TVCultura-Current-Alt.svg/revision/latest?cb=20260323120121",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/b/b8/TVCultura-Current-Alt.svg/revision/latest?cb=20260323120121",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://embed.jctvstreaming-vip.workers.dev/cultura" }
+    ]
+  }
+},
+"culturafast": {
+  name: "Cultura Fast",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/1/1b/CulturaFast.png/revision/latest/scale-to-width-down/1000?cb=20250830121433",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/1/1b/CulturaFast.png/revision/latest/scale-to-width-down/1000?cb=20250830121433",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://embed.jctvstreaming-vip.workers.dev/culturafast" }
+    ]
+  }
+},
+"globo": {
+  name: "Globo",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/e/ef/Globo_2025_Vector.svg/revision/latest?cb=20260212193928",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/e/ef/Globo_2025_Vector.svg/revision/latest?cb=20260212193928",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/globosp" }
+    ]
+  }
+},
+"sbt": {
+  name: "SBT",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/e/ee/SBT_2014.svg/revision/latest?cb=20220109225248",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/e/ee/SBT_2014.svg/revision/latest?cb=20220109225248",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/sbtsp" }
+    ]
+  }
+},
+"recordtv": {
+  name: "Record TV",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/c/c3/Record_2023_with_wordmark.png/revision/latest?cb=20231111231148",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/c/c3/Record_2023_with_wordmark.png/revision/latest?cb=20231111231148",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/recordsp" }
+    ]
+  }
+},
+"redetv": {
+  name: "RedeTV!",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/9/9a/RedeTV%21_logo_2019.png/revision/latest?cb=20191119025631",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/9/9a/RedeTV%21_logo_2019.png/revision/latest?cb=20191119025631",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/redetv" }
+    ]
+  }
+},
+"bandnews": {
+  name: "Band News",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/6/6c/Bandnews_TV_Blue_2024.svg/revision/latest?cb=20240420024833",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/6/6c/Bandnews_TV_Blue_2024.svg/revision/latest?cb=20240420024833",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/bandnews" }
+    ]
+  }
+},
+"cnnbrasil": {
+  name: "CNN Brasil",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/5/5f/CNN_Brasil.svg/revision/latest?cb=20200204234630",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/5/5f/CNN_Brasil.svg/revision/latest?cb=20200204234630",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/cnnbrasil" }
+    ]
+  }
+},
+"globonews": {
+  name: "Globo News",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/6/6e/GloboNews2022.svg/revision/latest?cb=20220814221714",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/6/6e/GloboNews2022.svg/revision/latest?cb=20220814221714",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/globonews" }
+    ]
+  }
+},
+"jpnews": {
+  name: "JP News",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/f/f7/TV_Jovem_Pan_News_2022_gradient.svg/revision/latest?cb=20251004164223",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/f/f7/TV_Jovem_Pan_News_2022_gradient.svg/revision/latest?cb=20251004164223",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/jovempannews" }
+    ]
+  }
+},
+"recordnews": {
+  name: "Record News",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/9/90/Record_News_2023.svg/revision/latest?cb=20231112221226",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/9/90/Record_News_2023.svg/revision/latest?cb=20231112221226",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/recordnews" }
+    ]
+  }
+},
+"amazomprime": {
+  name: "Amazon Prime Video",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/c/cb/Prime-2024.svg/revision/latest?cb=20251122165222",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/c/cb/Prime-2024.svg/revision/latest?cb=20251122165222",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/primevideo" }
+    ]
+  }
+},
+
+"bandsports": {
+  name: "Band Sports",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/4f/BandSports_logo_2024.png/revision/latest?cb=20240220013218",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/4f/BandSports_logo_2024.png/revision/latest?cb=20240220013218",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/bandsports" }
+    ]
+  }
+},
+"canaloff": {
+  name: "Canal Off",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/d/d4/Canal_OFF.svg/revision/latest?cb=20220718152032",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/d/d4/Canal_OFF.svg/revision/latest?cb=20220718152032",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/off" }
+    ]
+  }
+},
+"combate": {
+  name: "Combate",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/9/98/Combate_logo.svg/revision/latest?cb=20251229164954",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/9/98/Combate_logo.svg/revision/latest?cb=20251229164954",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/combate" }
+    ]
+  }
+},
+"espn": {
+  name: "ESPN",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/3/34/ESPN.svg/revision/latest?cb=20201130040927",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/3/34/ESPN.svg/revision/latest?cb=20201130040927",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/espn" }
+    ]
+  }
+},
+"espn2": {
+  name: "ESPN 2",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/d/d5/ESPN2.svg/revision/latest?cb=20210609161318",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/d/d5/ESPN2.svg/revision/latest?cb=20210609161318",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/espn2" }
+    ]
+  }
+},
+"espn3": {
+  name: "ESPN 3",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/1/11/ESPN3.svg/revision/latest?cb=20231118035609",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/1/11/ESPN3.svg/revision/latest?cb=20231118035609",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/espn3" }
+    ]
+  }
+},
+"espn4": {
+  name: "ESPN 4",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/3/30/ESPN_4.svg/revision/latest?cb=20211120194330",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/3/30/ESPN_4.svg/revision/latest?cb=20211120194330",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/espn4" }
+    ]
+  }
+},
+"espn5": {
+  name: "ESPN 5",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/1/13/ESPN_5.svg/revision/latest?cb=20211120193957",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/1/13/ESPN_5.svg/revision/latest?cb=20211120193957",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/espn5" }
+    ]
+  }
+},
+"espn6": {
+  name: "ESPN 6",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/e/ed/ESPN_6.svg/revision/latest?cb=20211120192909",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/e/ed/ESPN_6.svg/revision/latest?cb=20211120192909",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/espn6" }
+    ]
+  }
+},
+"getv": {
+  name: "GE TV",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Logo_GE_TV.svg?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original",
+  background: "",
+  logotipo: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Logo_GE_TV.svg?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/getv" }
+    ]
+  }
+},
+
+"Paramountplus": {
+  name: "Paramount +",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/3/36/Paramount%2B_2021.svg/revision/latest?cb=20210125103531",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/3/36/Paramount%2B_2021.svg/revision/latest?cb=20210125103531",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/paramountplus2" }
+    ]
+  }
+},
+
+"Premiereclubes": {
+  name: "Premiere Clubes",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/premiere" }
+    ]
+  }
+},
+"Premiere2": {
+  name: "Premiere 2",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/premiere2" }
+    ]
+  }
+},
+"Premiere3": {
+  name: "Premiere 3",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/premiere3" }
+    ]
+  }
+},
+"Premiere4": {
+  name: "Premiere 4",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/premiere4" }
+    ]
+  }
+},
+"Premiere5": {
+  name: "Premiere 5",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/premiere5" }
+    ]
+  }
+},
+"Premiere6": {
+  name: "Premiere 6",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/premiere6" }
+    ]
+  }
+},
+"Premiere7": {
+  name: "Premiere 7",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/premiere7" }
+    ]
+  }
+},
+"Premiere8": {
+  name: "Premiere 8",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/46/Premiere_2017.svg/revision/latest?cb=20220425152048",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/premiere8" }
+    ]
+  }
+},
+"sportv": {
+  name: "SporTV",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/b/b5/SporTV_2021.svg/revision/latest?cb=20211208021328",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/b/b5/SporTV_2021.svg/revision/latest?cb=20211208021328",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/sportv" }
+    ]
+  }
+},
+"sportv2": {
+  name: "SporTV 2",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/9/9f/SporTV2_2021.svg/revision/latest?cb=20211208021523",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/9/9f/SporTV2_2021.svg/revision/latest?cb=20211208021523",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/sportv2" }
+    ]
+  }
+},
+"sportv3": {
+  name: "SporTV 3",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/8/87/SporTV3_2021.svg/revision/latest?cb=20211208021644",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/8/87/SporTV3_2021.svg/revision/latest?cb=20211208021644",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/sportv3" }
+    ]
+  }
+},
+"xsports": {
+  name: "Xsports",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Xsports_logo.png/960px-Xsports_logo.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail",
+  background: "",
+  logotipo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Xsports_logo.png/960px-Xsports_logo.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/xsports" }
+    ]
+  }
+},
+"aee": {
+  name: "A&E",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/2/2d/A%26E_2013.svg/revision/latest?cb=20250722162127",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/2/2d/A%26E_2013.svg/revision/latest?cb=20250722162127",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/aie" }
+    ]
+  }
+},
+"adultswim": {
+  name: "Adult Swim",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/9/91/Adult_Swim.svg/revision/latest?cb=20201128112724",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/adultswim.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/adultswim" }
+    ]
+  }
+},
+"amc": {
+  name: "AMC",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/45/AMC_%282019%29.svg/revision/latest?cb=20230222103343",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/45/AMC_%282019%29.svg/revision/latest?cb=20230222103343",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/amc" }
+    ]
+  }
+},
+"axn": {
+  name: "AXN",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/d/dc/2016_AXN_logo.svg/revision/latest?cb=20201126064846",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/d/dc/2016_AXN_logo.svg/revision/latest?cb=20201126064846",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/axn" }
+    ]
+  }
+},
+"cinemax": {
+  name: "Cinemax",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/5/54/Cinemax_2011_%28Yellow%29.svg/revision/latest?cb=20201205114958",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/5/54/Cinemax_2011_%28Yellow%29.svg/revision/latest?cb=20201205114958",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/cinemax" }
+    ]
+  }
+},
+"curta": {
+  name: "Curta!",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/tvpediabrasil/images/e/ef/Canalcurta.png/revision/latest?cb=20220616212818&path-prefix=pt-br",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/tvpediabrasil/images/e/ef/Canalcurta.png/revision/latest?cb=20220616212818&path-prefix=pt-br",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/curta" }
+    ]
+  }
+},
+"hbo": {
+  name: "HBO",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/c/c1/HBO.svg/revision/latest?cb=20250930051253",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/hbo.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/hbo" }
+    ]
+  }
+},
+"hbo2": {
+  name: "HBO 2",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/6/6c/HBO2_logo.svg/revision/latest?cb=20220319012459",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/hbo2.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/hbo2" }
+    ]
+  }
+},
+"hbofamily": {
+  name: "HBO Family",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/e/e7/HBOfamilyLA2021.svg/revision/latest?cb=20220505142501",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/hbofamily.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/hbofamily" }
+    ]
+  }
+},
+"hbomundi": {
+  name: "HBO Mundi",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/3/3c/HBO_Mundi_%282020%29.svg/revision/latest?cb=20200508220536",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/hbomundi.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/hbomundi" }
+    ]
+  }
+},
+"hboplus": {
+  name: "HBO Plus",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/f/f9/Logohboplus2019.svg/revision/latest?cb=20190408002018",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/hboplus.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/hboplus" }
+    ]
+  }
+},
+"hbopop": {
+  name: "HBO Pop",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/1/17/HBO_Pop_%282020%29.svg/revision/latest?cb=20200508220707",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/hbopop.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/hbopop" }
+    ]
+  }
+},
+"hbosignature": {
+  name: "HBO Signature",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/3/37/HBO_Signature_2000.svg/revision/latest?cb=20100323081748",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/hbosignature.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/hbosignathure" }
+    ]
+  }
+},
+"hboxtreme": {
+  name: "HBO Xtreme",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/b/b3/HBO_Xtreme_%282020%29.svg/revision/latest?cb=20200508220352",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/hboxtreme.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/hboxtreme" }
+    ]
+  }
+},
+"megapix": {
+  name: "Megapix",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/8/8e/Megapix_2015.svg/revision/latest?cb=20220425151703",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/megapix.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/megapix" }
+    ]
+  }
+},
+"sonychannel": {
+  name: "Sony Channel",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/d/d2/Logosonychannellatam2023.png/revision/latest?cb=20230823021459",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/d/d2/Logosonychannellatam2023.png/revision/latest?cb=20230823021459",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/sony" }
+    ]
+  }
+},
+"space": {
+  name: "Space",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/SpaceLogo.svg/960px-SpaceLogo.svg.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail",
+  background: "",
+  logotipo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/SpaceLogo.svg/960px-SpaceLogo.svg.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/space" }
+    ]
+  }
+},
+"studiouniversal": {
+  name: "Studio Universal",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/6/64/Studio_Universal_2016.svg/revision/latest?cb=20160424062945",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/studiouniversal.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/studiouniversal" }
+    ]
+  }
+},
+"tcaction": {
+  name: "Telecine Action",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/1/1b/Telecine_Action_%282021%29.svg/revision/latest?cb=20250124192745",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/tcaction.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/telecineaction" }
+    ]
+  }
+},
+"tccult": {
+  name: "Telecine Cult",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/0/06/Telecine_Cult_%282021%29.svg/revision/latest?cb=20250124194048",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/tccult.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/telecinecult" }
+    ]
+  }
+},
+"tcfun": {
+  name: "Telecine Fun",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/9/99/Telecine_Fun_%282021%29.svg/revision/latest?cb=20250124193630",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/tcfun.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/telecinefun" }
+    ]
+  }
+},
+"tcpipoca": {
+  name: "Telecine Pipoca",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/b/b1/Telecine_Pipoca_%282021%29.svg/revision/latest?cb=20250124193915",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/tcpipoca.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/telecinepipoca" }
+    ]
+  }
+},
+"tcpremium": {
+  name: "Telecine Premium",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/8/81/Telecine_Premium_%282021%29.svg/revision/latest?cb=20250124192551",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/tcpremium.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/telecinepremium" }
+    ]
+  }
+},
+"tctouch": {
+  name: "Telecine Touch",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/1/1f/Telecine_Touch_%282021%29.svg/revision/latest?cb=20250124193952",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/tctouch.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/telecinetouch" }
+    ]
+  }
+},
+"tnt": {
+  name: "TNT",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/f/f4/TNT_2016.svg/revision/latest?cb=20201128113457",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/tnt.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/tnt" }
+    ]
+  }
+},
+"tntnovelas": {
+  name: "TNT Novelas",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/6/67/TNT_Novelas_2025.svg/revision/latest?cb=20250916210038",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/6/67/TNT_Novelas_2025.svg/revision/latest?cb=20250916210038",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/tntnovelas" }
+    ]
+  }
+},
+"tntseries": {
+  name: "TNT Series",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/c/c0/TNT_Series_2025.svg/revision/latest?cb=20250918154553",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/c/c0/TNT_Series_2025.svg/revision/latest?cb=20250918154553",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/tntseries" }
+    ]
+  }
+},
+"universaltv": {
+  name: "Universal TV",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/4/42/Universal_TV_logo.svg/revision/latest?cb=20210103235912",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/4/42/Universal_TV_logo.svg/revision/latest?cb=20210103235912",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/universaltv" }
+    ]
+  }
+},
+"warner": {
+  name: "Warner Channel",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/2/2b/Warner_Channel_%28LA%2C_2018%29.svg/revision/latest?cb=20240505003736",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/2/2b/Warner_Channel_%28LA%2C_2018%29.svg/revision/latest?cb=20240505003736",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/warnerchannel" }
+    ]
+  }
+},
+"animalplanet": {
+  name: "Animal Planet",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/e/e3/Animal_Planet_2018.svg/revision/latest?cb=20210825085349",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/e/e3/Animal_Planet_2018.svg/revision/latest?cb=20210825085349",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/animalplanet" }
+    ]
+  }
+},
+"discoverychannel": {
+  name: "Discovery Channel",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/6/6a/Discovery_Channel2019_%28stacked%29.svg/revision/latest?cb=20190502165801",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/discoverychannel.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/discoverychannel" }
+    ]
+  }
+},
+"discoveryhh": {
+  name: "Discovery Home & Health",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/2/26/Discovery_H%26H_2026_stacked.svg/revision/latest?cb=20260304205114",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/discoveryhh.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/discoveryhh" }
+    ]
+  }
+},
+"discoveryid": {
+  name: "Investigation Discovery",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/f/f8/Dicovery_ID.svg/revision/latest?cb=20240706210910",
+  background: "",
+  logotipo: "https://embedcanaisdetv.com/images/discoveryid.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/discoveryid" }
+    ]
+  }
+},
+"discoveryscience": {
+  name: "Discovery Science",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/b/b8/Discovery_Science_2012_%281%29.svg/revision/latest?cb=20250902230758",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/b/b8/Discovery_Science_2012_%281%29.svg/revision/latest?cb=20250902230758",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/discoveryscience" }
+    ]
+  }
+},
+"discoverytheater": {
+  name: "Discovery Theater",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/7/7e/2015_Discovery_theater_HD_logo.svg/revision/latest?cb=20180303033620",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/7/7e/2015_Discovery_theater_HD_logo.svg/revision/latest?cb=20180303033620",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/discoverytheather" }
+    ]
+  }
+},
+"discoveryturbo": {
+  name: "Discovery Turbo",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/a/ab/Discovery_Turbo_LatinAmerica_2021.svg/revision/latest?cb=20221005193427",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/a/ab/Discovery_Turbo_LatinAmerica_2021.svg/revision/latest?cb=20221005193427",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/discoveryturbo" }
+    ]
+  }
+},
+"discoveryworld": {
+  name: "Discovery World",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/5/5a/Discovery_World_HD.svg/revision/latest?cb=20170325203026",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/5/5a/Discovery_World_HD.svg/revision/latest?cb=20170325203026",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/discoveryworld" }
+    ]
+  }
+},
+"foodnetwork": {
+  name: "Food Network",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/5/59/FoodNetLogo.svg/revision/latest?cb=20210615015237",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/5/59/FoodNetLogo.svg/revision/latest?cb=20210615015237",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/foodnetwork" }
+    ]
+  }
+},
+"gnt": {
+  name: "GNT",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/2/2a/GNT_2011.svg/revision/latest?cb=20220425152918",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/2/2a/GNT_2011.svg/revision/latest?cb=20220425152918",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/gnt" }
+    ]
+  }
+},
+"hgtv": {
+  name: "HGTV",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/HGTV_US_Logo_2015.svg/250px-HGTV_US_Logo_2015.svg.png?utm_source=pt.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+  background: "",
+  logotipo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/HGTV_US_Logo_2015.svg/250px-HGTV_US_Logo_2015.svg.png?utm_source=pt.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/hgtv" }
+    ]
+  }
+},
+"history": {
+  name: "History",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/e/e8/History_2021.png/revision/latest?cb=20240302050750",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/e/e8/History_2021.png/revision/latest?cb=20240302050750",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/history" }
+    ]
+  }
+},
+"history2": {
+  name: "History 2",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/3/3a/History_2_%282022%29.png/revision/latest?cb=20260212002501",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/3/3a/History_2_%282022%29.png/revision/latest?cb=20260212002501",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/history2" }
+    ]
+  }
+},
+"bis": {
+  name: "Bis",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://logodownload.org/wp-content/uploads/2017/11/canal-bis-logo-1.png",
+  background: "",
+  logotipo: "https://logodownload.org/wp-content/uploads/2017/11/canal-bis-logo-1.png",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/bis" }
+    ]
+  }
+},
+"mtv": {
+  name: "MTV",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/e/e7/MTV_2021_Retro.svg/revision/latest?cb=20230607080834",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/e/e7/MTV_2021_Retro.svg/revision/latest?cb=20230607080834",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/mtv" }
+    ]
+  }
+},
+"multishow": {
+  name: "Multishow",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/3/34/Multishow_logo_red_2012.svg/revision/latest/scale-to-width-down/1000?cb=20121216184410",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/3/34/Multishow_logo_red_2012.svg/revision/latest/scale-to-width-down/1000?cb=20121216184410",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/multishow" }
+    ]
+  }
+},
+"cartoonito": {
+  name: "Cartoonito",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/6/67/Cartoonito_logo_2021.svg/revision/latest?cb=20211112214721",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/6/67/Cartoonito_logo_2021.svg/revision/latest?cb=20211112214721",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/cartoonito" }
+    ]
+  }
+},
+"cartoonnetwork": {
+  name: "Cartoon Network",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/e/ee/Cartoon_Network_2010.svg/revision/latest?cb=20210726224754",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/e/ee/Cartoon_Network_2010.svg/revision/latest?cb=20210726224754",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/cartoonnetwork" }
+    ]
+  }
+},
+"discoverykids": {
+  name: "discoverykids",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/0/00/DKids_2021.svg/revision/latest?cb=20210508171208",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/0/00/DKids_2021.svg/revision/latest?cb=20210508171208",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/discoverykids" }
+    ]
+  }
+},
+"gloob": {
+  name: "Gloob",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/9/99/Gloob_2022.svg/revision/latest?cb=20220720054147",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/9/99/Gloob_2022.svg/revision/latest?cb=20220720054147",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/gloob" }
+    ]
+  }
+},
+"gloobinho": {
+  name: "Gloobinho",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/c/cd/Gloobinho.svg/revision/latest?cb=20220425151145",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/c/cd/Gloobinho.svg/revision/latest?cb=20220425151145",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/gloobinho" }
+    ]
+  }
+},
+"tooncast": {
+  name: "Tooncast",
+  date: "01/01/2070",
+  synopsis: "Canal ao vivo 24h.",
+  poster: "https://static.wikia.nocookie.net/logopedia/images/0/05/Tooncast.svg/revision/latest?cb=20160514054656",
+  background: "",
+  logotipo: "https://static.wikia.nocookie.net/logopedia/images/0/05/Tooncast.svg/revision/latest?cb=20160514054656",
+  categories: ["TV ao vivo"], // 👈 AQUI
+  genero: ["TV"],
+  language: ["Ao vivo"],
+  seasons: {
+    1: [
+      { title: "Assistir ao vivo", url: "https://tv.jctvstreaming-vip.workers.dev/tv/tooncast" }
+    ]
+    }
+  }
+};
+
+// ---------------- Elementos
+const seriesTabs = document.getElementById("seriesTabs");
+const serieInfo = document.getElementById("serieInfo");
+const serieTitle = document.getElementById("serieTitle");
+const serieSynopsis = document.getElementById("serieSynopsis");
+const seriePoster = document.getElementById("seriePoster");
+const serieCategories = document.getElementById("serieCategories");
+const serieGênero = document.getElementById("serieGênero");
+const serieLanguage = document.getElementById("serieLanguage");
+const seasonEpisodesContainer = document.getElementById("seasonEpisodesContainer");
+const seriesSearch = document.getElementById("seriesSearch");
+const categoryFilter = document.getElementById("categoryFilter");
+const backButton = document.getElementById('backButton');
+const iframePlayer = document.getElementById("iframePlayer");
+const modalTitle = document.getElementById("modalTitle");
+const prevEpisodeBtn = document.getElementById("prevEpisodeBtn");
+const nextEpisodeBtn = document.getElementById("nextEpisodeBtn");
+const castButton = document.getElementById("castButton");
+const modalLogo = document.getElementById("modalLogo");
+const modalTitleText = document.getElementById("modalTitleText");
+
+let currentSeries = null;
+let episodeQueue = [];
+let currentEpisodeIndex = 0;
+let currentHls = null;
+
+// ---------------- Categorias
+function populateCategories(){
+  const allCategories = new Set();
+  Object.values(seriesData).forEach(s => s.categories.forEach(c => allCategories.add(c)));
+  [...allCategories].sort().forEach(cat=>{
+    const option = document.createElement("option");
+    option.value = cat; option.textContent = cat;
+    categoryFilter.appendChild(option);
+  });
+}
+
+// ---------------- Monta abas (ordenando por date)
+function buildTabs(filteredKeys = null) {
+  seriesTabs.innerHTML = "";
+  let keys = filteredKeys || Object.keys(seriesData);
+
+  // Ordena por data (mais recente primeiro)
+  keys.sort((a, b) => {
+    const dateA = seriesData[a].date
+      ? new Date(seriesData[a].date.split("/").reverse().join("-"))
+      : new Date(0);
+    const dateB = seriesData[b].date
+      ? new Date(seriesData[b].date.split("/").reverse().join("-"))
+      : new Date(0);
+    return dateB - dateA;
+  });
+
+  keys.forEach(key => {
+    const s = seriesData[key];
+    const li = document.createElement("li");
+    li.className = "nav-item";
+
+    const btn = document.createElement("button");
+    btn.className = "nav-link p-0 border-0 bg-transparent text-center series-tab";
+    btn.dataset.target = key;
+
+    // 🔴 TV AO VIVO
+  if (s.categories && s.categories.some(c => c.toLowerCase() === "tv ao vivo")) {
+
+    btn.innerHTML = `
+      <div class="card border-0 text-center" style="width: 110px;">
+        <img src="${s.poster}" 
+          style="height:60px; object-fit:contain; background:#fff; padding:5px;" 
+          class="rounded">
+
+        <div class="card-body p-1">
+          <p class="card-text small mb-0">${s.name}</p>
+          <small style="font-size:10px; color:#6c757d;">
+            <span style="color:#dc3545;">●</span> Ao Vivo
+          </small>
+        </div>
+      </div>
+    `;
+
+  } else {
+
+    btn.innerHTML = `
+      <div class="card border-0" style="width: 80px;">
+        <img src="${s.poster}" class="card-img-top rounded"
+          style="height:120px;object-fit:cover;" alt="${s.name}">
+        
+        <div class="card-body p-1">
+          <p class="card-text small text-truncate mb-0">${s.name}</p>
+        </div>
+      </div>
+    `;
+  }
+
+  li.appendChild(btn);
+  seriesTabs.appendChild(li);
+});
+
+// ✅ ESSA LINHA FALTAVA
+}
+
+// -------------------- Mostra detalhes da série --------------------
+function showSeasons(key, tabBtn) {
+  const s = seriesData[key];
+  const isLive = s.categories.includes("TV ao vivo");
+  const isMovie = s.categories.includes("Filmes");
+  serieTitle.textContent = s.name;
+  seriePoster.src = s.poster;
+  serieCategories.textContent = s.categories.join(", ");
+  serieGênero.textContent = s.genero.join(", ");
+  serieLanguage.textContent = s.language.join(", ");
+  serieInfo.style.display = "block";
+
+  // Sinopse com "ler mais/ler menos"
+  serieSynopsis.innerHTML = "";
+  const synopsisText = document.createElement("span");
+  synopsisText.className = "synopsis-text";
+  synopsisText.style.whiteSpace = "pre-wrap";
+  synopsisText.style.display = "inline";
+
+  const fullText = s.synopsis.trim();
+  const shortText = fullText.length > 100 ? fullText.slice(0, 100) + "..." : fullText;
+  let expanded = false;
+
+  synopsisText.textContent = shortText;
+  serieSynopsis.appendChild(synopsisText);
+
+  if (fullText.length > 50) {
+    const lerMaisBtn = document.createElement("span");
+    lerMaisBtn.textContent = " ler mais";
+    lerMaisBtn.style.color = "#007bff";
+    lerMaisBtn.style.cursor = "pointer";
+    lerMaisBtn.style.textDecoration = "underline";
+    lerMaisBtn.style.marginLeft = "5px";
+
+    serieSynopsis.appendChild(lerMaisBtn);
+
+    lerMaisBtn.addEventListener("click", () => {
+      expanded = !expanded;
+      if (expanded) { synopsisText.textContent = fullText; lerMaisBtn.textContent = " ler menos"; }
+      else { synopsisText.textContent = shortText; lerMaisBtn.textContent = " ler mais"; }
+    });
+  }
+
+  // Posiciona info logo abaixo da aba selecionada
+  const li = tabBtn.closest("li");
+  li.insertAdjacentElement("afterend", serieInfo);
+
+  // ---------------- Episódios ----------------
+  seasonEpisodesContainer.innerHTML = "";
+
+// 🎬 FILME
+// ---------------- Background (ANTES DE TUDO)
+document.body.style.backgroundImage = `url('${s.background}')`;
+document.body.style.backgroundSize = "cover";
+document.body.style.backgroundPosition = "center";
+document.body.style.backgroundRepeat = "no-repeat";
+document.body.style.backgroundAttachment = "fixed";
+
+// 🎬 FILME
+if (isMovie) {
+  const movie = s.seasons[1][0];
+
+  const btn = document.createElement("div");
+  btn.innerHTML = `
+    <div style="display:flex; justify-content:center; align-items:center; min-height:100px;">
+      <button class="btn btn-success btn-lg play-movie"
+        data-vid="${movie.url}"
+        data-title="${s.name}">
+        ▶ Assistir
+      </button>
+    </div>
+  `;
+
+  seasonEpisodesContainer.appendChild(btn);
+  return;
+}
+let seasonId = 0;
+
+for (const [seasonNum, episodes] of Object.entries(s.seasons)) {
+  seasonId++;
+  const container = document.createElement("div");
+  container.className = "accordion mb-2";
+  container.id = `accordionSeason${seasonId}`;
+  const item = document.createElement("div");
+  item.className = "accordion-item";
+  const headerId = `heading${seasonId}`;
+  const collapseId = `collapse${seasonId}`;
+
+  item.innerHTML = `
+    <h2 class="accordion-header" id="${headerId}">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+        data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+        Temporada ${seasonNum}
+      </button>
+    </h2>
+    <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}"
+     data-bs-parent="#accordionSeason${seasonId}">
+  <div class="episode-grid p-2">
+    ${episodes.map((ep, idx) => {
+      return `
+        <button class="episode-btn open-player"
+          data-vid="${ep.url}"
+          data-title="${s.name} – Temporada ${seasonNum} – Episódio ${idx + 1}">
+          ${idx + 1}
+        </button>
+      `;
+    }).join("")}
+  </div>
+</div>
+  `;
+  container.appendChild(item);
+  seasonEpisodesContainer.appendChild(container);
+}
+
+  // ---------------- Background ----------------
+  document.body.style.backgroundImage = `url('${s.background}')`;
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+  document.body.style.backgroundAttachment = "fixed";
+}
+
+// ---------------- Toggle UI
+function updateUIOnTabToggle(){
+  if(currentSeries){ 
+    backButton.style.display='block'; 
+    seriesSearch.style.display='none'; 
+    categoryFilter.style.display='none'; 
+    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='none'); 
+  }
+  else { 
+    backButton.style.display='none'; 
+    seriesSearch.style.display='block'; 
+    categoryFilter.style.display='block'; 
+    document.querySelectorAll('#seriesTabs > li').forEach(li=>li.style.display='inline-block'); 
+  }
+}
+
+document.addEventListener("click", (e) => {
+  const epItem = e.target.closest(".open-player");
+  if (!epItem) return;
+
+  // efeito toque
+  epItem.classList.add("touch-hover");
+  setTimeout(() => {
+    epItem.classList.remove("touch-hover");
+  }, 300); // duração igual à transição CSS
+
+  // carregar episódio normalmente
+  const seasonContainer = epItem.closest(".accordion-collapse");
+  const seasonEps = Array.from(seasonContainer.querySelectorAll(".open-player"));
+  episodeQueue = seasonEps.map(b => ({ src: b.dataset.vid, title: b.dataset.title }));
+  currentEpisodeIndex = seasonEps.indexOf(epItem);
+  playEpisode(currentEpisodeIndex);
+});
+
+// 🎬 CLICK FILME (SEM TEMPORADA)
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".play-movie");
+  if (!btn) return;
+
+  episodeQueue = [{
+    src: btn.dataset.vid,
+    title: btn.dataset.title,
+    logo: seriesData[currentSeries].logotipo
+  }];
+
+  currentEpisodeIndex = 0;
+  playEpisode(0);
+});
+
+document.addEventListener("click", (e)=>{
+  const epItem = e.target.closest(".open-player");
+  if(!epItem) return;
+
+  // Remover destaque anterior
+  document.querySelectorAll(".open-player.active-episode").forEach(el=>el.classList.remove("active-episode"));
+  epItem.classList.add("active-episode");
+
+  // Para efeito de toque em celular
+  document.querySelectorAll(".open-player.touch-hover").forEach(el=>el.classList.remove("touch-hover"));
+  epItem.classList.add("touch-hover");
+
+  epItem.scrollIntoView({behavior:"smooth", block:"center"});
+
+  // Carregar episódios
+  const seasonContainer = epItem.closest(".accordion-collapse");
+  const seasonEps = Array.from(seasonContainer.querySelectorAll(".open-player"));
+  episodeQueue = seasonEps.map(b => ({src:b.dataset.vid, title:b.dataset.title}));
+  currentEpisodeIndex = seasonEps.indexOf(epItem);
+  playEpisode(currentEpisodeIndex);
+});
+
+// ---------------- Eventos
+seriesTabs.addEventListener("click",(e)=>{
+  const btn = e.target.closest("button.series-tab"); if(!btn) return;
+  const target = btn.dataset.target;
+  if(currentSeries===target){ currentSeries=null; serieInfo.style.display="none"; document.body.style.backgroundImage=""; }
+  else{
+  const s = seriesData[target];
+
+  // 📺 TV AO VIVO abre direto
+  if (s.categories.includes("TV ao vivo")) {
+    episodeQueue = [{
+      src: s.seasons[1][0].url,
+      title: s.name,
+      logo: s.logotipo
+    }];
+    playEpisode(0);
+    return;
+  }
+
+  currentSeries = target;
+  document.querySelectorAll("#seriesTabs button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  showSeasons(target,btn);
+}
+  updateUIOnTabToggle();
+});
+
+backButton.addEventListener("click", ()=>{ currentSeries=null; serieInfo.style.display="none"; document.body.style.backgroundImage=""; updateUIOnTabToggle(); });
+
+// ---------------- Filtros de busca + categoria
+function applyFilters() {
+  const q = (seriesSearch.value || "").toLowerCase().trim();
+  const cat = categoryFilter.value;
+
+  const keys = Object.keys(seriesData).filter(key => {
+    const s = seriesData[key];
+
+    // 🔍 busca em nome
+    const matchName = s.name.toLowerCase().includes(q);
+
+    // 🔍 busca em categorias
+    const matchCategory = (s.categories || [])
+      .some(c => c.toLowerCase().includes(q));
+
+    // 🔍 busca em gênero
+    const matchGenero = (s.genero || [])
+      .some(g => g.toLowerCase().includes(q));
+
+    // 🔍 busca em linguagem
+    const matchLanguage = (s.language || [])
+      .some(l => l.toLowerCase().includes(q));
+
+    // 🔍 busca em episódios (SUBCATEGORIA 🔥)
+    const matchEpisodes = Object.values(s.seasons || {})
+      .flat()
+      .some(ep => ep.title && ep.title.toLowerCase().includes(q));
+
+    // 🔍 resultado final
+    const matchSearch = !q || (
+      matchName ||
+      matchCategory ||
+      matchGenero ||
+      matchLanguage ||
+      matchEpisodes
+    );
+
+    // 🎯 filtro de categoria selecionada
+    const matchCatFilter = !cat || (s.categories || [])
+      .some(c => c.toLowerCase() === cat.toLowerCase());
+
+    return matchSearch && matchCatFilter;
+  });
+
+  buildTabs(keys);
+}
+
+seriesSearch.addEventListener("input", applyFilters);
+categoryFilter.addEventListener("change", applyFilters);
+
+let selectedEpisodeUrl = "";
+let selectedEpisodeTitle = "";
+
+// ---------------- Player
+document.addEventListener("click", (e) => {
+  const epItem = e.target.closest(".open-player");
+  if (!epItem) return;
+
+  // Encontra todos os episódios da mesma temporada
+  const seasonContainer = epItem.closest(".accordion-collapse"); 
+  const seasonEps = Array.from(seasonContainer.querySelectorAll(".open-player"));
+
+  episodeQueue = seasonEps.map(b => ({
+      src: b.dataset.vid,
+      title: b.dataset.title,
+      logo: seriesData[currentSeries].logotipo // <<< IMPORTANTE AQUI
+  }));
+
+  currentEpisodeIndex = seasonEps.indexOf(epItem);
+  playEpisode(currentEpisodeIndex);
+});
+
+function playEpisode(index){
+  if(index < 0 || index >= episodeQueue.length) return;
+
+  currentEpisodeIndex = index;
+  const videoData = episodeQueue[currentEpisodeIndex];
+
+  // ---------------- TÍTULO DO MODAL ----------------
+  document.getElementById("modalTitleText").textContent = videoData.title;
+
+  // ---------------- LOGOTIPO NO MODAL ----------------
+  const modalLogo = document.getElementById("modalLogo");
+
+  if (videoData.logo) {
+    modalLogo.src = videoData.logo;
+    modalLogo.style.display = "block";
+  } else {
+    modalLogo.style.display = "none";
+  }
+
+  // ---------------- PLAYER ----------------
+  if (currentHls) {
+    currentHls.destroy();
+    currentHls = null;
+  }
+
+  new bootstrap.Modal(document.getElementById("playerModal")).show();
+}
+
+// ---------------- Inatividade (esconder barra do player)
+let inatividadeTimer;
+
+// Mostra a barra
+function mostrarBarraPlayer() {
+    const barra = document.querySelector(".modal-header");
+    barra.style.opacity = "1";
+}
+
+// Esconde a barra
+function esconderBarraPlayer() {
+    const barra = document.querySelector(".modal-header");
+    barra.style.opacity = "0";
+}
+
+// Reseta o timer sempre que mexe
+function resetarInatividade() {
+    mostrarBarraPlayer();
+    clearTimeout(inatividadeTimer);
+
+    inatividadeTimer = setTimeout(() => {
+        esconderBarraPlayer();
+    }, 3000); // 3 segundos
+}
+
+// Eventos de atividade
+document.getElementById("playerModal").addEventListener("mousemove", resetarInatividade);
+document.getElementById("playerModal").addEventListener("click", resetarInatividade);
+
+// Quando abrir o modal, inicia o timer
+document.getElementById("playerModal").addEventListener("shown.bs.modal", () => {
+    resetarInatividade();
+});
+
+// ---------------- Controle de episódios
+prevEpisodeBtn.addEventListener("click", ()=>{ if(currentEpisodeIndex>0) playEpisode(currentEpisodeIndex-1); });
+nextEpisodeBtn.addEventListener("click", ()=>{ if(currentEpisodeIndex<episodeQueue.length-1) playEpisode(currentEpisodeIndex+1); });
+
+
+
+// ---------------- Limpeza ao fechar modal
+document.getElementById("playerModal").addEventListener("hidden.bs.modal", ()=>{
+
+  const iframe = document.getElementById("iframePlayer");
+  if (iframe) iframe.src = "";
+
+  episodeQueue = [];
+  currentEpisodeIndex = 0;
+
+  document.body.classList.remove("modal-open");
+  document.querySelectorAll(".modal-backdrop").forEach(el => el.remove());
+
+});
+
+// ---------------- Barra de Rolagem ativa quando fecha modal
+const playerModal = document.getElementById('playerModal');
+
+playerModal.addEventListener('hidden.bs.modal', () => {
+  document.body.style.overflowY = 'auto';
+  document.documentElement.style.overflowY = 'auto';
+});
+
+// --- Web Video Cast ---
+castButton.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  if (!episodeQueue.length) {
+    alert("Nenhum vídeo carregado.");
+    return;
+  }
+
+  const title = modalTitle.textContent || "JC TV STREAMING";
+  const realUrl = episodeQueue[currentEpisodeIndex].src;
+
+  // Mantém o https://
+  const intentLink = `intent://${realUrl.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.instantbits.cast.webvideo;S.title=${encodeURIComponent(title)};end`;
+
+  // Redireciona para o app
+  window.location.href = intentLink;
+});
+
+// ===============================
+// 🔥 PLAYER UNIVERSAL (SOBRESCREVE)
+// ===============================
+
+function nextEpisodeFallback() {
+  if (currentEpisodeIndex < episodeQueue.length - 1) {
+    console.log("Tentando próximo link...");
+    playEpisode(currentEpisodeIndex + 1);
+  } else {
+    console.log("Nenhum link funcionou.");
+  }
+}
+
+// 🔥 SOBRESCREVE SUA FUNÇÃO ORIGINAL
+playEpisode = function(index){
+
+  if(index < 0 || index >= episodeQueue.length) return;
+
+  currentEpisodeIndex = index;
+  const videoData = episodeQueue[currentEpisodeIndex];
+
+  // ---------------- TÍTULO ----------------
+  document.getElementById("modalTitleText").textContent = videoData.title;
+
+  // ---------------- LOGO ----------------
+  const modalLogo = document.getElementById("modalLogo");
+  if (videoData.logo) {
+    modalLogo.src = videoData.logo;
+    modalLogo.style.display = "block";
+  } else {
+    modalLogo.style.display = "none";
+  }
+
+  // ---------------- IFRAME PLAYER ----------------
+  const iframe = document.getElementById("iframePlayer");
+
+  iframe.src = videoData.src;
+
+  new bootstrap.Modal(document.getElementById("playerModal")).show();
+};
+
+
+// ---------------- Inicialização
+populateCategories(); buildTabs(); updateUIOnTabToggle();
+
+</script>
+<!-- Tela de Alerta -->
+  <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
+    <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
+  </div>
+
+  <script>
+    function mostrarAlerta() {
+      const tela = document.getElementById("bloqueio");
+      tela.style.display = "block";
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+
+    document.querySelectorAll('a').forEach(link => {
+      link.setAttribute('target', '_self');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      const tecla = e.key.toLowerCase();
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && tecla === 'u') ||
+        (e.ctrlKey && tecla === 's') ||
+        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+      ) {
+        e.preventDefault();
+        mostrarAlerta();
+      }
+    });
+
+    window.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
+</body>
+</html>
