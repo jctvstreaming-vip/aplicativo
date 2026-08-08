@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>JC TV STREAMING</title>
+
+<script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+
+<style>
+
+html,body{
+margin:0;
+padding:0;
+width:100%;
+height:100%;
+background:#000;
+overflow:hidden;
+}
+
+#player{
+width:100%;
+height:100%;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="player"></div>
+
+<script>
+
+// MAP DE VÍDEOS
+const VIDEO_MAP = {
+
+  "filme1":
+    "https://playerfimoo.jctvstreaming-vip.workers.dev/tt28682323.mp4?s=FHD4",
+
+  "filme2":
+    "https://playerfimoo.jctvstreaming-vip.workers.dev/tt12345678.mp4?s=FHD5",
+
+  "teste":
+    "https://play.jctvstreaming-vip.workers.dev/ablyljoqqryrjwo.m3u8"
+
+};
+
+
+// PEGA O VÍDEO PELO NOME DA URL
+// exemplo: player.html?id=filme1
+
+const params = new URLSearchParams(window.location.search);
+
+const id = params.get("id") || "filme1";
+
+
+// BUSCA NO MAP
+const videoUrl = VIDEO_MAP[id];
+
+
+if(!videoUrl){
+
+  document.body.innerHTML =
+  "<h2 style='color:white;text-align:center'>Vídeo não encontrado</h2>";
+
+  throw new Error("ID inexistente");
+
+}
+
+
+// PLAYER CLAPPR
+
+new Clappr.Player({
+
+  source: videoUrl,
+
+  parentId:"#player",
+
+  width:"100%",
+  height:"100%",
+
+  autoPlay:true,
+
+  mute:false,
+
+  preload:"auto",
+
+  disableContextMenu:true,
+
+  playback:{
+    playInline:true,
+    recycleVideo:true
+  },
+
+  mediacontrol:{
+    seekbar:"#ff0000",
+    buttons:"#ffffff"
+  },
+
+  events:{
+    onError:function(e){
+      console.log("Erro:",e);
+    }
+  }
+
+});
+
+</script>
+
+</body>
+</html>
