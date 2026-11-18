@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JC TV STREAMING</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--gold:#ffc107;
+--gold2:#e5a900;
+--bg:#080b10;
+--panel:#101722;
+--panel2:#151e2b;
+--text:#f5f7fa;
+--muted:#8995a6
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:var(--bg);
+color:var(--text);
+font-family:Inter,sans-serif;
+overflow:hidden
+}
+
+#layout{
+display:flex;
+height:100vh;
+width:100%
+}
+
+#left{
+width:340px;
+min-width:260px;
+background:#0d131d;
+border-right:1px solid #222c39;
+display:flex;
+flex-direction:column;
+padding:20px 14px;
+overflow:hidden
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+padding:5px 7px 20px
+}
+
+.brand-logo{
+width:43px;
+height:43px;
+border-radius:12px;
+background:linear-gradient(135deg,#ffc107,#a87500);
+display:flex;
+align-items:center;
+justify-content:center;
+color:#111;
+font-size:22px;
+font-weight:900;
+box-shadow:0 0 20px #ffc10730
+}
+
+.brand-title{
+font-size:16px;
+font-weight:800;
+letter-spacing:.5px
+}
+
+.brand-subtitle{
+font-size:10px;
+color:var(--gold);
+letter-spacing:2px;
+margin-top:4px
+}
+
+.search-box{
+position:relative;
+margin-bottom:14px
+}
+
+.search-box input{
+background:#182230;
+border:1px solid #293647;
+border-radius:10px;
+padding:12px 14px;
+color:white;
+width:100%;
+outline:none;
+font-size:13px
+}
+
+.search-box input:focus{
+border-color:var(--gold)
+}
+
+.search-box input::placeholder{
+color:#8290a3
+}
+
+.category-title{
+font-size:10px;
+font-weight:800;
+letter-spacing:2px;
+color:#728096;
+padding:8px 5px
+}
+
+#playlistsButtons{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:7px;
+margin-bottom:15px
+}
+
+.category-btn{
+background:#172230;
+color:#aeb9c8;
+border:1px solid #283647;
+padding:10px 4px;
+border-radius:8px;
+font-size:10px;
+font-weight:800;
+cursor:pointer;
+transition:.2s
+}
+
+.category-btn:hover,
+.category-btn.active{
+color:#111;
+background:var(--gold);
+border-color:var(--gold)
+}
+
+.sidebar-footer{
+padding:13px 5px 0;
+border-top:1px solid #222c39;
+color:#647184;
+font-size:10px;
+text-align:center
+}
+
+#right{
+flex:1;
+min-width:0;
+display:flex;
+flex-direction:column;
+padding:24px;
+overflow-y:auto
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+margin-bottom:20px
+}
+
+#nowTitle{
+font-size:20px;
+font-weight:800;
+margin:0;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap
+}
+
+.live-status{
+display:flex;
+align-items:center;
+gap:7px;
+font-size:10px;
+font-weight:800;
+color:#ff5555;
+letter-spacing:1px
+}
+
+.live-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:#ff3030;
+box-shadow:0 0 10px #ff3030
+}
+
+/* CARDS DOS CONTEÚDOS */
+
+.channels-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
+gap:16px;
+align-content:start;
+width:100%;
+}
+
+.channels-grid .channel-card{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:flex-start;
+gap:10px;
+padding:14px;
+margin:0;
+min-width:0;
+min-height:155px;
+background:#101722;
+border:1px solid #283647;
+border-radius:12px;
+text-align:center;
+cursor:pointer;
+transition:.2s;
+}
+
+.channels-grid .channel-card:hover{
+background:#192535;
+border-color:var(--gold);
+transform:translateY(-3px);
+}
+
+.channels-grid .channel-card.active{
+background:#28230f;
+border-color:var(--gold);
+}
+
+.channels-grid .channel-card img{
+display:block;
+width:100%;
+height:100px;
+object-fit:contain;
+background:#080b10;
+border-radius:8px;
+}
+
+.channels-grid .channel-card img[style*="display: none"]{
+display:none!important;
+}
+
+.channels-grid .channel-card > div{
+width:100%;
+}
+
+.channels-grid .channel-name{
+font-size:12px;
+font-weight:800;
+text-align:center;
+overflow-wrap:anywhere;
+}
+
+.channels-grid .channel-category{
+font-size:10px;
+text-align:center;
+}
+
+/* VOLTAR PARA A LISTA DE SÉRIES */
+
+.series-back{
+grid-column:1/-1;
+justify-self:start;
+background:#172230;
+color:var(--gold);
+border:1px solid #344254;
+border-radius:8px;
+padding:10px 16px;
+font-size:11px;
+font-weight:800;
+cursor:pointer;
+transition:.2s;
+}
+
+.series-back:hover{
+background:var(--gold);
+color:#111;
+border-color:var(--gold);
+}
+
+/* MODAL UNIVERSAL */
+
+#playerModal{
+position:fixed;
+inset:0;
+z-index:9999;
+display:none;
+align-items:stretch;
+justify-content:stretch;
+padding:0;
+background:#000;
+backdrop-filter:none;
+}
+
+#playerModal.active{
+display:flex;
+}
+
+.modal-player-content{
+width:100%;
+height:100%;
+max-width:none;
+background:#000;
+border:0;
+border-radius:0;
+overflow:hidden;
+box-shadow:none;
+animation:modalOpen .2s ease;
+display:flex;
+flex-direction:column;
+}
+
+.modal-player-header{
+height:55px;
+min-height:55px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+padding:0 16px;
+background:#101722;
+border-bottom:1px solid #283647;
+}
+
+#modalTitle{
+font-size:14px;
+font-weight:800;
+overflow:hidden;
+white-space:nowrap;
+text-overflow:ellipsis
+}
+
+#closePlayerModal{
+width:35px;
+height:35px;
+border:1px solid #344254;
+border-radius:8px;
+background:#172230;
+color:white;
+font-size:19px;
+cursor:pointer;
+flex-shrink:0;
+transition:.2s
+}
+
+#closePlayerModal:hover{
+background:#e53935;
+border-color:#e53935
+}
+
+.modal-video-container{
+position:relative;
+width:100%;
+height:calc(100% - 55px);
+max-height:none;
+min-height:0;
+flex:1;
+background:#000;
+overflow:hidden;
+aspect-ratio:auto;
+}
+
+#clapprPlayer,
+#shakaPlayer,
+#embedPlayer{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+}
+
+#shakaPlayer{
+display:none
+}
+
+#embedPlayer{
+display:none;
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+border:0;
+background:#000;
+z-index:5
+}
+
+#playerMessage{
+margin-top:16px;
+font-size:12px;
+color:var(--muted);
+min-height:18px
+}
+
+#playerMessage.error{
+color:#ff6262
+}
+
+#playerMessage.success{
+color:#53d99a
+}
+
+@media(max-width:850px){
+#left{
+width:290px;
+min-width:220px
+}
+#right{
+padding:15px
+}
+}
+
+@media(max-width:600px){
+
+#layout{
+height:100dvh
+}
+
+#left{
+width:40%;
+min-width:135px;
+padding:10px 7px
+}
+
+.brand{
+gap:6px;
+padding:5px 2px 15px
+}
+
+.brand-logo{
+width:30px;
+height:30px;
+font-size:15px
+}
+
+.brand-title{
+font-size:10px
+}
+
+.brand-subtitle{
+font-size:7px
+}
+
+#right{
+padding:10px
+}
+
+#nowTitle{
+font-size:13px
+}
+
+.channels-grid{
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:8px;
+}
+
+.channels-grid .channel-card{
+min-height:125px;
+padding:8px;
+}
+
+.channels-grid .channel-card img{
+height:75px;
+}
+
+.channels-grid .channel-name{
+font-size:10px;
+}
+
+.channels-grid .channel-category{
+font-size:8px;
+}
+
+.live-status{
+font-size:8px
+}
+
+#playerModal{
+padding:8px
+}
+
+.modal-player-content{
+border-radius:9px
+}
+
+.modal-player-header{
+height:43px;
+padding:0 10px
+}
+
+#modalTitle{
+font-size:11px
+}
+
+#closePlayerModal{
+width:30px;
+height:30px;
+font-size:16px
+}
+
+.modal-video-container{
+min-height:160px;
+max-height:calc(100dvh - 65px)
+}
+
+}
+/* Animação da barra do player */
+.modal-player-header {
+    transition: transform .3s ease, opacity .3s ease;
+    z-index: 20;
+}
+.brand-logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  border-radius:inherit;
+  display:block;
+}
+
+
+/* =====================================
+   RESPONSIVIDADE JC TV STREAMING
+===================================== */
+
+html, body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+#layout {
+    width: 100%;
+    min-height: 100dvh;
+}
+
+/* Tablets e telas intermediárias */
+@media (max-width: 850px) {
+    #left {
+        width: 250px;
+        min-width: 190px;
+        padding: 14px 9px;
+    }
+
+    #right {
+        padding: 14px;
+    }
+
+    .channels-grid {
+        grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+        gap: 10px;
+    }
+
+    .channels-grid .channel-card {
+        min-height: 125px;
+        padding: 9px;
+    }
+
+    .channels-grid .channel-card img {
+        height: 75px;
+    }
+}
+
+/* Celulares na vertical */
+@media (max-width: 600px) and (orientation: portrait) {
+
+    #layout {
+        flex-direction: column;
+        height: 100dvh;
+        min-height: 0;
+    }
+
+    #left {
+        width: 100%;
+        min-width: 0;
+        max-height: 39dvh;
+        flex-shrink: 0;
+        padding: 8px 10px;
+        overflow-y: auto;
+        border-right: 0;
+        border-bottom: 1px solid #222c39;
+    }
+
+    .brand {
+        padding: 3px 4px 8px;
+    }
+
+    .search-box {
+        margin-bottom: 7px;
+    }
+
+    .search-box input {
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+
+    .category-title {
+        padding: 5px;
+    }
+
+    #playlistsButtons {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 5px;
+        margin-bottom: 5px;
+    }
+
+    .category-btn {
+        padding: 8px 2px;
+        font-size: 8px;
+    }
+
+    .sidebar-footer {
+        padding: 7px 3px 0;
+    }
+
+    #right {
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        padding: 10px;
+        overflow-y: auto;
+    }
+
+    .topbar {
+        margin-bottom: 10px;
+    }
+
+    #nowTitle {
+        font-size: 14px;
+    }
+
+    .channels-grid {
+        grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+        gap: 8px;
+    }
+
+    .channels-grid .channel-card {
+        min-height: 110px;
+        padding: 7px;
+        gap: 6px;
+    }
+
+    .channels-grid .channel-card img {
+        height: 65px;
+    }
+
+    .channels-grid .channel-name {
+        font-size: 10px;
+    }
+
+    .channels-grid .channel-category {
+        font-size: 8px;
+    }
+
+    #playerModal {
+        padding: 0;
+    }
+
+    .modal-player-content {
+        border-radius: 0;
+    }
+}
+
+/* Celular na horizontal */
+@media (max-width: 850px) and (orientation: landscape) {
+
+    #layout {
+        flex-direction: row;
+        height: 100dvh;
+        min-height: 0;
+    }
+
+    #left {
+        width: 220px;
+        min-width: 145px;
+        padding: 9px;
+    }
+
+    #right {
+        flex: 1;
+        min-width: 0;
+        padding: 10px;
+    }
+
+    .brand {
+        padding-bottom: 10px;
+    }
+
+    .brand-logo {
+        width: 32px;
+        height: 32px;
+    }
+
+    .brand-title {
+        font-size: 11px;
+    }
+
+    .channels-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 8px;
+    }
+
+    .channels-grid .channel-card {
+        min-height: 115px;
+        padding: 8px;
+    }
+
+    .channels-grid .channel-card img {
+        height: 65px;
+    }
+}
+
+/* Botão para ativar orientação horizontal */
+#landscapeBtn {
+    display: none;
+    position: fixed;
+    right: 12px;
+    bottom: 15px;
+    z-index: 99998;
+    background: #ffc107;
+    color: #111;
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 13px;
+    font-size: 11px;
+    font-weight: 800;
+    box-shadow: 0 3px 15px #0008;
+}
+
+@media (max-width: 850px) and (orientation: portrait) {
+    #landscapeBtn {
+        display: block;
+    }
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@clappr/player@0.14.7/dist/clappr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/shaka-player@4.12.8/dist/shaka-player.compiled.js"></script>
+
+</head>
+
+<body>
+
+<div id="layout">
+
+<aside id="left">
+
+<div class="brand">
+  <div class="brand-logo">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="JC TV STREAMING">
+  </div>
+  <div>
+    <div class="brand-title">JC TV STREAMING</div>
+    <div class="brand-subtitle">PREMIUM PLAYER</div>
+  </div>
+</div>
+
+<div class="search-box">
+<input id="search" type="text" placeholder="Pesquisar canais e conteúdos...">
+</div>
+
+<div class="category-title">CATEGORIAS</div>
+<div id="playlistsButtons"></div>
+
+<div class="sidebar-footer">
+JC TV STREAMING © 2026
+</div>
+
+</aside>
+
+<main id="right">
+
+<div class="topbar">
+<h2 id="nowTitle">Selecione uma categoria</h2>
+
+<div class="live-status">
+<span class="live-dot"></span>
+PLAYER
+</div>
+</div>
+
+<div id="channelsList" class="channels-grid">
+<p style="color:#8995a6;font-size:12px">Selecione uma categoria.</p>
+</div>
+
+<div id="playerMessage">
+Selecione uma categoria para começar.
+</div>
+
+</main>
+</div>
+
+<!-- MODAL -->
+
+<div id="playerModal">
+
+<div class="modal-player-content">
+
+<div class="modal-player-header">
+<div id="modalTitle">JC TV STREAMING</div>
+<button id="closePlayerModal" title="Fechar">✕</button>
+</div>
+
+<div class="modal-video-container">
+
+<div id="clapprPlayer"></div>
+
+<video id="shakaPlayer" controls playsinline></video>
+
+<iframe
+id="embedPlayer"
+allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+allowfullscreen
+referrerpolicy="no-referrer">
+</iframe>
+
+</div>
+</div>
+</div>
+
+<script>
+
+// =====================================================
+// CADASTRO MANUAL — EDITE SOMENTE ESTA PARTE
+// =====================================================
+
+const CATEGORIES = [
+{id:"tv",name:"TV AO VIVO"},
+{id:"filmes",name:"FILMES"},
+{id:"series",name:"SÉRIES"},
+{id:"animes",name:"ANIMES"},
+{id:"desenhos",name:"DESENHOS"},
+{id:"novelas",name:"NOVELAS"},
+{id:"doramas",name:"DORAMAS"},
+{id:"tokusatsu",name:"TOKUSATSU"}
+];
+
+const CHANNELS = [
+
+{name:"A Fazenda 18 CAM01", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/afazenda", type:"embed"},
+{name:"A Fazenda 18 CAM 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/afazenda2", type:"embed"},
+{name:"A Fazenda 18 CAM 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/afazenda3", type:"embed"},
+{name:"A Fazenda 18 CAM 4", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/afazenda4", type:"embed"},
+{name:"A Fazenda 18 CAM 5", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/afazenda5", type:"embed"},
+{name:"24h Chaves", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_chaves", type:"embed"},
+{name:"24h Dragon Ball", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_dragonball", type:"embed"},
+{name:"24h Naruto", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_naruto", type:"embed"},
+{name:"24h Pica-Pau", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_picapau", type:"embed"},
+{name:"24h Friends", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_friends", type:"embed"},
+{name:"24h Todo Mundo Odeia o Chris", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_odeiachris", type:"embed"},
+{name:"Arte1", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/aa70/9s2kgymo4v7jl4l5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/arte1", type:"embed"},
+{name:"Band", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/7dcd/ors0qr3jqbwm2sh5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/bandsp", type:"embed"},
+{name:"Cultura", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/7cde/qs9sfyv4lvjrzsw5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/cultura", type:"embed"},
+{name:"Cultura Fast", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/c821/szi91ocxfkd3qb15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/culturafast", type:"embed"},
+{name:"Futura", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/2c40/i8539zyt2rc0pst5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/futura", type:"embed"},
+{name:"Globo", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/globosp", type:"embed"},
+{name:"SBT", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/ec97/n1ustsu38sqw0vj5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/sbtsp", type:"embed"},
+{name:"Record TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/996b/3hk43pafo0b5zve5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/recordsp", type:"embed"},
+{name:"RedeTV!", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/72bc/q2h6sp6no62q4j15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/redetv", type:"embed"},
+{name:"Rit TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/dfe9/ivr3w7z377mhpv15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/rittv", type:"embed"},
+{name:"Band News", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/2ef7/f9duyhtq2fvdja95g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/bandnews", type:"embed"},
+{name:"CNN Brasil", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/9cf0/ufwwfpli3cxsayv5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/fm/s6p7zcf4f9emjdqn", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+
+
+
+
+
+{
+name:"Exemplo - Filme",
+category:"filmes",
+group:"Filmes",
+logo:"",
+url:"https://SEU-LINK-AQUI/video.mp4",
+type:"direct"
+},
+
+{
+name:"Exemplo - Embed",
+category:"filmes",
+group:"Filmes",
+logo:"",
+url:"https://SEU-SERVIDOR.com/embed/12345",
+type:"embed"
+},
+
+{
+name:"A Ilha do Tesouro (2026)",
+episodeTitle:"A Ilha do Tesouro S01EP01",
+series:"A Ilha do Tesouro (2026)",
+season:1,
+category:"series",
+group:"Temporada 1",
+logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",
+url:"https://vt.jctvstreaming-vip.workers.dev/vt/n0lq9rz5xilz",
+type:"embed"
+},
+
+{
+name:"A Ilha do Tesouro (2026)",
+episodeTitle:"A Ilha do Tesouro S01EP02",
+series:"A Ilha do Tesouro (2026)",
+season:1,
+category:"series",
+group:"Temporada 1",
+logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",
+url:"https://vt.jctvstreaming-vip.workers.dev/vt/5mx74bhuomby",
+type:"embed"
+},
+
+{
+name:"A Ilha do Tesouro (2026)",
+episodeTitle:"A Ilha do Tesouro S01EP03",
+series:"A Ilha do Tesouro (2026)",
+season:1,
+category:"series",
+group:"Temporada 1",
+logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",
+url:"https://vt.jctvstreaming-vip.workers.dev/vt/wpr8nu8qyruh",
+type:"embed"
+},
+
+{
+name:"A Ilha do Tesouro (2026)",
+episodeTitle:"A Ilha do Tesouro S01EP04",
+series:"A Ilha do Tesouro (2026)",
+season:1,
+category:"series",
+group:"Temporada 1",
+logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",
+url:"https://vt.jctvstreaming-vip.workers.dev/vt/5yb48thefjrr",
+type:"embed"
+},
+
+{
+name:"A Ilha do Tesouro (2026)",
+episodeTitle:"A Ilha do Tesouro S01EP05",
+series:"A Ilha do Tesouro (2026)",
+season:1,
+category:"series",
+group:"Temporada 1",
+logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",
+url:"https://vt.jctvstreaming-vip.workers.dev/vt/m7km8rjyiub6",
+type:"embed"
+}
+
+];
+
+
+
+// =====================================================
+// JC TV STREAMING — PLAYER UNIVERSAL
+// =====================================================
+
+(function(){
+
+const buttonsDiv=document.getElementById("playlistsButtons");
+const channelsDiv=document.getElementById("channelsList");
+const iframe=document.getElementById("embedPlayer");
+const message=document.getElementById("playerMessage");
+
+const playerContainer=document.getElementById("clapprPlayer");
+const shakaVideo=document.getElementById("shakaPlayer");
+
+const playerModal=document.getElementById("playerModal");
+const modalTitle=document.getElementById("modalTitle");
+
+let entries=[];
+let visibleEntries=[];
+let categoryEntries=[];
+
+let currentIndex=-1;
+let currentCategory=CATEGORIES[0]?.id||"";
+
+let currentSeriesName=null;
+
+let player=null;
+let shakaInstance=null;
+
+let currentURL="";
+let currentType="";
+
+const USE_PROXY=false;
+
+// =====================================================
+// MENSAGENS
+// =====================================================
+
+function setMessage(text,type=""){
+
+message.textContent=text;
+message.className=type;
+
+}
+
+function setTitle(text){
+
+document.getElementById("nowTitle").textContent=text;
+
+}
+
+// =====================================================
+// MODAL
+// =====================================================
+
+function openPlayerModal(title){
+
+modalTitle.textContent=title||"JC TV STREAMING";
+
+playerModal.classList.add("active");
+
+document.body.style.overflow="hidden";
+
+}
+
+function closePlayerModal(){
+
+playerModal.classList.remove("active");
+
+document.body.style.overflow="";
+
+destroyPlayer();
+
+setMessage("Selecione um conteúdo para assistir.");
+
+}
+
+document.getElementById("closePlayerModal").onclick=closePlayerModal;
+
+playerModal.addEventListener("click",event=>{
+
+if(event.target===playerModal){
+
+closePlayerModal();
+
+}
+
+});
+
+document.addEventListener("keydown",event=>{
+
+if(event.key==="Escape"&&playerModal.classList.contains("active")){
+
+closePlayerModal();
+
+}
+
+});
+
+// =====================================================
+// DETECTAR FORMATO
+// =====================================================
+
+function getPath(url){
+
+try{
+
+return new URL(url,location.href).pathname.toLowerCase();
+
+}catch(e){
+
+return String(url).split(/[?#]/)[0].toLowerCase();
+
+}
+
+}
+
+function detectType(url,declaredType){
+
+if(declaredType){
+
+return declaredType.toLowerCase().trim();
+
+}
+
+const path=getPath(url);
+const value=String(url).toLowerCase();
+
+if(/\.m3u8$/i.test(path)) return "hls";
+
+if(/\.mpd$/i.test(path)) return "dash";
+
+if(/youtube\.com|youtu\.be|youtube-nocookie\.com|vimeo\.com/i.test(value)){
+
+return "embed";
+
+}
+
+return "direct";
+
+}
+
+// =====================================================
+// CONVERTER LINKS PARA EMBED
+// =====================================================
+
+function getEmbedURL(url){
+
+try{
+
+const parsed=new URL(url);
+
+if(
+parsed.hostname.includes("youtube.com")||
+parsed.hostname.includes("youtube-nocookie.com")
+){
+
+if(parsed.pathname==="/watch"){
+
+const id=parsed.searchParams.get("v");
+
+if(id){
+
+return "https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id);
+
+}
+
+}
+
+if(parsed.pathname.startsWith("/embed/")){
+
+return url;
+
+}
+
+}
+
+if(parsed.hostname==="youtu.be"){
+
+const id=parsed.pathname.split("/").filter(Boolean)[0];
+
+if(id){
+
+return "https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id);
+
+}
+
+}
+
+if(parsed.hostname.includes("vimeo.com")){
+
+const match=parsed.pathname.match(/\/(\d+)/);
+
+if(match){
+
+return "https://player.vimeo.com/video/"+match[1];
+
+}
+
+}
+
+}catch(e){}
+
+return url;
+
+}
+
+// =====================================================
+// PROXY OPCIONAL
+// =====================================================
+
+function getOriginalURL(value){
+
+let current=value;
+
+try{
+
+for(let i=0;i<5;i++){
+
+const parsed=new URL(current,location.href);
+
+if(parsed.pathname!=="/proxy") break;
+
+const original=parsed.searchParams.get("url");
+
+if(!original) break;
+
+current=original;
+
+}
+
+}catch(e){}
+
+return current;
+
+}
+
+function makeProxyURL(value){
+
+if(!USE_PROXY) return value;
+
+if(location.protocol==="file:"){
+
+throw new Error("Hospede a página no domínio do Worker para utilizar o proxy.");
+
+}
+
+return location.origin+"/proxy?url="+encodeURIComponent(getOriginalURL(value));
+
+}
+
+// =====================================================
+// DESTRUIR PLAYERS
+// =====================================================
+
+function destroyPlayer(){
+
+if(player){
+
+try{
+
+player.destroy();
+
+}catch(e){}
+
+player=null;
+
+}
+
+if(shakaInstance){
+
+try{
+
+shakaInstance.destroy();
+
+}catch(e){}
+
+shakaInstance=null;
+
+}
+
+playerContainer.innerHTML="";
+
+iframe.removeAttribute("src");
+iframe.style.display="none";
+
+shakaVideo.pause();
+
+shakaVideo.removeAttribute("src");
+
+try{
+
+shakaVideo.load();
+
+}catch(e){}
+
+shakaVideo.style.display="none";
+
+playerContainer.style.display="block";
+
+}
+
+// =====================================================
+// CATEGORIAS
+// =====================================================
+
+function categoryName(id){
+
+const found=CATEGORIES.find(c=>c.id===id);
+
+return found?found.name:id;
+
+}
+
+function renderCategoryButtons(){
+
+buttonsDiv.innerHTML="";
+
+CATEGORIES.forEach(category=>{
+
+const btn=document.createElement("button");
+
+btn.className="category-btn";
+btn.textContent=category.name;
+btn.dataset.category=category.id;
+
+btn.onclick=()=>selectCategory(category.id);
+
+buttonsDiv.appendChild(btn);
+
+});
+
+}
+
+// =====================================================
+// IDENTIFICAR NOME DA SÉRIE
+// =====================================================
+
+function getSeriesName(item){
+
+return item.series||item.group||item.name||"Série sem nome";
+
+}
+
+// =====================================================
+// AGRUPAR SÉRIES
+// =====================================================
+
+function getSeriesGroups(){
+
+const groups=new Map();
+
+categoryEntries.forEach(item=>{
+
+const name=getSeriesName(item);
+
+if(!groups.has(name)){
+
+groups.set(name,[]);
+
+}
+
+groups.get(name).push(item);
+
+});
+
+return Array.from(groups.entries()).map(([name,episodes])=>({
+
+name,
+episodes,
+logo:episodes.find(item=>item.seriesLogo)?.seriesLogo||
+episodes.find(item=>item.logo)?.logo||""
+
+}));
+
+}
+
+// =====================================================
+// SELECIONAR CATEGORIA
+// =====================================================
+
+function selectCategory(category){
+
+currentCategory=category;
+currentIndex=-1;
+currentSeriesName=null;
+
+destroyPlayer();
+
+playerModal.classList.remove("active");
+document.body.style.overflow="";
+
+document.querySelectorAll(".category-btn").forEach(btn=>{
+
+btn.classList.toggle(
+"active",
+btn.dataset.category===category
+);
+
+});
+
+categoryEntries=CHANNELS.filter(item=>item.category===category);
+
+if(category==="series"){
+
+entries=[];
+visibleEntries=[];
+
+renderSeriesCards(getSeriesGroups());
+
+setTitle(categoryName(category));
+
+setMessage(
+getSeriesGroups().length+" séries cadastradas.",
+"success"
+);
+
+return;
+
+}
+
+entries=categoryEntries.slice();
+
+visibleEntries=entries.slice();
+
+renderChannels(visibleEntries);
+
+setTitle(categoryName(category));
+
+setMessage(
+entries.length+" conteúdos cadastrados nesta categoria.",
+"success"
+);
+
+}
+
+// =====================================================
+// MOSTRAR CARDS DAS SÉRIES
+// =====================================================
+
+function renderSeriesCards(groups){
+
+channelsDiv.innerHTML="";
+
+if(!groups.length){
+
+channelsDiv.innerHTML=
+'<p style="color:#8995a6;font-size:12px">Nenhuma série cadastrada nesta categoria.</p>';
+
+return;
+
+}
+
+groups.forEach(series=>{
+
+const card=document.createElement("div");
+
+card.className="channel-card";
+
+const img=document.createElement("img");
+
+if(series.logo){
+
+img.src=series.logo;
+img.alt="";
+
+img.onerror=()=>{
+
+img.style.display="none";
+
+};
+
+}else{
+
+img.style.display="none";
+
+}
+
+const info=document.createElement("div");
+
+const name=document.createElement("div");
+
+name.className="channel-name";
+name.textContent=series.name;
+
+const category=document.createElement("div");
+
+category.className="channel-category";
+
+category.textContent=
+series.episodes.length+" episódios";
+
+info.append(name,category);
+
+card.append(img,info);
+
+card.onclick=()=>openSeries(series.name);
+
+channelsDiv.appendChild(card);
+
+});
+
+}
+
+// =====================================================
+// ABRIR UMA SÉRIE
+// =====================================================
+
+function openSeries(seriesName){
+
+currentSeriesName=seriesName;
+currentIndex=-1;
+
+entries=categoryEntries.filter(item=>
+getSeriesName(item)===seriesName
+);
+
+visibleEntries=entries.slice();
+
+renderChannels(visibleEntries);
+
+setTitle(seriesName);
+
+setMessage(
+entries.length+" episódios disponíveis.",
+"success"
+);
+
+}
+
+// =====================================================
+// VOLTAR PARA A LISTA DE SÉRIES
+// =====================================================
+
+function backToSeries(){
+
+currentSeriesName=null;
+currentIndex=-1;
+
+entries=[];
+visibleEntries=[];
+
+renderSeriesCards(getSeriesGroups());
+
+setTitle(categoryName("series"));
+
+setMessage(
+getSeriesGroups().length+" séries cadastradas.",
+"success"
+);
+
+}
+
+// =====================================================
+// LISTA DE CONTEÚDOS — CARDS NO LADO DIREITO
+// =====================================================
+
+function renderChannels(list){
+
+channelsDiv.innerHTML="";
+
+if(currentCategory==="series"&&currentSeriesName){
+
+const backButton=document.createElement("button");
+
+backButton.className="series-back";
+backButton.textContent="← VOLTAR PARA SÉRIES";
+
+backButton.onclick=backToSeries;
+
+channelsDiv.appendChild(backButton);
+
+}
+
+if(!list.length){
+
+const empty=document.createElement("p");
+
+empty.style.color="#8995a6";
+empty.style.fontSize="12px";
+empty.textContent="Nenhum conteúdo cadastrado nesta categoria.";
+
+channelsDiv.appendChild(empty);
+
+return;
+
+}
+
+list.forEach(ch=>{
+
+const index=entries.indexOf(ch);
+
+const card=document.createElement("div");
+
+card.className="channel-card"+(index===currentIndex?" active":"");
+
+const img=document.createElement("img");
+
+if(ch.logo){
+
+img.src=ch.logo;
+img.alt="";
+
+img.onerror=()=>{
+
+img.style.display="none";
+
+};
+
+}else{
+
+img.style.display="none";
+
+}
+
+const info=document.createElement("div");
+
+const name=document.createElement("div");
+
+name.className="channel-name";
+
+name.textContent=ch.episodeTitle||ch.name||"Sem título";
+
+const category=document.createElement("div");
+
+category.className="channel-category";
+
+if(currentCategory==="series"&&ch.season){
+
+category.textContent="Temporada "+ch.season;
+
+}else{
+
+category.textContent=ch.group||categoryName(ch.category);
+
+}
+
+info.append(name,category);
+
+card.append(img,info);
+
+card.onclick=()=>loadChannel(index);
+
+channelsDiv.appendChild(card);
+
+});
+
+}
+
+// =====================================================
+// PLAYER CLAPPR — HLS E MP4
+// =====================================================
+
+function initializePlayer(url){
+
+if(!window.Clappr){
+
+throw new Error("Clappr Player não foi carregado.");
+
+}
+
+player=new Clappr.Player({
+
+source:url,
+
+parentId:"#clapprPlayer",
+
+width:"100%",
+height:"100%",
+
+autoPlay:false,
+mute:false,
+
+playback:{
+playInline:true
+},
+
+poster:"",
+
+hideMediaControl:false,
+
+mediacontrol:{
+seekbar:"#ffc107",
+buttons:"#ffc107"
+},
+
+events:{
+
+onReady:function(){
+
+setMessage(
+"Clappr carregado. Clique em PLAY.",
+"success"
+);
+
+},
+
+onError:function(error){
+
+console.error("JC TV CLAPPR:",error);
+
+setMessage(
+"Erro no Clappr. Verifique URL, CORS ou servidor.",
+"error"
+);
+
+}
+
+}
+
+});
+
+}
+
+// =====================================================
+// PLAYER SHAKA — DASH
+// =====================================================
+
+async function loadShaka(url){
+
+if(!window.shaka){
+
+throw new Error("Shaka Player não foi carregado.");
+
+}
+
+shakaVideo.style.display="block";
+
+playerContainer.style.display="none";
+
+shakaInstance=new shaka.Player(shakaVideo);
+
+shakaInstance.addEventListener("error",event=>{
+
+console.error("JC TV SHAKA:",event.detail);
+
+setMessage("Erro na reprodução DASH.","error");
+
+});
+
+await shakaInstance.load(url);
+
+setMessage(
+"Shaka Player carregado. Clique em PLAY.",
+"success"
+);
+
+}
+
+// =====================================================
+// PLAYER EMBED — IFRAME
+// =====================================================
+
+function loadEmbed(url){
+
+const embedURL=getEmbedURL(url);
+
+if(!/^https?:\/\//i.test(embedURL)){
+
+throw new Error("URL de embed inválida.");
+
+}
+
+playerContainer.style.display="none";
+
+shakaVideo.style.display="none";
+
+iframe.style.display="block";
+
+iframe.src=embedURL;
+
+setMessage(
+"Embed carregado no modal. A reprodução depende do provedor.",
+"success"
+);
+
+}
+
+// =====================================================
+// CARREGAMENTO UNIVERSAL
+// =====================================================
+
+async function loadChannel(index){
+
+const ch=entries[index];
+
+if(!ch) return;
+
+currentIndex=index;
+
+currentURL=ch.url;
+
+currentType=detectType(ch.url,ch.type);
+
+setTitle(ch.episodeTitle||ch.name||"Conteúdo");
+
+renderChannels(visibleEntries);
+
+setMessage("Preparando player...","");
+
+destroyPlayer();
+
+openPlayerModal(ch.episodeTitle||ch.name);
+
+try{
+
+if(!ch.url){
+
+throw new Error("URL não informada.");
+
+}
+
+const url=makeProxyURL(ch.url);
+
+if(currentType==="embed"){
+
+loadEmbed(url);
+
+return;
+
+}
+
+if(currentType==="dash"){
+
+await loadShaka(url);
+
+return;
+
+}
+
+if(
+currentType==="hls"||
+currentType==="direct"||
+currentType==="mp4"
+){
+
+initializePlayer(url);
+
+return;
+
+}
+
+throw new Error("Formato não reconhecido: "+currentType);
+
+}catch(e){
+
+console.error("JC TV PLAYER:",e);
+
+setMessage(
+"Falha na reprodução: "+(e.message||"Verifique a URL."),
+"error"
+);
+
+}
+
+}
+
+// =====================================================
+// PESQUISA
+// =====================================================
+
+document.getElementById("search").oninput=event=>{
+
+const term=event.target.value.toLocaleLowerCase("pt-BR");
+
+if(currentCategory==="series"&&!currentSeriesName){
+
+const filteredGroups=getSeriesGroups().filter(series=>
+
+series.name.toLocaleLowerCase("pt-BR").includes(term)
+
+);
+
+renderSeriesCards(filteredGroups);
+
+return;
+
+}
+
+visibleEntries=entries.filter(ch=>
+
+(ch.name||"").toLocaleLowerCase("pt-BR").includes(term)||
+
+(ch.episodeTitle||"").toLocaleLowerCase("pt-BR").includes(term)||
+
+(ch.group||"").toLocaleLowerCase("pt-BR").includes(term)||
+
+(ch.series||"").toLocaleLowerCase("pt-BR").includes(term)
+
+);
+
+renderChannels(visibleEntries);
+
+};
+
+// =====================================================
+// INICIALIZAÇÃO
+// =====================================================
+
+renderCategoryButtons();
+
+if(CATEGORIES.length){
+
+selectCategory(currentCategory);
+
+}
+
+})();
+
+</script>
+
+(function(){
+
+    async function bloquearHorizontal(){
+
+        try {
+            if (screen.orientation &&
+                screen.orientation.lock) {
+
+                await screen.orientation.lock("landscape");
+            }
+        } catch(e) {
+            // O navegador pode bloquear a solicitação.
+        }
+    }
+
+    window.addEventListener("load", bloquearHorizontal);
+
+    document.addEventListener("visibilitychange", function(){
+
+        if (!document.hidden) {
+            bloquearHorizontal();
+        }
+
+    });
+
+})();
+</script>
+
+<!-- Tela de Alerta -->
+  <div id="bloqueio" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:99999;color:white;font-family:sans-serif;text-align:center;padding-top:100px;">
+    <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="Logo" style="width:150px;height:auto;margin-bottom:30px;">
+    <h1 style="font-size:40px;">ACESSO NÃO AUTORIZADO</h1>
+  </div>
+
+  <script>
+    function mostrarAlerta() {
+      const tela = document.getElementById("bloqueio");
+      tela.style.display = "block";
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    }
+
+    document.querySelectorAll('a').forEach(link => {
+      link.setAttribute('target', '_self');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      const tecla = e.key.toLowerCase();
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && tecla === 'u') ||
+        (e.ctrlKey && tecla === 's') ||
+        (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(tecla))
+      ) {
+        e.preventDefault();
+        mostrarAlerta();
+      }
+    });
+
+    window.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  </script>
+</body>
+</html>
