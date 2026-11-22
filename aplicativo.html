@@ -247,10 +247,11 @@ width:100%;
 }
 
 .channels-grid .channel-name{
-font-size:12px;
-font-weight:800;
-text-align:center;
-overflow-wrap:anywhere;
+    font-size:10px;
+    font-weight:700;
+    text-align:center;
+    overflow-wrap:anywhere;
+    line-height:1.2;
 }
 
 .channels-grid .channel-category{
@@ -313,15 +314,15 @@ flex-direction:column;
 }
 
 .modal-player-header{
-height:55px;
-min-height:55px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:12px;
-padding:0 16px;
-background:#101722;
-border-bottom:1px solid #283647;
+    height:55px;
+    min-height:55px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:0 16px;
+    background:transparent;
+    border-bottom:1px solid transparent;
 }
 
 #modalTitle{
@@ -485,7 +486,7 @@ border-radius:9px
 }
 
 .modal-player-header{
-height:43px;
+height:20px;
 padding:0 10px
 }
 
@@ -733,6 +734,299 @@ html, body {
     }
 }
 
+
+/* DESTAQUES — TELA INICIAL */
+#right.home-view .topbar,
+#right.home-view #channelsList,
+#right.home-view #playerMessage{
+    display:none!important;
+}
+
+#right.home-view #destaquesSection{
+    display:block;
+    width:100%;
+    margin:0;
+}
+
+#destaquesSection h4{
+    color:#fff;
+    font-size:19px;
+    font-weight:800;
+    margin:0 0 14px;
+}
+
+#destaquesLista{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    width:100%;
+}
+
+.destaque-grupo{
+    width:100%;
+    min-width:0;
+}
+
+.destaque-grupo-titulo{
+    color:#ffc107;
+    font-size:13px;
+    font-weight:800;
+    margin:0 0 8px;
+}
+
+.destaques-faixa{
+    display:flex;
+    align-items:stretch;
+    gap:8px;
+    width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-behavior:auto;
+    padding:4px 3px 9px;
+    scrollbar-width:thin;
+    scrollbar-color:#FFC107 #222;
+}
+
+.destaques-faixa::-webkit-scrollbar{
+    height:5px;
+}
+
+.destaques-faixa::-webkit-scrollbar-track{
+    background:#222;
+    border-radius:10px;
+}
+
+.destaques-faixa::-webkit-scrollbar-thumb{
+    background:#FFC107;
+    border-radius:10px;
+}
+
+
+/* =====================================
+   PADRONIZAR TODOS OS CARDS DAS CATEGORIAS
+===================================== */
+
+.channels-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+    align-items:stretch;
+    grid-auto-rows:165px;
+    gap:12px;
+}
+
+.channels-grid .channel-card{
+    width:100%;
+    height:165px;
+    min-height:165px;
+    max-height:165px;
+    box-sizing:border-box;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+
+    padding:10px;
+    gap:8px;
+    overflow:hidden;
+}
+
+.channels-grid .channel-card img{
+    width:100%;
+    height:100px;
+    min-height:100px;
+    max-height:100px;
+    flex:0 0 100px;
+    object-fit:contain;
+}
+
+.channels-grid .channel-card > div{
+    width:100%;
+    min-width:0;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.channels-grid .channel-name{
+    width:100%;
+    font-size:10px;
+    line-height:1.2;
+    text-align:center;
+    overflow:hidden;
+    overflow-wrap:anywhere;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+}
+
+.channels-grid .channel-category{
+    width:100%;
+    font-size:9px;
+    text-align:center;
+}
+
+/* CELULAR */
+@media(max-width:600px){
+    .channels-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-auto-rows:140px;
+    }
+
+    .channels-grid .channel-card{
+        height:140px;
+        min-height:140px;
+        max-height:140px;
+        padding:7px;
+    }
+
+    .channels-grid .channel-card img{
+        height:80px;
+        min-height:80px;
+        max-height:80px;
+        flex-basis:80px;
+    }
+}
+
+
+/* CARDS MENORES */
+.destaque-item{
+    box-sizing:border-box;
+    flex:0 0 85px;
+    width:85px;
+    height:125px;
+    min-height:125px;
+    max-height:125px;
+    padding:5px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    gap:3px;
+    background:#101722;
+    border-radius:9px;
+    overflow:hidden;
+    cursor:pointer;
+    border:1px solid #283647;
+    transition:.2s;
+    color:#fff;
+    text-align:center;
+}
+
+.destaque-item:hover{
+    background:#192535;
+    border-color:#FFC107;
+    transform:translateY(-2px);
+}
+
+.destaque-item img{
+    display:block;
+    flex:0 0 75px;
+    width:100%;
+    height:75px;
+    min-height:75px;
+    max-height:75px;
+    object-fit:contain;
+    background:#080b10;
+    border-radius:6px;
+}
+
+.destaque-item p{
+    flex:0 0 20px;
+    width:100%;
+    height:20px;
+    font-size:8px;
+    font-weight:700;
+    color:#fff;
+    text-align:center;
+    padding:0;
+    margin:0;
+    line-height:1.2;
+    overflow:hidden;
+    overflow-wrap:anywhere;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+}
+
+.destaque-tag{
+    flex:0 0 9px;
+    height:9px;
+    display:block;
+    width:100%;
+    color:#FFC107;
+    font-size:7px;
+    text-align:center;
+    padding:0;
+    font-weight:bold;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+/* TABLETS */
+@media (max-width:850px){
+    .destaque-item{
+        flex-basis:80px;
+        width:80px;
+        height:120px;
+        min-height:120px;
+        max-height:120px;
+    }
+
+    .destaque-item img{
+        flex-basis:70px;
+        height:70px;
+        min-height:70px;
+        max-height:70px;
+    }
+}
+
+/* CELULARES */
+@media (max-width:600px) and (orientation:portrait){
+    #destaquesSection h4{
+        font-size:16px;
+        margin-bottom:10px;
+    }
+
+    .destaque-grupo-titulo{
+        font-size:11px;
+    }
+
+    .destaques-faixa{
+        gap:7px;
+    }
+
+    .destaque-item{
+        flex-basis:72px;
+        width:72px;
+        height:108px;
+        min-height:108px;
+        max-height:108px;
+        padding:4px;
+        gap:3px;
+    }
+
+    .destaque-item img{
+        flex-basis:64px;
+        height:64px;
+        min-height:64px;
+        max-height:64px;
+    }
+
+    .destaque-item p{
+        flex-basis:18px;
+        height:18px;
+        font-size:7px;
+    }
+
+    .destaque-tag{
+        font-size:6px;
+    }
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@clappr/player@0.14.7/dist/clappr.min.js"></script>
@@ -747,7 +1041,7 @@ html, body {
 
 <aside id="left">
 
-<div class="brand">
+<div class="brand" onclick="location.reload()" style="cursor:pointer">
   <div class="brand-logo">
     <img src="https://www.mediafire.com/convkey/7a81/hl79s61t5v9c0555g.jpg" alt="JC TV STREAMING">
   </div>
@@ -770,7 +1064,12 @@ JC TV STREAMING © 2026
 
 </aside>
 
-<main id="right">
+<main id="right" class="home-view">
+
+<div id="destaquesSection">
+<h4>⭐ Destaques</h4>
+<div id="destaquesLista"></div>
+</div>
 
 <div class="topbar">
 <h2 id="nowTitle">Selecione uma categoria</h2>
@@ -861,105 +1160,116 @@ const CHANNELS = [
 {name:"RedeTV!", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/72bc/q2h6sp6no62q4j15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/redetv", type:"embed"},
 {name:"Rit TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/dfe9/ivr3w7z377mhpv15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/rittv", type:"embed"},
 {name:"Band News", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/2ef7/f9duyhtq2fvdja95g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/bandnews", type:"embed"},
-{name:"CNN Brasil", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/9cf0/ufwwfpli3cxsayv5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/fm/s6p7zcf4f9emjdqn", type:"embed"},
+{name:"CNN Brasil", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/9cf0/ufwwfpli3cxsayv5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/cnnbrasil", type:"embed"},
+{name:"cnnbrasilmoney", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3c55/79782iw447zo65s5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/cnnbrasilmoney", type:"embed"},
+{name:"Jovem Pan News", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/c32e/z6n71wps9nuofum5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/jpnews", type:"embed"},
+{name:"globonews", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/d707/vany601v3i6oltz5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/globonews", type:"embed"},
+{name:"Record News", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/4ea5/qlxfi1vsvu7m5m55g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/recordnews", type:"embed"},
+{name:"Amazon Prime Video", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/4950/zto8jqq1tkiofqy5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/primevideo", type:"embed"},
+{name:"Amazon Prime Video 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/4950/zto8jqq1tkiofqy5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/primevideo2", type:"embed"},
+{name:"Band Sports", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1e18/eblhu8culfgis5f5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/bandsports", type:"embed"},
+{name:"Canal Off", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/6680/2ehg7adeyz6ufnm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/off", type:"embed"},
+{name:"Cazé TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/709d/sfc607eybr2wkxd5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/caze1", type:"embed"},
+{name:"Cazé TV 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/709d/sfc607eybr2wkxd5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/caze2", type:"embed"},
+{name:"Combate", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/8692/4u9xbfujsnwx8a95g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/combate", type:"embed"},
+{name:"Disney+", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bd8f/nbw2ar8p0tgld645g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/disneyplus1", type:"embed"},
+{name:"ESPN", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3512/ovq21ck4lile4sx5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn", type:"embed"},
+{name:"ESPN 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/96c0/1n8z2pjnpe6knip5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn2", type:"embed"},
+{name:"ESPN 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/a705/x0oad6vreapio1v5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn3", type:"embed"},
+{name:"ESPN 4", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/e418/1rirj01jj917x865g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn4", type:"embed"},
+{name:"ESPN 5", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/d37d/1ojbd4ekwad59j05g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn5", type:"embed"},
+{name:"ESPN 6", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/41cd/wzlgga0jyir8rud5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn6", type:"embed"},
+{name:"GE TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/654d/tky3twatel9yzv15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/getv", type:"embed"},
+{name:"Max", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/53d8/57klkvikyp073fm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/max1", type:"embed"},
+{name:"Max 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/53d8/57klkvikyp073fm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/max2", type:"embed"},
+{name:"Max 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/53d8/57klkvikyp073fm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/max3", type:"embed"},
+{name:"Paramount +", category:"tv", group:"TV ao vivo", logo:"https://static.wikia.nocookie.net/logopedia/images/3/36/Paramount%2B_2021.svg/revision/latest?cb=20210125103531", url:"https://vt.jctvstreaming-vip.workers.dev/w7/paramountplus", type:"embed"},
+
 {name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
+
+
+
+// FILMES
+
+{name:"Apocalipse Z: Novo Mundo (2026)",dataLancamento:"30/10/2026",category:"filmes",group:"Filmes",logo:"https://media.themoviedb.org/t/p/w500/tzk90shtAI6WaoDIjLLVten7oov.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/y1u1yw7m5rjg",type:"embed"},
+{name:"Outra Mamãe (2026)",dataLancamento:"08/10/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/hiuBB4ZqGbL7uihdVPUahFtg7Zr.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/p2njlqzj4mtv",type:"embed"},
+{name:"Super Mario Galaxy: O Filme (2026)",dataLancamento:"01/04/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/b3WeTp42eJSRuE4UZfyPCOJW4c.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/t3mdhb0cba14",type:"embed"},
+{name:"Verity (2026)",dataLancamento:"01/10/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/fy7q7xcyUjHXiKRuYblhcUTgBn0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/7fcabypatb8h",type:"embed"},
+{name:"Super Mario Bros. O Filme (2023)",dataLancamento:"05/04/2023",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/ij8sapIEbLf2g8npOu6XgsQS2w0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/tuaabhjnlzb3",type:"embed"},
+{name:"Um Duende em Nova York (2003)",dataLancamento:"07/11/2003",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/zZVJr3jAueYRSiaKx98gzzRpFGp.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/udgmtga0a94g",type:"embed"},
+{name:"Todo Mundo em Pânico (2026)",dataLancamento:"04/06/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/y9yJd2qIIwhZcllHeKHsz5eRvNr.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/skgfflx5siow",type:"embed"},
+{name:"O Peixe Pout-Pout (2026)",dataLancamento:"12/09/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/k0QYAzCteuuw4whzHZhWyr4Vljh.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/05lp4ah856l0",type:"embed"},
+{name:"Coração Selvagem (2026)",dataLancamento:"24/09/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/n4PJa4xVo4SjIsBvTA0yGMKjTBh.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/ui02ib17qywq",type:"embed"},
+{name:"Resident Evil (2026)",dataLancamento:"17/09/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/bvBTdNaWVPrHKjyPFnsigZJsKdD.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/yya592i73rau",type:"embed"},
+{name:"Tequila Repasado (2023)",dataLancamento:"20/12/2023",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/7onQmk5ZzUjx6SEAiqILWQFTaYC.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/70wnuh7n80ey",type:"embed"},
+{name:"Pasárgada (2024)",dataLancamento:"26/09/2024",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/1TK4KTXt3mQAgq09GxmohNz9PTM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/qskg3pqjwv0f",type:"embed"},
+{name:"O Vidente (2007)",dataLancamento:"19/07/2007",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/fFehtsCSORmECTCgs6mntAYFvL4.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/suli4anuqq4j",type:"embed"},
+{name:"A Lenda do Tesouro Perdido: Livro dos Segredos (2007)",dataLancamento:"25/01/2008",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/9B4vP6EbfDqh9semKDqeDgMO5GJ.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/t003e295jawu",type:"embed"},
+{name:"A Lenda do Tesouro Perdido (2004)",dataLancamento:"31/12/2004",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/4UDjy5GkxPCdZHhc0F7Gq0KIaEz.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/1vj7pv4d89il",type:"embed"},
+{name:"A Lenda do Cavaleiro Sem Cabeça (1999)",dataLancamento:"28/01/2000",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/zxOuNnW2qrOOFtiPVJtx5aRAJoX.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/789ybbw603av",type:"embed"},
+{name:"A Filha do Rei do Pântano (2023)",dataLancamento:"28/09/2023",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/f2V05fRxGxSGI6xjqA0pQeXk35.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/r5i7d3h8hwve",type:"embed"},
+{name:"O Genro (2026)",dataLancamento:"18/04/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/pS1hk20bUfGZ4tFf9r0Ws0gGPoZ.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/c4kqn7lwiobk",type:"embed"},
+{name:"O Genro Da Minha Vida (2018)",dataLancamento:"19/12/2018",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/5fvcUtJwnGsiHXneDOOlaUPFc4E.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/nocl4kbc2gw0",type:"embed"},
+{name:"Como Mágica (2026)",dataLancamento:"01/05/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/2TZiL4ZYOwWeIjGfz3glpMuPqpN.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/hk2q8whsnd95",type:"embed"},
+{name:"Pantera Negra: O Reino Selvagem (2020)",dataLancamento:"01/04/2022",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/qPC2pIL6o43PWott4VX6pYhPVgh.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/lffgfzfaoxa7",type:"embed"},
+{name:"A Maravilhosa Árvore Encantada (2026)",dataLancamento:"10/09/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/a21jFmzFUVCw2anR8YIhwACOuJM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/p2ecltuih21t",type:"embed"},
+{name:"Lilo & Stitch (2025)",dataLancamento:"22/05/2025",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/bLQN6DUNYN4NVzSY3Q53JwBRlgV.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/wmpxt5dvdjmi",type:"embed"},
+{name:"Lilo & Stitch 2: Stitch Deu Defeito (2005)",dataLancamento:"21/09/2005",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/7XH0o8IJp0YKubgEee2vuPrJ1wk.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/wppf3agas7dr",type:"embed"},
+{name:"Lilo & Stitch (2002)",dataLancamento:"28/06/2002",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/ottRXMCQ9jPB318syTcfIdtJWIE.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/5mjpa8n7u31y",type:"embed"},
+{name:"Os Estranhos: Capítulo Final (2026)",dataLancamento:"09/04/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/jYaPXOzUFVlNIn5Cgn1dyVRYpRN.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/0fb54jljblnh",type:"embed"},
+{name:"Os Estranhos: Capítulo 2 (2025)",dataLancamento:"02/10/2025",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/bMrUruq2lT3b7xwC5y3vEidGYfZ.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/j91ljmzevwcv",type:"embed"},
+{name:"Os Estranhos: Capítulo 1 (2024)",dataLancamento:"30/05/2024",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/vjyZvt5qMJ5xQAzQ8JvT0arlpkK.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/odyd97eljofn",type:"embed"},
+{name:"Os Estranhos: Caçada Noturna (2018)",dataLancamento:"07/06/2018",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/w81oy2uftuBwGb1Ncx0V4OOO27G.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/mvhkc09je8e8",type:"embed"},
+{name:"Os Estranhos (2008)",dataLancamento:"21/11/2008",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/l2Z7iL5HIBJ0qeNldI59YmQRSEk.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/8vn9mqncvfpl",type:"embed"},
+{name:"Contatos Imediatos do Terceiro Grau (1977)",dataLancamento:"24/12/1977",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/9fab10esBOe3OwarBN531iHwsjF.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/ask8v3turth2",type:"embed"},
+{name:"Drácula: A Última Viagem do Deméter (2023)",dataLancamento:"24/08/2023",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/bojgIXdqn5VbvO8EtQVsLXrepSb.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/xf8j9wnk0dvd",type:"embed"},
+{name:"Missão Refúgio (2026)",dataLancamento:"12/03/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/hSvhZRkbYD9crC4nqy8uCk9EdFH.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/dwwp8ovnz0af",type:"embed"},
+{name:"POV: Presença Oculta (2026)",dataLancamento:"12/03/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/fC4GSEiDu2ONAOjT3VhKdAOR2UI.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/q6mayv65m30e",type:"embed"},
+{name:"Terror em Silent Hill: Regresso Para o Inferno (2026)",dataLancamento:"22/01/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/5ZDqTM0ZP3ypmFivTeAnHslV6mY.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/h2eg4i6fgj1o",type:"embed"},
+{name:"Silent Hill: Revelação (2012)",dataLancamento:"10/10/2012",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/7936Tglq1tM3eMXpssyrn0CxjeD.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/vnezpdwiqqqf",type:"embed"},
+{name:"Terror em Silent Hill (2006)",dataLancamento:"21/04/2006",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/7CLiGJbAlJNlbMbgeVbLhaEx8XD.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/h23nkmrba0vt",type:"embed"},
+{name:"Máquina de Guerra (2026)",dataLancamento:"06/03/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/48h40o6Q97hZaqH0g7bOiXOrImX.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/ml4epnnqyvid",type:"embed"},
+{name:"Elio (2025)",dataLancamento:"19/06/2025",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/2H8k54MWPQtsxWkQhR2HVfT34ty.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/jg66efef17fh",type:"embed"},
+{name:"Vingadores: Ultimato Encore (2026)",dataLancamento:"24/09/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/flvU62GGM49PeSBxdhdMaPGM9wh.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/1l5txqnfk0ky",type:"embed"},
+{name:"Capitão América: Admirável Mundo Novo (2025)",dataLancamento:"13/02/2025",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/5nbSgP8f5LMCI0PwVRRaHJaUmR3.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/tszkl8m1xwdn",type:"embed"},
+{name:"Capitão América: Guerra Civil (2016)",dataLancamento:"05/05/2016",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/dsvUR5aEVSkB1Sro7nT6Khqik71.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/vvukfwwcvfvk",type:"embed"},
+{name:"Capitão América: O Soldado Invernal (2014)",dataLancamento:"10/04/2014",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/9sTDXtIIfHza1rAbmHU2djyzEXA.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/mvpb1ib8g89f",type:"embed"},
+{name:"Capitão América: O Primeiro Vingador (2011)",dataLancamento:"29/11/2011",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/xYijVAPunk6neVW2KHKE4Lp45ZU.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/dgpqy94m9ypm",type:"embed"},
+{name:"Capitão América (1990)",dataLancamento:"05/07/1991",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/j9Jq4feBhAJTjEj4CvNuMgRwUjW.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/4yglqb9bqtch",type:"embed"},
+{name:"Homem de Ferro e Capitão América: Super-Heróis Unidos (2014)",dataLancamento:"29/07/2014",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/6E5OJfpoUM7k8C1bORXI1lXwhKD.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/ddrn3w4p4hw4",type:"embed"},
+{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+
+
+
+
+// SÉRIES
+
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"",episodeTitle:"A Ilha do Tesouro S01EP01",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/n0lq9rz5xilz",type:"embed"},
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"",episodeTitle:"A Ilha do Tesouro S01EP02",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/5mx74bhuomby",type:"embed"},
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"",episodeTitle:"A Ilha do Tesouro S01EP03",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/wpr8nu8qyruh",type:"embed"},
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"",episodeTitle:"A Ilha do Tesouro S01EP04",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/5yb48thefjrr",type:"embed"},
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"",episodeTitle:"A Ilha do Tesouro S01EP05",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/m7km8rjyiub6",type:"embed"},
+
+{name:"",episodeTitle:"",series:"",season:1,category:"series",group:"",logo:"",url:"",type:"embed"},
+{name:"",episodeTitle:"",series:"",season:1,category:"series",group:"",logo:"",url:"",type:"embed"},
 
 
 
 
 
-{
-name:"Exemplo - Filme",
-category:"filmes",
-group:"Filmes",
-logo:"",
-url:"https://SEU-LINK-AQUI/video.mp4",
-type:"direct"
-},
 
-{
-name:"Exemplo - Embed",
-category:"filmes",
-group:"Filmes",
-logo:"",
-url:"https://SEU-SERVIDOR.com/embed/12345",
-type:"embed"
-},
 
-{
-name:"A Ilha do Tesouro (2026)",
-episodeTitle:"A Ilha do Tesouro S01EP01",
-series:"A Ilha do Tesouro (2026)",
-season:1,
-category:"series",
-group:"Temporada 1",
-logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",
-url:"https://vt.jctvstreaming-vip.workers.dev/vt/n0lq9rz5xilz",
-type:"embed"
-},
+{name:"",episodeTitle:"",series:"",season:1,category:"series",group:"",logo:"",url:"",type:"embed"}
 
-{
-name:"A Ilha do Tesouro (2026)",
-episodeTitle:"A Ilha do Tesouro S01EP02",
-series:"A Ilha do Tesouro (2026)",
-season:1,
-category:"series",
-group:"Temporada 1",
-logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",
-url:"https://vt.jctvstreaming-vip.workers.dev/vt/5mx74bhuomby",
-type:"embed"
-},
-
-{
-name:"A Ilha do Tesouro (2026)",
-episodeTitle:"A Ilha do Tesouro S01EP03",
-series:"A Ilha do Tesouro (2026)",
-season:1,
-category:"series",
-group:"Temporada 1",
-logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",
-url:"https://vt.jctvstreaming-vip.workers.dev/vt/wpr8nu8qyruh",
-type:"embed"
-},
-
-{
-name:"A Ilha do Tesouro (2026)",
-episodeTitle:"A Ilha do Tesouro S01EP04",
-series:"A Ilha do Tesouro (2026)",
-season:1,
-category:"series",
-group:"Temporada 1",
-logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",
-url:"https://vt.jctvstreaming-vip.workers.dev/vt/5yb48thefjrr",
-type:"embed"
-},
-
-{
-name:"A Ilha do Tesouro (2026)",
-episodeTitle:"A Ilha do Tesouro S01EP05",
-series:"A Ilha do Tesouro (2026)",
-season:1,
-category:"series",
-group:"Temporada 1",
-logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",
-url:"https://vt.jctvstreaming-vip.workers.dev/vt/m7km8rjyiub6",
-type:"embed"
-}
 
 ];
 
@@ -987,7 +1297,7 @@ let visibleEntries=[];
 let categoryEntries=[];
 
 let currentIndex=-1;
-let currentCategory=CATEGORIES[0]?.id||"";
+let currentCategory="";
 
 let currentSeriesName=null;
 
@@ -1309,6 +1619,36 @@ return item.series||item.group||item.name||"Série sem nome";
 
 }
 
+// Converte a data de lançamento DD/MM/AAAA em valor numérico.
+function getItemDate(item){
+
+const value=(item.dataLancamento||"").trim();
+const match=value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+
+if(!match) return 0;
+
+const day=Number(match[1]);
+const month=Number(match[2]);
+const year=Number(match[3]);
+const date=new Date(year,month-1,day);
+
+// Valida a data para evitar ordenações incorretas.
+if(date.getFullYear()!==year||date.getMonth()!==month-1||date.getDate()!==day){
+    return 0;
+}
+
+return date.getTime();
+
+}
+
+// Ordena pela data de lançamento mais recente para a mais antiga.
+// Itens sem data válida ficam depois dos que possuem data.
+function sortByNewest(list){
+
+return list.slice().sort((a,b)=>getItemDate(b)-getItemDate(a));
+
+}
+
 // =====================================================
 // AGRUPAR SÉRIES
 // =====================================================
@@ -1338,7 +1678,11 @@ episodes,
 logo:episodes.find(item=>item.seriesLogo)?.seriesLogo||
 episodes.find(item=>item.logo)?.logo||""
 
-}));
+ })).sort((a,b)=>{
+const dateA=Math.max(0,...a.episodes.map(getItemDate));
+const dateB=Math.max(0,...b.episodes.map(getItemDate));
+return dateB-dateA;
+});
 
 }
 
@@ -1349,6 +1693,8 @@ episodes.find(item=>item.logo)?.logo||""
 function selectCategory(category){
 
 currentCategory=category;
+atualizarVisibilidadeDestaques();
+renderHighlights(category);
 currentIndex=-1;
 currentSeriesName=null;
 
@@ -1367,6 +1713,10 @@ btn.dataset.category===category
 });
 
 categoryEntries=CHANNELS.filter(item=>item.category===category);
+
+if(category==="filmes"){
+    categoryEntries=sortByNewest(categoryEntries);
+}
 
 if(category==="series"){
 
@@ -1594,11 +1944,15 @@ category.className="channel-category";
 
 if(currentCategory==="series"&&ch.season){
 
-category.textContent="Temporada "+ch.season;
+    category.textContent="Temporada "+ch.season;
+
+}else if(currentCategory==="tv"||currentCategory==="filmes"){
+
+    category.textContent="";
 
 }else{
 
-category.textContent=ch.group||categoryName(ch.category);
+    category.textContent=ch.group||categoryName(ch.category);
 
 }
 
@@ -1864,13 +2218,217 @@ renderChannels(visibleEntries);
 // INICIALIZAÇÃO
 // =====================================================
 
-renderCategoryButtons();
+// =====================================================
+// DESTAQUES — GERAIS E POR CATEGORIA
+// =====================================================
 
-if(CATEGORIES.length){
 
-selectCategory(currentCategory);
+function renderHighlights(){
+
+    const highlightsList=document.getElementById("destaquesLista");
+    if(!highlightsList) return;
+
+    highlightsList.innerHTML="";
+
+    CATEGORIES.forEach(category=>{
+
+        let items=CHANNELS.filter(item=>
+            item.category===category.id && item.url
+        );
+
+        // Não mostrar categorias sem conteúdo cadastrado.
+        if(!items.length) return;
+
+        let highlights=[];
+
+        // SÉRIES: mostrar cada série apenas uma vez.
+        if(category.id==="series"){
+
+            const seriesMap=new Map();
+
+            items.forEach(item=>{
+
+                const name=getSeriesName(item);
+
+                if(!seriesMap.has(name)){
+
+                    seriesMap.set(name,{
+                        name,
+                        series:name,
+                        dataLancamento:item.dataLancamento||"",
+                        logo:item.seriesLogo||item.logo||"",
+                        category:"series",
+                        highlightType:"SÉRIE",
+                        sourceItem:item
+                    });
+
+                }
+
+            });
+
+            highlights=Array.from(seriesMap.values());
+
+        }else{
+
+            highlights=items.map(item=>({
+                ...item,
+                sourceItem:item,
+                highlightType:category.name
+            }));
+
+        }
+
+        // FILMES E SÉRIES: ordenar pelos lançamentos mais recentes.
+        if(category.id==="filmes" || category.id==="series"){
+            highlights=sortByNewest(highlights);
+        }
+
+        // Até 12 destaques por categoria.
+        highlights=highlights.slice(0,12);
+
+        if(!highlights.length) return;
+
+        // Criar grupo da categoria.
+        const grupo=document.createElement("div");
+        grupo.className="destaque-grupo";
+
+        const titulo=document.createElement("h5");
+        titulo.className="destaque-grupo-titulo";
+        titulo.textContent="⭐ "+category.name;
+
+        const faixa=document.createElement("div");
+        faixa.className="destaques-faixa";
+
+        highlights.forEach(item=>{
+
+            const card=document.createElement("div");
+            card.className="destaque-item";
+
+            const img=document.createElement("img");
+            img.src=item.logo||"";
+            img.alt=item.name||"";
+
+            img.onerror=()=>{
+                img.style.display="none";
+            };
+
+            const title=document.createElement("p");
+            title.textContent=item.name||"Sem título";
+
+            const tag=document.createElement("span");
+            tag.className="destaque-tag";
+            tag.textContent=item.highlightType;
+
+            card.append(img,title,tag);
+
+            card.onclick=()=>{
+
+                if(item.category==="series"){
+
+                    selectCategory("series");
+                    openSeries(item.name);
+                    return;
+
+                }
+
+                selectCategory(item.category);
+
+                const index=entries.indexOf(item.sourceItem);
+
+                if(index!==-1){
+                    loadChannel(index);
+                }
+
+            };
+
+            faixa.appendChild(card);
+
+        });
+
+        grupo.append(titulo,faixa);
+        highlightsList.appendChild(grupo);
+
+    });
 
 }
+
+
+
+// =====================================================
+// Mostra os destaques na tela inicial de TV ao vivo e oculta nas demais categorias.
+// =====================================================
+
+function atualizarVisibilidadeDestaques(){
+    const destaques=document.getElementById("destaquesSection");
+    const area=document.getElementById("right");
+    if(!destaques||!area) return;
+
+    const telaInicial=currentCategory==="";
+    destaques.style.display=telaInicial?"block":"none";
+    area.classList.toggle("home-view",telaInicial);
+}
+
+// Rolagem automática contínua; pausa enquanto o usuário interage com a faixa.
+
+// Rolagem automática independente para cada categoria.
+function iniciarRolagemDestaques(){
+
+    const faixas=document.querySelectorAll(".destaques-faixa");
+
+    faixas.forEach(faixa=>{
+
+        let direcao=1;
+        let pausado=false;
+
+        faixa.addEventListener("mouseenter",()=>{
+            pausado=true;
+        });
+
+        faixa.addEventListener("mouseleave",()=>{
+            pausado=false;
+        });
+
+        faixa.addEventListener("touchstart",()=>{
+            pausado=true;
+        },{passive:true});
+
+        faixa.addEventListener("touchend",()=>{
+            pausado=false;
+        },{passive:true});
+
+        setInterval(()=>{
+
+            if(pausado) return;
+
+            if(faixa.scrollWidth<=faixa.clientWidth) return;
+
+            faixa.scrollLeft+=direcao;
+
+            if(faixa.scrollLeft+faixa.clientWidth>=faixa.scrollWidth-1){
+                direcao=-1;
+            }
+
+            if(faixa.scrollLeft<=0){
+                direcao=1;
+            }
+
+        },80);
+
+    });
+
+}
+
+
+renderCategoryButtons();
+
+renderHighlights();
+atualizarVisibilidadeDestaques();
+iniciarRolagemDestaques();
+
+// A página inicia sem categoria selecionada; mostra somente os Destaques.
+channelsDiv.innerHTML="";
+setTitle("Destaques");
+setMessage("Selecione uma categoria ou escolha um destaque.");
 
 })();
 
