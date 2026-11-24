@@ -262,25 +262,43 @@ text-align:center;
 /* VOLTAR PARA A LISTA DE SÉRIES */
 
 .series-back{
-grid-column:1/-1;
-justify-self:start;
-background:#172230;
-color:var(--gold);
-border:1px solid #344254;
-border-radius:8px;
-padding:10px 16px;
-font-size:11px;
-font-weight:800;
-cursor:pointer;
-transition:.2s;
+    grid-column:1/-1;
+    justify-self:start;
+    align-self:start;
+
+    width:auto;
+    height:auto;
+    min-height:0;
+    max-height:none;
+
+    background:#172230;
+    color:var(--gold);
+    border:1px solid #344254;
+    border-radius:8px;
+
+    padding:7px 12px;
+    font-size:10px;
+    font-weight:700;
+
+    cursor:pointer;
+    transition:.2s;
+    line-height:1.2;
 }
 
 .series-back:hover{
-background:var(--gold);
-color:#111;
-border-color:var(--gold);
+    background:var(--gold);
+    color:#111;
+    border-color:var(--gold);
+}
+.channels-grid:has(.series-back){
+    grid-auto-rows:auto;
 }
 
+.channels-grid:has(.series-back) .channel-card{
+    height:165px;
+    min-height:165px;
+    max-height:165px;
+}
 /* MODAL UNIVERSAL */
 
 #playerModal{
@@ -1138,55 +1156,121 @@ const CATEGORIES = [
 
 const CHANNELS = [
 
-{name:"A Fazenda 18 CAM01", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/afazenda", type:"embed"},
-{name:"A Fazenda 18 CAM 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/afazenda2", type:"embed"},
-{name:"A Fazenda 18 CAM 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/afazenda3", type:"embed"},
-{name:"A Fazenda 18 CAM 4", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/afazenda4", type:"embed"},
-{name:"A Fazenda 18 CAM 5", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/afazenda5", type:"embed"},
-{name:"24h Chaves", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_chaves", type:"embed"},
-{name:"24h Dragon Ball", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_dragonball", type:"embed"},
-{name:"24h Naruto", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_naruto", type:"embed"},
-{name:"24h Pica-Pau", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_picapau", type:"embed"},
-{name:"24h Friends", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_friends", type:"embed"},
-{name:"24h Todo Mundo Odeia o Chris", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/24h_odeiachris", type:"embed"},
-{name:"Arte1", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/aa70/9s2kgymo4v7jl4l5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/arte1", type:"embed"},
-{name:"Band", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/7dcd/ors0qr3jqbwm2sh5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/bandsp", type:"embed"},
+{name:"A Fazenda 18 CAM01", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/afazenda", type:"embed"},
+{name:"A Fazenda 18 CAM 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/afazenda2", type:"embed"},
+{name:"A Fazenda 18 CAM 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/afazenda3", type:"embed"},
+{name:"A Fazenda 18 CAM 4", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/afazenda4", type:"embed"},
+{name:"A Fazenda 18 CAM 5", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3daa/dyvspgmjj5qciei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/afazenda5", type:"embed"},
+{name:"24h Chaves", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/24h_chaves", type:"embed"},
+{name:"24h Dragon Ball", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/24h_dragonball", type:"embed"},
+{name:"24h Naruto", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/24h_naruto", type:"embed"},
+{name:"24h Pica-Pau", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/24h_picapau", type:"embed"},
+{name:"24h Friends", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/24h_friends", type:"embed"},
+{name:"24h Todo Mundo Odeia o Chris", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bb8a/oteto0bx7pwht9i5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/24h_odeiachris", type:"embed"},
+{name:"Arte1", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/aa70/9s2kgymo4v7jl4l5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/arte1", type:"embed"},
+{name:"Band", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/7dcd/ors0qr3jqbwm2sh5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/bandsp", type:"embed"},
 {name:"Cultura", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/7cde/qs9sfyv4lvjrzsw5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/cultura", type:"embed"},
 {name:"Cultura Fast", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/c821/szi91ocxfkd3qb15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/culturafast", type:"embed"},
 {name:"Futura", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/2c40/i8539zyt2rc0pst5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/futura", type:"embed"},
-{name:"Globo", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/globosp", type:"embed"},
-{name:"SBT", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/ec97/n1ustsu38sqw0vj5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/sbtsp", type:"embed"},
-{name:"Record TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/996b/3hk43pafo0b5zve5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/recordsp", type:"embed"},
-{name:"RedeTV!", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/72bc/q2h6sp6no62q4j15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/redetv", type:"embed"},
+{name:"Globo", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1a63/3z6ljt6siqw49pg5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/globosp", type:"embed"},
+{name:"SBT", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/ec97/n1ustsu38sqw0vj5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/sbtsp", type:"embed"},
+{name:"Record TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/996b/3hk43pafo0b5zve5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/recordsp", type:"embed"},
+{name:"RedeTV!", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/72bc/q2h6sp6no62q4j15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/redetv", type:"embed"},
 {name:"Rit TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/dfe9/ivr3w7z377mhpv15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/rittv", type:"embed"},
-{name:"Band News", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/2ef7/f9duyhtq2fvdja95g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/bandnews", type:"embed"},
-{name:"CNN Brasil", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/9cf0/ufwwfpli3cxsayv5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/cnnbrasil", type:"embed"},
-{name:"cnnbrasilmoney", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3c55/79782iw447zo65s5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/cnnbrasilmoney", type:"embed"},
+{name:"Band News", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/2ef7/f9duyhtq2fvdja95g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/bandnews", type:"embed"},
+{name:"CNN Brasil", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/9cf0/ufwwfpli3cxsayv5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/cnnbrasil", type:"embed"},
+{name:"CNN Brasil Money", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3c55/79782iw447zo65s5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/cnnbrasilmoney", type:"embed"},
 {name:"Jovem Pan News", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/c32e/z6n71wps9nuofum5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/jpnews", type:"embed"},
-{name:"globonews", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/d707/vany601v3i6oltz5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/globonews", type:"embed"},
-{name:"Record News", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/4ea5/qlxfi1vsvu7m5m55g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/recordnews", type:"embed"},
-{name:"Amazon Prime Video", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/4950/zto8jqq1tkiofqy5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/primevideo", type:"embed"},
-{name:"Amazon Prime Video 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/4950/zto8jqq1tkiofqy5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/primevideo2", type:"embed"},
-{name:"Band Sports", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1e18/eblhu8culfgis5f5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/bandsports", type:"embed"},
-{name:"Canal Off", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/6680/2ehg7adeyz6ufnm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/off", type:"embed"},
-{name:"Cazé TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/709d/sfc607eybr2wkxd5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/caze1", type:"embed"},
-{name:"Cazé TV 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/709d/sfc607eybr2wkxd5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/caze2", type:"embed"},
-{name:"Combate", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/8692/4u9xbfujsnwx8a95g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/combate", type:"embed"},
-{name:"Disney+", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bd8f/nbw2ar8p0tgld645g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/disneyplus1", type:"embed"},
-{name:"ESPN", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3512/ovq21ck4lile4sx5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn", type:"embed"},
-{name:"ESPN 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/96c0/1n8z2pjnpe6knip5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn2", type:"embed"},
-{name:"ESPN 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/a705/x0oad6vreapio1v5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn3", type:"embed"},
-{name:"ESPN 4", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/e418/1rirj01jj917x865g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn4", type:"embed"},
-{name:"ESPN 5", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/d37d/1ojbd4ekwad59j05g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn5", type:"embed"},
-{name:"ESPN 6", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/41cd/wzlgga0jyir8rud5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/espn6", type:"embed"},
-{name:"GE TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/654d/tky3twatel9yzv15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/getv", type:"embed"},
-{name:"Max", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/53d8/57klkvikyp073fm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/max1", type:"embed"},
-{name:"Max 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/53d8/57klkvikyp073fm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/max2", type:"embed"},
-{name:"Max 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/53d8/57klkvikyp073fm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w7/max3", type:"embed"},
-{name:"Paramount +", category:"tv", group:"TV ao vivo", logo:"https://static.wikia.nocookie.net/logopedia/images/3/36/Paramount%2B_2021.svg/revision/latest?cb=20210125103531", url:"https://vt.jctvstreaming-vip.workers.dev/w7/paramountplus", type:"embed"},
-
-{name:"", category:"tv", group:"TV ao vivo", logo:"", url:"", type:"embed"},
-
+{name:"globonews", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/d707/vany601v3i6oltz5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/globonews", type:"embed"},
+{name:"Record News", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/4ea5/qlxfi1vsvu7m5m55g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/recordnews", type:"embed"},
+{name:"Amazon Prime Video", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/4950/zto8jqq1tkiofqy5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/primevideo", type:"embed"},
+{name:"Amazon Prime Video 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/4950/zto8jqq1tkiofqy5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/primevideo2", type:"embed"},
+{name:"Band Sports", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1e18/eblhu8culfgis5f5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/bandsports", type:"embed"},
+{name:"Canal Off", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/6680/2ehg7adeyz6ufnm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/off", type:"embed"},
+{name:"Cazé TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/709d/sfc607eybr2wkxd5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/caze1", type:"embed"},
+{name:"Cazé TV 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/709d/sfc607eybr2wkxd5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/caze2", type:"embed"},
+{name:"Combate", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/8692/4u9xbfujsnwx8a95g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/combate", type:"embed"},
+{name:"Disney+", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bd8f/nbw2ar8p0tgld645g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/disneyplus1", type:"embed"},
+{name:"ESPN", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3512/ovq21ck4lile4sx5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/espn", type:"embed"},
+{name:"ESPN 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/96c0/1n8z2pjnpe6knip5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/espn2", type:"embed"},
+{name:"ESPN 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/a705/x0oad6vreapio1v5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/espn3", type:"embed"},
+{name:"ESPN 4", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/e418/1rirj01jj917x865g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/espn4", type:"embed"},
+{name:"ESPN 5", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/d37d/1ojbd4ekwad59j05g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/espn5", type:"embed"},
+{name:"ESPN 6", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/41cd/wzlgga0jyir8rud5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/espn6", type:"embed"},
+{name:"GE TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/654d/tky3twatel9yzv15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/getv", type:"embed"},
+{name:"Max", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/53d8/57klkvikyp073fm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/max1", type:"embed"},
+{name:"Max 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/53d8/57klkvikyp073fm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/max2", type:"embed"},
+{name:"Max 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/53d8/57klkvikyp073fm5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/max3", type:"embed"},
+{name:"Paramount +", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/eae5/rlwszx6py7eoemw5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/paramountplus", type:"embed"},
+{name:"Paramount + 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/eae5/rlwszx6py7eoemw5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/paramountplus2", type:"embed"},
+{name:"Premiere Clubes", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/premiere", type:"embed"},
+{name:"Premiere 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/premiere2", type:"embed"},
+{name:"Premiere 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/premiere3", type:"embed"},
+{name:"Premiere 4", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/premiere4", type:"embed"},
+{name:"Premiere 5", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/premiere5", type:"embed"},
+{name:"Premiere 6", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/premiere6", type:"embed"},
+{name:"Premiere 7", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/premiere7", type:"embed"},
+{name:"Premiere 8", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1eda/5019osp2pe0la6c5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/premiere8", type:"embed"},
+{name:"Sportv", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/cd23/p1rxf0qpxtclpw75g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/sportv", type:"embed"},
+{name:"Sportv 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/9c1e/318ioitp90nqrsa5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/sportv2", type:"embed"},
+{name:"Sportv 3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/a89c/8hoohulrzb92th55g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/sportv3", type:"embed"},
+{name:"SportyNet", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/b117/0t5mgn07rnjarcu5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/sportynet", type:"embed"},
+{name:"SportyNet +1", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/b117/0t5mgn07rnjarcu5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/sportynetplus1", type:"embed"},
+{name:"SportyNet +2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/b117/0t5mgn07rnjarcu5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/sportynetplus2", type:"embed"},
+{name:"SportyNet +3", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/b117/0t5mgn07rnjarcu5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/sportynetplus3", type:"embed"},
+{name:"Xsports", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/a424/fn4fusvvx2gjaof5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/xsports", type:"embed"},
+{name:"A&E", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/2598/huxkg4lcurlfko35g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/ae", type:"embed"},
+{name:"Adult Swim", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/bafc/u6lut22bmswk8hq5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/adultswim", type:"embed"},
+{name:"AMC", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/aa3e/xbc07letcmluym65g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/amc", type:"embed"},
+{name:"AXN", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/e488/5ajoj97di8f0rvu5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/axn", type:"embed"},
+{name:"Cinemax", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/36a2/lieqkrv92trvw865g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/cinemax", type:"embed"},
+{name:"Curta!", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/56b4/qa3fi0he91yw4ce5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/curta", type:"embed"},
+{name:"E! Entertainment", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/d59c/76hy39fcai41z955g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/jc/e", type:"embed"},
+{name:"Globoplay Novelas", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/6203/2jyjzcs9yip5mm55g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/globonovelas", type:"embed"},
+{name:"HBO", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/57f8/f46d0ht9k9h6qor5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/hbo", type:"embed"},
+{name:"HBO 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/6784/094ecv56q1gx9wp5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/hbo2", type:"embed"},
+{name:"HBO Family", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/6ffa/gc4rc1r9pf6yeyd5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/hbofamily", type:"embed"},
+{name:"HBO Mundi", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/284a/ijtp3sgtjxyn7tf5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/hbomundi", type:"embed"},
+{name:"HBO Plus", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1ced/vso3ujiky4tvvk05g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/hboplus", type:"embed"},
+{name:"HBO Pop", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/2732/c5stimdg4fu9dch5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/hbopop", type:"embed"},
+{name:"HBO Xtreme", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/048b/voyryixm40xwr5n5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/hboxtreme", type:"embed"},
+{name:"Megapix", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/6e6b/1zy0dskxz4mtzai5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/megapix", type:"embed"},
+{name:"Sony Channel", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/0684/tk9baeut61ufh605g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/sonychannel", type:"embed"},
+{name:"Space", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/a9ef/0jdw8czly0dnjug5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/space", type:"embed"},
+{name:"Studio Universal", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/44dc/cnmkzxavfqi9gq85g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/studiouniversal", type:"embed"},
+{name:"TCM", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/5044/glceyrf1y3cplao5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/tcm", type:"embed"},
+{name:"TLC", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/604c/qt0chtp1k0i3ex35g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/tlc", type:"embed"},
+{name:"Telecine Action", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/f015/ss85xdbgpn4v4co5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/telecineaction", type:"embed"},
+{name:"Telecine Cult", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3407/tzbsl532lvhl9lh5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/telecinecult", type:"embed"},
+{name:"Telecine Fun", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/d8b5/m49v3xpcsp4ggc15g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/telecinefun", type:"embed"},
+{name:"Telecine Pipoca", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/5389/40r58hvzgexg1tg5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/telecinepipoca", type:"embed"},
+{name:"Telecine Premium", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/6bff/rhznq8sgw3jsnsc5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/telecinepremium", type:"embed"},
+{name:"Telecine Touch", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/4b1d/em13al9fywmoio65g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/telecinetouch", type:"embed"},
+{name:"TNT", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/1fda/hnpl392ek0uvhxn5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/tnt", type:"embed"},
+{name:"TNT Novelas", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/47ac/qgr3erww8f9hg225g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/tntnovelas", type:"embed"},
+{name:"TNT Series", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/5225/9mfad9o7744un765g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/tntseries", type:"embed"},
+{name:"Universal TV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/6342/uw3j9griyzwfhvo5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/universaltv", type:"embed"},
+{name:"Warner Channel", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/2c78/akts8nrxrn16nw35g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/warnerchannel", type:"embed"},
+{name:"Animal Planet", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/08d9/l1syfzof817nmk75g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/animalplanet", type:"embed"},
+{name:"Discovery Channel", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/a885/ngdunnc8ddnkrt65g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/discoverychannel", type:"embed"},
+{name:"Discovery Home & Health", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/c4ff/yqsk6z5mhtlxju65g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/discoveryhh", type:"embed"},
+{name:"ID: Investigação Discovery", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/3911/uxao9373njw0dje5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/discoveryid", type:"embed"},
+{name:"Discovery Science", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/c074/43qs60gg70r9ndl5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/discoveryscience", type:"embed"},
+{name:"Discovery Theater", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/ba73/ldr09d61fvwlakc5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/discoverytheather", type:"embed"},
+{name:"Discovery Turbo", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/6b07/x56n8bfmodktzgb5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/discoveryturbo", type:"embed"},
+{name:"Discovery World", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/cd0a/zdg6db0hx0j0d325g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/discoveryworld", type:"embed"},
+{name:"Food Network", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/948c/6hki7c7jhgsgbin5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/foodnetwork", type:"embed"},
+{name:"GNT", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/c257/23wmwqfhkxncxei5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/gnt", type:"embed"},
+{name:"History", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/713f/rkbl3yw9r456lla5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/history", type:"embed"},
+{name:"History 2", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/e388/udadrcaxjzjgv3b5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/history2", type:"embed"},
+{name:"MTV", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/83dc/7byqz6pxwhfblbc5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/mtv", type:"embed"},
+{name:"Multishow", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/d18f/be5363h4y96wihg5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/multishow", type:"embed"},
+{name:"Cartoonito", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/ffb9/ys1gxu0qrkzp0zl5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/cartoonito", type:"embed"},
+{name:"Cartoon Network", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/628c/uadp0amudpo14db5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/cartoonnetwork", type:"embed"},
+{name:"Discovery Kids", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/f84e/0twpa5zx2b6a2y55g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/discoverykids", type:"embed"},
+{name:"Gloob", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/e6b7/prcguyxudq0sa7a5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/gloob", type:"embed"},
+{name:"Gloobinho", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/83b3/tuqjkz16t9g5stv5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/gloobinho", type:"embed"},
+{name:"Tooncast", category:"tv", group:"TV ao vivo", logo:"https://www.mediafire.com/convkey/a418/qhmrcza5iegcn4u5g.jpg", url:"https://vt.jctvstreaming-vip.workers.dev/w8/tooncast", type:"embed"},
 
 
 // FILMES
@@ -1237,15 +1321,16 @@ const CHANNELS = [
 {name:"Capitão América: O Primeiro Vingador (2011)",dataLancamento:"29/11/2011",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/xYijVAPunk6neVW2KHKE4Lp45ZU.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/dgpqy94m9ypm",type:"embed"},
 {name:"Capitão América (1990)",dataLancamento:"05/07/1991",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/j9Jq4feBhAJTjEj4CvNuMgRwUjW.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/4yglqb9bqtch",type:"embed"},
 {name:"Homem de Ferro e Capitão América: Super-Heróis Unidos (2014)",dataLancamento:"29/07/2014",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/6E5OJfpoUM7k8C1bORXI1lXwhKD.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/ddrn3w4p4hw4",type:"embed"},
-{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
-{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
-{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
-{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
-{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
-{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
-{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
-{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
-{name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
+{name:"As Marvels (2023)",dataLancamento:"09/11/2023",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/wpp5KIwjtrKoWj5H0TSsJdqsDx7.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/a0kswfsbl6fa",type:"embed"},
+{name:"Capitã Marvel (2019)",dataLancamento:"07/03/2019",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/n3BisLdTMceUWcdP1ooP5VwN9JF.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/kjc86tmgwu9a",type:"embed"},
+{name:"Homem de Ferro 3 (2013)",dataLancamento:"26/04/2013",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/C7MZwRTjvEy7gkWcLJeBGZFE1w.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/lmmdrlqeot7g",type:"embed"},
+{name:"Homem de Ferro 2 (2010)",dataLancamento:"30/04/2010",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/vzROjQbgKWMVf2EldXipCcjpuBL.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/nebrxqyr67kx",type:"embed"},
+{name:"Homem de Ferro (2008)",dataLancamento:"30/04/2008",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/mqN7RxojEiPoh3FTSTwOtwg7KAu.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/u601ifgs8dug",type:"embed"},
+{name:"Homem de Ferro e Hulk: Super-Heróis Unidos (2013)",dataLancamento:"03/12/2013",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/w1mmwDv8srLzCAOX7qvHmNr3tb7.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/kki473ag2o7v",type:"embed"},
+{name:"The Avengers vs. A.I.M. (2006)",dataLancamento:"03/04/2006",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/original/tNC4pNyyny56KECEcNwUdBSTnvw.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/mki27ovs10vh",type:"embed"},
+{name:"Homem de Ferro: A Batalha Contra Ezekiel Stane (2013)",dataLancamento:"24/04/2013",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/3vgn4p1gZ8RLk7ti4pYXVhiEfiE.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/2uzbcqrj1u73",type:"embed"},
+{name:"O Invencível Homem de Ferro (2007)",dataLancamento:"23/01/2007",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/tfIv37GJRHETmhqlxDZwBDGrFTP.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/rtzff8613zl8",type:"embed"},
+
 {name:"",dataLancamento:"",category:"filmes",group:"Filmes",logo:"",url:"https://vt.jctvstreaming-vip.workers.dev/vt/",type:"embed"},
 
 
@@ -1253,22 +1338,60 @@ const CHANNELS = [
 
 // SÉRIES
 
-{name:"A Ilha do Tesouro (2026)",dataLancamento:"",episodeTitle:"A Ilha do Tesouro S01EP01",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/n0lq9rz5xilz",type:"embed"},
-{name:"A Ilha do Tesouro (2026)",dataLancamento:"",episodeTitle:"A Ilha do Tesouro S01EP02",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/5mx74bhuomby",type:"embed"},
-{name:"A Ilha do Tesouro (2026)",dataLancamento:"",episodeTitle:"A Ilha do Tesouro S01EP03",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/wpr8nu8qyruh",type:"embed"},
-{name:"A Ilha do Tesouro (2026)",dataLancamento:"",episodeTitle:"A Ilha do Tesouro S01EP04",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/5yb48thefjrr",type:"embed"},
-{name:"A Ilha do Tesouro (2026)",dataLancamento:"",episodeTitle:"A Ilha do Tesouro S01EP05",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/m7km8rjyiub6",type:"embed"},
+{name:"A Crise dos Caras (2025)",dataLancamento:"02/10/2025",episodeTitle:"A Crise dos Caras S01EP01",series:"A Crise dos Caras (2025)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hOq7UDe4W9g3K3NFHDCvzJVPih8.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/3jg5ml01wckp",type:"embed"},
+{name:"A Crise dos Caras (2025)",dataLancamento:"02/10/2025",episodeTitle:"A Crise dos Caras S01EP02",series:"A Crise dos Caras (2025)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hOq7UDe4W9g3K3NFHDCvzJVPih8.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/czpoc4fivyu1",type:"embed"},
+{name:"A Crise dos Caras (2025)",dataLancamento:"02/10/2025",episodeTitle:"A Crise dos Caras S01EP03",series:"A Crise dos Caras (2025)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hOq7UDe4W9g3K3NFHDCvzJVPih8.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/547s9qywfcn5",type:"embed"},
+{name:"A Crise dos Caras (2025)",dataLancamento:"02/10/2025",episodeTitle:"A Crise dos Caras S01EP04",series:"A Crise dos Caras (2025)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hOq7UDe4W9g3K3NFHDCvzJVPih8.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/jdiorxfofe4e",type:"embed"},
+{name:"A Crise dos Caras (2025)",dataLancamento:"02/10/2025",episodeTitle:"A Crise dos Caras S01EP05",series:"A Crise dos Caras (2025)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hOq7UDe4W9g3K3NFHDCvzJVPih8.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/xaei40v0yzco",type:"embed"},
+{name:"A Crise dos Caras (2025)",dataLancamento:"02/10/2025",episodeTitle:"A Crise dos Caras S01EP06",series:"A Crise dos Caras (2025)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hOq7UDe4W9g3K3NFHDCvzJVPih8.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/udpjf91vkl4q",type:"embed"},
+{name:"A Crise dos Caras (2025)",dataLancamento:"02/10/2025",episodeTitle:"A Crise dos Caras S01EP07",series:"A Crise dos Caras (2025)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hOq7UDe4W9g3K3NFHDCvzJVPih8.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/2w4odgy31asl",type:"embed"},
+{name:"A Crise dos Caras (2025)",dataLancamento:"02/10/2025",episodeTitle:"A Crise dos Caras S01EP08",series:"A Crise dos Caras (2025)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hOq7UDe4W9g3K3NFHDCvzJVPih8.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/d6brb8nphzhf",type:"embed"},
 
-{name:"",episodeTitle:"",series:"",season:1,category:"series",group:"",logo:"",url:"",type:"embed"},
-{name:"",episodeTitle:"",series:"",season:1,category:"series",group:"",logo:"",url:"",type:"embed"},
+{name:"A História de Brooke Shields (2023)",dataLancamento:"03/04/2023",episodeTitle:"A História de Brooke Shields S01EP01",series:"A História de Brooke Shields (2023)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/o8kUdljrV17rfHttSawH879L85N.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/9xz35i49d4du",type:"embed"},
+{name:"A História de Brooke Shields (2023)",dataLancamento:"03/04/2023",episodeTitle:"A História de Brooke Shields S01EP02",series:"A História de Brooke Shields (2023)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/o8kUdljrV17rfHttSawH879L85N.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/q1waqczz305h",type:"embed"},
+
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"11/10/2026",episodeTitle:"A Ilha do Tesouro S01EP01",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/n0lq9rz5xilz",type:"embed"},
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"11/10/2026",episodeTitle:"A Ilha do Tesouro S01EP02",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/5mx74bhuomby",type:"embed"},
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"11/10/2026",episodeTitle:"A Ilha do Tesouro S01EP03",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/wpr8nu8qyruh",type:"embed"},
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"11/10/2026",episodeTitle:"A Ilha do Tesouro S01EP04",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/5yb48thefjrr",type:"embed"},
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"11/10/2026",episodeTitle:"A Ilha do Tesouro S01EP05",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/m7km8rjyiub6",type:"embed"},
+{name:"A Ilha do Tesouro (2026)",dataLancamento:"11/10/2026",episodeTitle:"A Ilha do Tesouro S01EP06",series:"A Ilha do Tesouro (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/f8kNFg3QjReMX32geTbWfzMegAM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/mvsps308w8dk",type:"embed"},
+
+{name:"VisionQuest (2026)",dataLancamento:"13/10/2026",episodeTitle:"VisionQuest S01EP01",series:"VisionQuest (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/WGyAyBPncfuu8MZhLY9RtfZPM0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/ql5ga5yeywlc",type:"embed"},
+{name:"VisionQuest (2026)",dataLancamento:"13/10/2026",episodeTitle:"VisionQuest S01EP02",series:"VisionQuest (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/WGyAyBPncfuu8MZhLY9RtfZPM0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/5hi898j8vphj",type:"embed"},
+{name:"VisionQuest (2026)",dataLancamento:"13/10/2026",episodeTitle:"VisionQuest S01EP03",series:"VisionQuest (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/WGyAyBPncfuu8MZhLY9RtfZPM0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/5l2n7j12ejzy",type:"embed"},
+{name:"VisionQuest (2026)",dataLancamento:"13/10/2026",episodeTitle:"VisionQuest S01EP04",series:"VisionQuest (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/WGyAyBPncfuu8MZhLY9RtfZPM0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/xgfobxgly3g0",type:"embed"},
+{name:"VisionQuest (2026)",dataLancamento:"13/10/2026",episodeTitle:"VisionQuest S01EP05",series:"VisionQuest (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/WGyAyBPncfuu8MZhLY9RtfZPM0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/z4ag2hd490nl",type:"embed"},
+{name:"VisionQuest (2026)",dataLancamento:"13/10/2026",episodeTitle:"VisionQuest S01EP06",series:"VisionQuest (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/WGyAyBPncfuu8MZhLY9RtfZPM0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/rz6adcx3kkhz",type:"embed"},
+{name:"VisionQuest (2026)",dataLancamento:"13/10/2026",episodeTitle:"VisionQuest S01EP07",series:"VisionQuest (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/WGyAyBPncfuu8MZhLY9RtfZPM0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/dw4nm6k81k4g",type:"embed"},
+{name:"VisionQuest (2026)",dataLancamento:"13/10/2026",episodeTitle:"VisionQuest S01EP08",series:"VisionQuest (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/WGyAyBPncfuu8MZhLY9RtfZPM0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/31jrqudstnzc",type:"embed"},
+
+{name:"Spider-Noir (2026)",dataLancamento:"25/05/2026",episodeTitle:"Spider-Noir S01EP01",series:"Spider-Noir (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/rfrzXSaiuvRMLo8PRQds0TfFrZC.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/3w7998eqxkig",type:"embed"},
+{name:"Spider-Noir (2026)",dataLancamento:"25/05/2026",episodeTitle:"Spider-Noir S01EP02",series:"Spider-Noir (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/rfrzXSaiuvRMLo8PRQds0TfFrZC.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/2neumklfix5k",type:"embed"},
+{name:"Spider-Noir (2026)",dataLancamento:"25/05/2026",episodeTitle:"Spider-Noir S01EP03",series:"Spider-Noir (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/rfrzXSaiuvRMLo8PRQds0TfFrZC.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/u8z9ed6mae6v",type:"embed"},
+{name:"Spider-Noir (2026)",dataLancamento:"25/05/2026",episodeTitle:"Spider-Noir S01EP04",series:"Spider-Noir (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/rfrzXSaiuvRMLo8PRQds0TfFrZC.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/n8g979ebdhdw",type:"embed"},
+{name:"Spider-Noir (2026)",dataLancamento:"25/05/2026",episodeTitle:"Spider-Noir S01EP05",series:"Spider-Noir (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/rfrzXSaiuvRMLo8PRQds0TfFrZC.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/9xgzmotb9ybc",type:"embed"},
+{name:"Spider-Noir (2026)",dataLancamento:"25/05/2026",episodeTitle:"Spider-Noir S01EP06",series:"Spider-Noir (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/rfrzXSaiuvRMLo8PRQds0TfFrZC.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/ioms4pl3jo1a",type:"embed"},
+{name:"Spider-Noir (2026)",dataLancamento:"25/05/2026",episodeTitle:"Spider-Noir S01EP07",series:"Spider-Noir (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/rfrzXSaiuvRMLo8PRQds0TfFrZC.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/vx1spssh6tnw",type:"embed"},
+{name:"Spider-Noir (2026)",dataLancamento:"25/05/2026",episodeTitle:"Spider-Noir S01EP08",series:"Spider-Noir (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/rfrzXSaiuvRMLo8PRQds0TfFrZC.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/rkugxxu7bnbu",type:"embed"},
+
+{name:"Desaparecida (2026)",dataLancamento:"09/09/2026",episodeTitle:"Desaparecida S01EP01",series:"Desaparecida (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hWLzO9fUFOaePehHYnCm4y0YnQA.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/h6gyixirn1ag",type:"embed"},
+{name:"Desaparecida (2026)",dataLancamento:"09/09/2026",episodeTitle:"Desaparecida S01EP02",series:"Desaparecida (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hWLzO9fUFOaePehHYnCm4y0YnQA.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/os2ms0st3ydq",type:"embed"},
+{name:"Desaparecida (2026)",dataLancamento:"09/09/2026",episodeTitle:"Desaparecida S01EP03",series:"Desaparecida (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hWLzO9fUFOaePehHYnCm4y0YnQA.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/5k9d5m9ivh1f",type:"embed"},
+{name:"Desaparecida (2026)",dataLancamento:"09/09/2026",episodeTitle:"Desaparecida S01EP04",series:"Desaparecida (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hWLzO9fUFOaePehHYnCm4y0YnQA.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/t160ixxswmkz",type:"embed"},
+{name:"Desaparecida (2026)",dataLancamento:"09/09/2026",episodeTitle:"Desaparecida S01EP05",series:"Desaparecida (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hWLzO9fUFOaePehHYnCm4y0YnQA.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/qfb9sthaerqs",type:"embed"},
+{name:"Desaparecida (2026)",dataLancamento:"09/09/2026",episodeTitle:"Desaparecida S01EP06",series:"Desaparecida (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hWLzO9fUFOaePehHYnCm4y0YnQA.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/734ddtafm969",type:"embed"},
+
+
+
+
+{name:"",dataLancamento:"",episodeTitle:"",series:"",season:1,category:"series",group:"Temporada 1",logo:"",url:"",type:"embed"},
 
 
 
 
 
-
-
-{name:"",episodeTitle:"",series:"",season:1,category:"series",group:"",logo:"",url:"",type:"embed"}
+{name:"",dataLancamento:"",episodeTitle:"",series:"",season:1,category:"series",group:"",logo:"",url:"",type:"embed"}
 
 
 ];
