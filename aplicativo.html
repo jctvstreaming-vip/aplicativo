@@ -54,8 +54,8 @@ padding:5px 7px 20px
 }
 
 .brand-logo{
-width:43px;
-height:43px;
+width:50px;
+height:50px;
 border-radius:12px;
 background:linear-gradient(135deg,#ffc107,#a87500);
 display:flex;
@@ -68,13 +68,13 @@ box-shadow:0 0 20px #ffc10730
 }
 
 .brand-title{
-font-size:16px;
+font-size:18px;
 font-weight:800;
 letter-spacing:.5px
 }
 
 .brand-subtitle{
-font-size:10px;
+font-size:12px;
 color:var(--gold);
 letter-spacing:2px;
 margin-top:4px
@@ -105,7 +105,7 @@ color:#8290a3
 }
 
 .category-title{
-font-size:10px;
+font-size:13px;
 font-weight:800;
 letter-spacing:2px;
 color:#728096;
@@ -123,9 +123,9 @@ margin-bottom:15px
 background:#172230;
 color:#aeb9c8;
 border:1px solid #283647;
-padding:10px 4px;
+padding:12px 4px;
 border-radius:8px;
-font-size:10px;
+font-size:13px;
 font-weight:800;
 cursor:pointer;
 transition:.2s
@@ -142,7 +142,7 @@ border-color:var(--gold)
 padding:13px 5px 0;
 border-top:1px solid #222c39;
 color:#647184;
-font-size:10px;
+font-size:12px;
 text-align:center
 }
 
@@ -164,7 +164,7 @@ margin-bottom:20px
 }
 
 #nowTitle{
-font-size:20px;
+font-size:24px;
 font-weight:800;
 margin:0;
 overflow:hidden;
@@ -176,7 +176,7 @@ white-space:nowrap
 display:flex;
 align-items:center;
 gap:7px;
-font-size:10px;
+font-size:12px;
 font-weight:800;
 color:#ff5555;
 letter-spacing:1px
@@ -344,7 +344,7 @@ flex-direction:column;
 }
 
 #modalTitle{
-font-size:14px;
+font-size:16px;
 font-weight:800;
 overflow:hidden;
 white-space:nowrap;
@@ -820,59 +820,59 @@ html, body {
 }
 
 
-/* =====================================
-   PADRONIZAR TODOS OS CARDS DAS CATEGORIAS
-===================================== */
+/* CARDS DOS DESTAQUES - MESMO PADRÃO DAS CATEGORIAS */
 
-.channels-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
-    align-items:stretch;
-    grid-auto-rows:165px;
-    gap:12px;
-}
-
-.channels-grid .channel-card{
-    width:100%;
-    height:165px;
-    min-height:165px;
-    max-height:165px;
+.destaque-item{
     box-sizing:border-box;
-
+    flex:0 0 100px;
+    width:100px;
+    min-height:155px;
+    height:155px;
+    padding:14px;
+    margin:0;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:flex-start;
-
-    padding:10px;
-    gap:8px;
+    gap:10px;
+    background:#101722;
+    border:1px solid #283647;
+    border-radius:12px;
     overflow:hidden;
+    cursor:pointer;
+    transition:.2s;
+    color:#fff;
+    text-align:center;
 }
 
-.channels-grid .channel-card img{
+.destaque-item:hover{
+    background:#192535;
+    border-color:var(--gold);
+    transform:translateY(-3px);
+}
+
+.destaque-item img{
+    display:block;
+    flex:0 0 100px;
     width:100%;
     height:100px;
     min-height:100px;
     max-height:100px;
-    flex:0 0 100px;
     object-fit:contain;
+    background:#080b10;
+    border-radius:8px;
 }
 
-.channels-grid .channel-card > div{
-    width:100%;
-    min-width:0;
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-}
-
-.channels-grid .channel-name{
+.destaque-item p{
+    flex:0 0 auto;
     width:100%;
     font-size:10px;
-    line-height:1.2;
+    font-weight:700;
+    color:#fff;
     text-align:center;
+    padding:0;
+    margin:0;
+    line-height:1.2;
     overflow:hidden;
     overflow-wrap:anywhere;
     display:-webkit-box;
@@ -880,10 +880,18 @@ html, body {
     -webkit-box-orient:vertical;
 }
 
-.channels-grid .channel-category{
+.destaque-tag{
+    flex:0 0 auto;
     width:100%;
-    font-size:9px;
+    color:#FFC107;
+    font-size:10px;
     text-align:center;
+    padding:0;
+    margin:0;
+    font-weight:bold;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
 }
 
 /* CELULAR */
@@ -909,20 +917,20 @@ html, body {
 }
 
 
-/* CARDS MENORES */
+/* CARDS MAIORES */
 .destaque-item{
     box-sizing:border-box;
-    flex:0 0 85px;
-    width:85px;
-    height:125px;
-    min-height:125px;
-    max-height:125px;
-    padding:5px;
+    flex:0 0 120px;
+    width:120px;
+    height:175px;
+    min-height:175px;
+    max-height:175px;
+    padding:6px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:flex-start;
-    gap:3px;
+    gap:5px;
     background:#101722;
     border-radius:9px;
     overflow:hidden;
@@ -941,27 +949,27 @@ html, body {
 
 .destaque-item img{
     display:block;
-    flex:0 0 75px;
+    flex:0 0 105px;
     width:100%;
-    height:75px;
-    min-height:75px;
-    max-height:75px;
+    height:105px;
+    min-height:105px;
+    max-height:105px;
     object-fit:contain;
     background:#080b10;
     border-radius:6px;
 }
 
 .destaque-item p{
-    flex:0 0 20px;
+    flex:0 0 30px;
     width:100%;
-    height:20px;
-    font-size:8px;
+    height:30px;
+    font-size:11px;
     font-weight:700;
     color:#fff;
     text-align:center;
     padding:0;
     margin:0;
-    line-height:1.2;
+    line-height:1.3;
     overflow:hidden;
     overflow-wrap:anywhere;
     display:-webkit-box;
@@ -970,12 +978,12 @@ html, body {
 }
 
 .destaque-tag{
-    flex:0 0 9px;
-    height:9px;
+    flex:0 0 12px;
+    height:12px;
     display:block;
     width:100%;
     color:#FFC107;
-    font-size:7px;
+    font-size:9px;
     text-align:center;
     padding:0;
     font-weight:bold;
@@ -1282,9 +1290,9 @@ const CHANNELS = [
 {name:"Super Mario Bros. O Filme (2023)",dataLancamento:"05/04/2023",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/ij8sapIEbLf2g8npOu6XgsQS2w0.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/tuaabhjnlzb3",type:"embed"},
 {name:"Um Duende em Nova York (2003)",dataLancamento:"07/11/2003",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/zZVJr3jAueYRSiaKx98gzzRpFGp.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/udgmtga0a94g",type:"embed"},
 {name:"Todo Mundo em Pânico (2026)",dataLancamento:"04/06/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/y9yJd2qIIwhZcllHeKHsz5eRvNr.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/skgfflx5siow",type:"embed"},
-{name:"O Peixe Pout-Pout (2026)",dataLancamento:"12/09/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/k0QYAzCteuuw4whzHZhWyr4Vljh.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/05lp4ah856l0",type:"embed"},
+{name:"O Peixe Pout-Pout (2026)",dataLancamento:"12/09/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/k0QYAzCteuuw4whzHZhWyr4Vljh.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/fyyc0hewt6jlhrr",type:"embed"},
 {name:"Coração Selvagem (2026)",dataLancamento:"24/09/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/n4PJa4xVo4SjIsBvTA0yGMKjTBh.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/ui02ib17qywq",type:"embed"},
-{name:"Resident Evil (2026)",dataLancamento:"17/09/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/bvBTdNaWVPrHKjyPFnsigZJsKdD.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/yya592i73rau",type:"embed"},
+{name:"Resident Evil (2026)",dataLancamento:"17/09/2026",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/bvBTdNaWVPrHKjyPFnsigZJsKdD.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/e17rrojwy02c41j",type:"embed"},
 {name:"Tequila Repasado (2023)",dataLancamento:"20/12/2023",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/7onQmk5ZzUjx6SEAiqILWQFTaYC.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/70wnuh7n80ey",type:"embed"},
 {name:"Pasárgada (2024)",dataLancamento:"26/09/2024",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/1TK4KTXt3mQAgq09GxmohNz9PTM.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/qskg3pqjwv0f",type:"embed"},
 {name:"O Vidente (2007)",dataLancamento:"19/07/2007",category:"filmes",group:"Filmes",logo:"https://image.tmdb.org/t/p/w500/fFehtsCSORmECTCgs6mntAYFvL4.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/suli4anuqq4j",type:"embed"},
@@ -1382,12 +1390,64 @@ const CHANNELS = [
 {name:"Desaparecida (2026)",dataLancamento:"09/09/2026",episodeTitle:"Desaparecida S01EP05",series:"Desaparecida (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hWLzO9fUFOaePehHYnCm4y0YnQA.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/qfb9sthaerqs",type:"embed"},
 {name:"Desaparecida (2026)",dataLancamento:"09/09/2026",episodeTitle:"Desaparecida S01EP06",series:"Desaparecida (2026)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hWLzO9fUFOaePehHYnCm4y0YnQA.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/vt/734ddtafm969",type:"embed"},
 
-
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S01EP01",series:"Stranger Things (2016)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/ba70ntmggh3k89k",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S01EP02",series:"Stranger Things (2016)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/xk8vop4183dsack",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S01EP03",series:"Stranger Things (2016)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/mrb2fpah4nqkput",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S01EP04",series:"Stranger Things (2016)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/my17elmzw000s7b",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S01EP05",series:"Stranger Things (2016)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/hmz6vwd4iiugcvt",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S01EP06",series:"Stranger Things (2016)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/vn8iqptknp1chmz",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S01EP07",series:"Stranger Things (2016)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/xmhbtf934w2yn83",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S01EP08",series:"Stranger Things (2016)",season:1,category:"series",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/jdikcfydw9urlbj",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S02EP01",series:"Stranger Things (2016)",season:2,category:"series",group:"Temporada 2",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/18uhdiex3kk64x6",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S02EP02",series:"Stranger Things (2016)",season:2,category:"series",group:"Temporada 2",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/22qjhzij6fr0s6v",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S02EP03",series:"Stranger Things (2016)",season:2,category:"series",group:"Temporada 2",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/26so5z7cg4a6zoi",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S02EP04",series:"Stranger Things (2016)",season:2,category:"series",group:"Temporada 2",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/1stqllpc3ty6mb1",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S02EP05",series:"Stranger Things (2016)",season:2,category:"series",group:"Temporada 2",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/seylwh577p9jjz3",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S02EP06",series:"Stranger Things (2016)",season:2,category:"series",group:"Temporada 2",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/73alb1geameis5x",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S02EP07",series:"Stranger Things (2016)",season:2,category:"series",group:"Temporada 2",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/34sru04ewwkgzdi",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S02EP08",series:"Stranger Things (2016)",season:2,category:"series",group:"Temporada 2",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/wamtkfq08wu7dp0",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S02EP09",series:"Stranger Things (2016)",season:2,category:"series",group:"Temporada 2",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/5fio4qfhysgs53x",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S03EP01",series:"Stranger Things (2016)",season:3,category:"series",group:"Temporada 3",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/2oyk2xe1tp51xez",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S03EP02",series:"Stranger Things (2016)",season:3,category:"series",group:"Temporada 3",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/21tnit4nosllpt0",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S03EP03",series:"Stranger Things (2016)",season:3,category:"series",group:"Temporada 3",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/ssowbps88muznkk",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S03EP04",series:"Stranger Things (2016)",season:3,category:"series",group:"Temporada 3",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/swgpdj3yx79swz0",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S03EP05",series:"Stranger Things (2016)",season:3,category:"series",group:"Temporada 3",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/tlyf3kyfeyfdj55",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S03EP06",series:"Stranger Things (2016)",season:3,category:"series",group:"Temporada 3",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/b0enr28zmcpil5j",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S03EP07",series:"Stranger Things (2016)",season:3,category:"series",group:"Temporada 3",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/2tm223egwwej624",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S03EP08",series:"Stranger Things (2016)",season:3,category:"series",group:"Temporada 3",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/99lqxx8ot6awkfh",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S04EP01",series:"Stranger Things (2016)",season:4,category:"series",group:"Temporada 4",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/3b4ko358956fnkz",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S04EP02",series:"Stranger Things (2016)",season:4,category:"series",group:"Temporada 4",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/sjc7ounf8nljsf9",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S04EP03",series:"Stranger Things (2016)",season:4,category:"series",group:"Temporada 4",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/z8epn4n6zyh1bkf",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S04EP04",series:"Stranger Things (2016)",season:4,category:"series",group:"Temporada 4",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/xl6zbpviu682eiq",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S04EP05",series:"Stranger Things (2016)",season:4,category:"series",group:"Temporada 4",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/a8mtpbbkuqmyzcw",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S04EP06",series:"Stranger Things (2016)",season:4,category:"series",group:"Temporada 4",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/3yi7c17yt3nhv6z",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S04EP07",series:"Stranger Things (2016)",season:4,category:"series",group:"Temporada 4",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/f62vve1qd01dsqg",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S04EP08",series:"Stranger Things (2016)",season:4,category:"series",group:"Temporada 4",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/lprhc50v5a9v1um",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S04EP09",series:"Stranger Things (2016)",season:4,category:"series",group:"Temporada 4",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/s3sz4n3dh5udu8m",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S05EP01",series:"Stranger Things (2016)",season:5,category:"series",group:"Temporada 5",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/ue9dv2mexn0kd0d",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S05EP02",series:"Stranger Things (2016)",season:5,category:"series",group:"Temporada 5",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/w2e8lruuujioyu7",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S05EP03",series:"Stranger Things (2016)",season:5,category:"series",group:"Temporada 5",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/z2hqrplj455vfra",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S05EP04",series:"Stranger Things (2016)",season:5,category:"series",group:"Temporada 5",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/gomuxn1u90w36vh",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S05EP05",series:"Stranger Things (2016)",season:5,category:"series",group:"Temporada 5",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/txsvishx6d98bdz",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S05EP06",series:"Stranger Things (2016)",season:5,category:"series",group:"Temporada 5",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/hic91ivpfr3ahly",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S05EP07",series:"Stranger Things (2016)",season:5,category:"series",group:"Temporada 5",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/inrt6re8kk6mpvq",type:"embed"},
+{name:"Stranger Things (2016)",dataLancamento:"15/07/2016",episodeTitle:"Stranger Things S05EP08",series:"Stranger Things (2016)",season:5,category:"series",group:"Temporada 5",logo:"https://image.tmdb.org/t/p/w500/twfKp60THrcOIep9sjHODOOfO8d.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/a2a7e311eajkkbv",type:"embed"},
 
 
 {name:"",dataLancamento:"",episodeTitle:"",series:"",season:1,category:"series",group:"Temporada 1",logo:"",url:"",type:"embed"},
 
-
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP01",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/dpf77pzh4r3tkab",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP02",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/ara5l5ct3tziqev",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP03",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/8mxgepmcnnz1quy",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP04",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/vs5hvwnondaa67u",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP05",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/vl9owqcx4bx7du0",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP06",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/busgtqnwmg5ylhn",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP07",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/muebrgciwyvewrk",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP08",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/43pn7jmpel2woj3",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP09",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/x0squ6gv8w4k4d2",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP10",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/bkcp6vl6jcle6ui",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP11",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/ttq2cqwdp7pme8s",type:"embed"},
+{name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP12",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/rb5j188oiz9un6l",type:"embed"},
 
 
 
@@ -1841,7 +1901,7 @@ if(category==="filmes"){
     categoryEntries=sortByNewest(categoryEntries);
 }
 
-if(category==="series"){
+if(["series","animes","desenhos","doramas","novelas","tokusatsu"].includes(category)){
 
 entries=[];
 visibleEntries=[];
@@ -1982,7 +2042,7 @@ visibleEntries=[];
 
 renderSeriesCards(getSeriesGroups());
 
-setTitle(categoryName("series"));
+setTitle(categoryName(currentCategory));
 
 setMessage(
 getSeriesGroups().length+" séries cadastradas.",
@@ -1999,7 +2059,7 @@ function renderChannels(list){
 
 channelsDiv.innerHTML="";
 
-if(currentCategory==="series"&&currentSeriesName){
+if(["series","animes","desenhos","doramas","novelas","tokusatsu"].includes(currentCategory)&&currentSeriesName){
 
 const backButton=document.createElement("button");
 
@@ -2365,7 +2425,7 @@ function renderHighlights(){
         let highlights=[];
 
         // SÉRIES: mostrar cada série apenas uma vez.
-        if(category.id==="series"){
+        if(["series","animes","desenhos","novelas","doramas","tokusatsu"].includes(category.id)){
 
             const seriesMap=new Map();
 
@@ -2380,8 +2440,8 @@ function renderHighlights(){
                         series:name,
                         dataLancamento:item.dataLancamento||"",
                         logo:item.seriesLogo||item.logo||"",
-                        category:"series",
-                        highlightType:"SÉRIE",
+                        category:category.id,
+                        highlightType:category.name,
                         sourceItem:item
                     });
 
@@ -2446,11 +2506,11 @@ function renderHighlights(){
 
             card.onclick=()=>{
 
-                if(item.category==="series"){
+                if(["series","animes","desenhos","novelas","doramas","tokusatsu"].includes(item.category)){
 
-                    selectCategory("series");
-                    openSeries(item.name);
-                    return;
+                selectCategory(item.category);
+                openSeries(item.name);
+                return;
 
                 }
 
