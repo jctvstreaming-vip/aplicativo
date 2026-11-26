@@ -1436,6 +1436,13 @@ const CHANNELS = [
 
 {name:"",dataLancamento:"",episodeTitle:"",series:"",season:1,category:"series",group:"Temporada 1",logo:"",url:"",type:"embed"},
 
+{name:"Devils' Crest (2026)",dataLancamento:"06/11/2026",episodeTitle:"Devils' Crest S01EP01",animes:"Devils' Crest (2026)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/kimx6VeIKhNQH0sqyT2OXfWUO07.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/zy/328010/1x1/HD13",type:"embed"},
+{name:"Devils' Crest (2026)",dataLancamento:"06/11/2026",episodeTitle:"Devils' Crest S01EP02",animes:"Devils' Crest (2026)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/kimx6VeIKhNQH0sqyT2OXfWUO07.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/zy/328010/1x2/HD13",type:"embed"},
+{name:"Devils' Crest (2026)",dataLancamento:"06/11/2026",episodeTitle:"Devils' Crest S01EP03",animes:"Devils' Crest (2026)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/kimx6VeIKhNQH0sqyT2OXfWUO07.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/zy/328010/1x3/HD13",type:"embed"},
+{name:"Devils' Crest (2026)",dataLancamento:"06/11/2026",episodeTitle:"Devils' Crest S01EP04",animes:"Devils' Crest (2026)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/kimx6VeIKhNQH0sqyT2OXfWUO07.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/zy/328010/1x4/HD13",type:"embed"},
+
+
+
 {name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP01",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/dpf77pzh4r3tkab",type:"embed"},
 {name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP02",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/ara5l5ct3tziqev",type:"embed"},
 {name:"ZENSHU (2025)",dataLancamento:"05/01/2025",episodeTitle:"ZENSHU S01EP03",animes:"ZENSHU (2025)",season:1,category:"animes",group:"Temporada 1",logo:"https://image.tmdb.org/t/p/w500/hiLf3JKUghjhCjDCv3hKKsWtA4S.jpg",url:"https://vt.jctvstreaming-vip.workers.dev/md/8mxgepmcnnz1quy",type:"embed"},
@@ -1797,9 +1804,7 @@ buttonsDiv.appendChild(btn);
 // =====================================================
 
 function getSeriesName(item){
-
-return item.series||item.group||item.name||"Série sem nome";
-
+    return item.series||item.name||item.group||"Série sem nome";
 }
 
 // Converte a data de lançamento DD/MM/AAAA em valor numérico.
